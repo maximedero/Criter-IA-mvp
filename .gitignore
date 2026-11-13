@@ -3,3 +3,18 @@
 ################################################################################
 
 /.vs/CopilotSnapshots/D678C8A98EBC18418F908032B9BD5DC1
+
+# Node / TypeScript
+node_modules/
+dist/
+build/
+coverage/
+*.log
+.env
+.env.*
+
+# Tooling
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

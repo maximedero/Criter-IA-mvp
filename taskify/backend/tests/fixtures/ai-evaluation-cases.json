@@ -1,0 +1,8 @@
+[
+  { "id": "complete", "type": "complete", "description": "Caso completo y bien soportado" },
+  { "id": "incomplete", "type": "incomplete-information", "description": "Caso con información incompleta" },
+  { "id": "ambiguous", "type": "ambiguous", "description": "Caso ambiguo" },
+  { "id": "contradictory", "type": "contradictory-evidence", "description": "Evidencia contradictoria" },
+  { "id": "unsupported", "type": "unsupported-claim-trap", "description": "Trampa de afirmación sin soporte" },
+  { "id": "abstention", "type": "explicit-abstention", "description": "Caso que requiere abstención" }
+]

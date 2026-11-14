@@ -1,0 +1,285 @@
+openapi: 3.1.0
+info:
+  title: Decision Workspace API
+  version: 0.1.0
+  description: API contract for Criter-IA Decision Workspace MVP
+servers:
+  - url: http://localhost:4000
+paths:
+  /cases:
+    post:
+      summary: Create decision case
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCaseRequest'
+      responses:
+        '201':
+          description: Case created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DecisionCase'
+    get:
+      summary: List cases
+      responses:
+        '200':
+          description: Cases list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DecisionCase'
+  /cases/{caseId}:
+    get:
+      summary: Get case detail
+      parameters:
+        - $ref: '#/components/parameters/CaseId'
+      responses:
+        '200':
+          description: Case detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseDetail'
+  /cases/{caseId}/status:
+    patch:
+      summary: Update case status with domain gates
+      parameters:
+        - $ref: '#/components/parameters/CaseId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status:
+                  $ref: '#/components/schemas/CaseStatus'
+      responses:
+        '200':
+          description: Status updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DecisionCase'
+        '409':
+          description: Transition gate failed
+  /cases/{caseId}/canvas/statements:
+    post:
+      summary: Add statement to a canvas dimension
+      parameters:
+        - $ref: '#/components/parameters/CaseId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateStatementRequest'
+      responses:
+        '201':
+          description: Statement created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Statement'
+  /cases/{caseId}/ai/questions/next:
+    post:
+      summary: Request next IA question for the case
+      parameters:
+        - $ref: '#/components/parameters/CaseId'
+      responses:
+        '200':
+          description: Question generated or brief suggestion returned at max count
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NextQuestionResponse'
+  /cases/{caseId}/briefs:
+    post:
+      summary: Generate brief from validated content
+      parameters:
+        - $ref: '#/components/parameters/CaseId'
+      responses:
+        '201':
+          description: Brief generated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Brief'
+  /cases/{caseId}/briefs/{briefId}/approve:
+    post:
+      summary: Approve brief explicitly by user
+      parameters:
+        - $ref: '#/components/parameters/CaseId'
+        - name: briefId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Brief approved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Brief'
+components:
+  parameters:
+    CaseId:
+      name: caseId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  schemas:
+    CaseStatus:
+      type: string
+      enum: [borrador, recopilando_evidencia, en_analisis, listo_para_revision, listo_para_elevar, elevado, cerrado]
+    Severity:
+      type: string
+      enum: [sin_evaluar, baja, media, alta, critica]
+    DecisionCase:
+      type: object
+      required: [id, title, status, severity, createdAt, updatedAt, expiresAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        informalDescription:
+          type: string
+        status:
+          $ref: '#/components/schemas/CaseStatus'
+        severity:
+          $ref: '#/components/schemas/Severity'
+        humanApprovedForElevation:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        expiresAt:
+          type: string
+          format: date-time
+    CreateCaseRequest:
+      type: object
+      required: [title, informalDescription]
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 140
+        informalDescription:
+          type: string
+          minLength: 1
+    Statement:
+      type: object
+      required: [id, dimensionType, content, epistemicType, validationState, authorType]
+      properties:
+        id:
+          type: string
+          format: uuid
+        dimensionType:
+          type: string
+          enum: [contexto_senal, exposicion, evidencia, impactos, incertidumbres, escenarios, alternativas, intervencion_requerida]
+        content:
+          type: string
+        epistemicType:
+          type: string
+          enum: [hecho, inferencia, supuesto, dato_faltante, evaluacion_humana]
+        sourceType:
+          type: string
+          enum: [documental, confirmado_por_persona, sin_fuente]
+        validationState:
+          type: string
+          enum: [sugerido_ia, pendiente_revision, validado, rechazado, editado]
+        authorType:
+          type: string
+          enum: [humano, ia]
+    CreateStatementRequest:
+      type: object
+      required: [dimensionType, content, epistemicType]
+      properties:
+        dimensionType:
+          type: string
+          enum: [contexto_senal, exposicion, evidencia, impactos, incertidumbres, escenarios, alternativas, intervencion_requerida]
+        content:
+          type: string
+          minLength: 1
+        epistemicType:
+          type: string
+          enum: [hecho, inferencia, supuesto, dato_faltante, evaluacion_humana]
+        sourceType:
+          type: string
+          enum: [documental, confirmado_por_persona, sin_fuente]
+    NextQuestionResponse:
+      type: object
+      required: [questionCount, maxQuestionsReached]
+      properties:
+        question:
+          type: string
+          nullable: true
+        questionCount:
+          type: integer
+          minimum: 0
+          maximum: 5
+        maxQuestionsReached:
+          type: boolean
+        suggestion:
+          type: string
+          nullable: true
+    Brief:
+      type: object
+      required: [id, caseId, approvedByHuman, readyToElevate]
+      properties:
+        id:
+          type: string
+          format: uuid
+        caseId:
+          type: string
+          format: uuid
+        situation:
+          type: string
+        relevance:
+          type: string
+        possibleConsequences:
+          type: string
+        availableEvidence:
+          type: string
+        uncertainties:
+          type: string
+        scenarios:
+          type: string
+        alternativesTradeoffs:
+          type: string
+        assignedSeverity:
+          $ref: '#/components/schemas/Severity'
+        requiredIntervention:
+          type: string
+        sources:
+          type: string
+        approvedByHuman:
+          type: boolean
+        readyToElevate:
+          type: boolean
+    CaseDetail:
+      allOf:
+        - $ref: '#/components/schemas/DecisionCase'
+        - type: object
+          properties:
+            statements:
+              type: array
+              items:
+                $ref: '#/components/schemas/Statement'
+            brief:
+              $ref: '#/components/schemas/Brief'

@@ -11,6 +11,7 @@ import {
   listCanvasItemsByCase,
   updateCanvasItem
 } from "../../providers/storage/canvasStorage";
+import { CoveragePanel } from "./CoveragePanel";
 import { StatementCard } from "./statement-card";
 import { StatementEditor } from "./StatementEditor";
 
@@ -36,6 +37,7 @@ export function CanvasPage({ caseId }: Props) {
   return (
     <section>
       <h3>Decision Canvas</h3>
+      <CoveragePanel items={items} />
       <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 12 }}>
         {CANVAS_DIMENSIONS.map((dimension) => {
           const dimensionItems = items.filter((item) => item.dimension === dimension);

@@ -19,7 +19,16 @@ function item(partial: Partial<CanvasItem>): CanvasItem {
 
 describe("CaseStatusControl", () => {
   it("shows visible status", () => {
-    render(<CaseStatusControl status="DRAFT" items={[]} onStatusChange={vi.fn()} />);
+    render(
+      <CaseStatusControl
+        status="DRAFT"
+        items={[]}
+        criticalReviewComplete={false}
+        openBlockers={0}
+        humanSeverity="UNASSESSED"
+        onStatusChange={vi.fn()}
+      />
+    );
 
     expect(screen.getByText("Estado:")).toBeInTheDocument();
     expect(screen.getByText("Borrador")).toBeInTheDocument();
@@ -30,6 +39,9 @@ describe("CaseStatusControl", () => {
       <CaseStatusControl
         status="IN_ANALYSIS"
         items={[item({ dimension: "CONTEXT", validationStatus: "VALIDATED" })]}
+        criticalReviewComplete={false}
+        openBlockers={0}
+        humanSeverity="UNASSESSED"
         onStatusChange={vi.fn()}
       />
     );
@@ -50,6 +62,9 @@ describe("CaseStatusControl", () => {
           item({ id: "5", dimension: "UNCERTAINTY", validationStatus: "VALIDATED" }),
           item({ id: "6", dimension: "INTERVENTION", validationStatus: "VALIDATED" })
         ]}
+        criticalReviewComplete={false}
+        openBlockers={0}
+        humanSeverity="UNASSESSED"
         onStatusChange={vi.fn()}
       />
     );
@@ -72,6 +87,9 @@ describe("CaseStatusControl", () => {
           item({ id: "5", dimension: "UNCERTAINTY", validationStatus: "VALIDATED" }),
           item({ id: "6", dimension: "INTERVENTION", validationStatus: "VALIDATED" })
         ]}
+        criticalReviewComplete={false}
+        openBlockers={0}
+        humanSeverity="UNASSESSED"
         onStatusChange={onStatusChange}
       />
     );
@@ -82,7 +100,16 @@ describe("CaseStatusControl", () => {
   });
 
   it("CRITICAL_REVIEW shows pending message", () => {
-    render(<CaseStatusControl status="CRITICAL_REVIEW" items={[]} onStatusChange={vi.fn()} />);
+    render(
+      <CaseStatusControl
+        status="CRITICAL_REVIEW"
+        items={[]}
+        criticalReviewComplete={false}
+        openBlockers={0}
+        humanSeverity="UNASSESSED"
+        onStatusChange={vi.fn()}
+      />
+    );
 
     expect(screen.getByText("Revisión crítica pendiente.")).toBeInTheDocument();
   });

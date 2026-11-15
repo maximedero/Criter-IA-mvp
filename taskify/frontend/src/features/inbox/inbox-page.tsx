@@ -2,7 +2,10 @@ import { useEffect, useMemo, useState } from "react";
 import type { CanvasItem } from "../../domain/models/CanvasItem";
 import { CASE_STATUS_LABELS } from "../../domain/models/CaseStatus";
 import type { DecisionCase } from "../../domain/models/DecisionCase";
+import { evaluateMinimumCoverage } from "../../domain/rules/coverageRules";
+import { calculateReviewSummary } from "../../domain/rules/reviewRules";
 import { canTransition } from "../../domain/workflow/caseStateMachine";
+import { canAdvanceToBriefDraft } from "../../domain/workflow/humanSeverityWorkflow";
 import type { AIProvider } from "../../providers/ai";
 import { MockAIProvider } from "../../providers/ai";
 import { listCanvasItemsByCase } from "../../providers/storage/canvasStorage";
@@ -12,6 +15,9 @@ import {
   listDecisionCases,
   updateDecisionCaseStatus
 } from "../../providers/storage/casesStorage";
+import { getCriticalReview, isCriticalReviewComplete } from "../../providers/storage/criticalReviewStorage";
+import { getHumanSeverityAssessment } from "../../providers/storage/humanSeverityStorage";
+import { HumanSeverityPanel, mapMissingCoverageLabels } from "../canvas/HumanSeverityPanel";
 import { CanvasPage } from "../canvas/canvas-page";
 import { CriticalReviewPanel } from "../review/CriticalReviewPanel";
 import { CaseForm } from "./CaseForm";
@@ -64,6 +70,24 @@ export function InboxPage({ aiProvider }: Props) {
   }, [selectedCaseId, items]);
 
   if (viewMode === "detail" && selectedCase) {
+    const coverage = evaluateMinimumCoverage(selectedCaseItems);
+    const review = getCriticalReview(selectedCase.id);
+    const reviewSummary = review ? calculateReviewSummary(review.findings) : null;
+    const openBlockers = reviewSummary?.openBlockers ?? 0;
+    const openWarnings = reviewSummary?.openWarnings ?? 0;
+    const criticalReviewComplete = isCriticalReviewComplete(selectedCase.id);
+    const severityAssessment = getHumanSeverityAssessment(selectedCase.id);
+
+    const handleStatusChange = (status: DecisionCase["status"]) => {
+      updateDecisionCaseStatus(selectedCase.id, status);
+      refresh();
+    };
+
+    const shouldRenderHumanSeverityPanel =
+      selectedCase.status === "HUMAN_EVALUATION" ||
+      (selectedCase.status === "CRITICAL_REVIEW" && criticalReviewComplete) ||
+      selectedCase.status === "BRIEF_DRAFT";
+
     return (
       <section>
         <h2>Detalle de caso</h2>
@@ -80,10 +104,10 @@ export function InboxPage({ aiProvider }: Props) {
         <CaseStatusControl
           status={selectedCase.status}
           items={selectedCaseItems}
-          onStatusChange={(status) => {
-            updateDecisionCaseStatus(selectedCase.id, status);
-            refresh();
-          }}
+          criticalReviewComplete={criticalReviewComplete}
+          openBlockers={openBlockers}
+          humanSeverity={severityAssessment.severity}
+          onStatusChange={handleStatusChange}
         />
 
         <CanvasPage
@@ -127,6 +151,34 @@ export function InboxPage({ aiProvider }: Props) {
           provider={provider}
           onItemsUpdated={refresh}
         />
+
+        {shouldRenderHumanSeverityPanel ? (
+          <HumanSeverityPanel
+            caseId={selectedCase.id}
+            caseStatus={selectedCase.status}
+            criticalReviewComplete={criticalReviewComplete}
+            hasMinimumCoverage={coverage.hasMinimumCoverage}
+            missingCoverageLabels={mapMissingCoverageLabels(coverage.missingDimensions)}
+            openBlockers={openBlockers}
+            openWarnings={openWarnings}
+            onSaved={() => {
+              refresh();
+            }}
+            onContinueToBriefDraft={() => {
+              const gate = canAdvanceToBriefDraft({
+                currentStatus: "HUMAN_EVALUATION",
+                hasMinimumCoverage: coverage.hasMinimumCoverage,
+                criticalReviewComplete,
+                openBlockers,
+                humanSeverity: getHumanSeverityAssessment(selectedCase.id).severity
+              });
+
+              if (gate.allowed) {
+                handleStatusChange("BRIEF_DRAFT");
+              }
+            }}
+          />
+        ) : null}
 
         <button
           type="button"

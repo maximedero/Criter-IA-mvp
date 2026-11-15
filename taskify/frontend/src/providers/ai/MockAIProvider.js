@@ -87,6 +87,34 @@ const DYNAMICS_QUESTIONS = {
 function normalizeNarrative(value) {
     return value.trim().replace(/\s+/g, " ");
 }
+const AI_OBSERVATION_KEY = "dw.ai.observation";
+function trackAIInvocation(method) {
+    const windowTarget = globalThis.__DW_AI_OBSERVATION__;
+    if (windowTarget) {
+        windowTarget[method] += 1;
+    }
+    try {
+        const raw = localStorage.getItem(AI_OBSERVATION_KEY);
+        if (!raw) {
+            return;
+        }
+        const parsed = JSON.parse(raw);
+        if (typeof parsed.analyzeNarrative !== "number" ||
+            typeof parsed.suggestNextQuestion !== "number" ||
+            typeof parsed.reviewCase !== "number" ||
+            typeof parsed.generateBrief !== "number") {
+            return;
+        }
+        const next = {
+            ...parsed,
+            [method]: parsed[method] + 1
+        };
+        localStorage.setItem(AI_OBSERVATION_KEY, JSON.stringify(next));
+    }
+    catch {
+        return;
+    }
+}
 function isDynamicsReviewFixture(input) {
     const normalized = normalizeNarrative(input.initialNarrative);
     if (normalized !== DYNAMICS_NARRATIVE) {
@@ -172,6 +200,7 @@ function buildDynamicsFindings(input) {
 }
 export class MockAIProvider {
     async analyzeNarrative(input) {
+        trackAIInvocation("analyzeNarrative");
         const parsedInput = parseAnalyzeNarrativeInput(input);
         const normalized = normalizeNarrative(parsedInput.initialNarrative);
         if (normalized !== DYNAMICS_NARRATIVE) {
@@ -180,6 +209,7 @@ export class MockAIProvider {
         return parseAnalyzeNarrativeResult(DYNAMICS_SUGGESTIONS);
     }
     async suggestNextQuestion(input) {
+        trackAIInvocation("suggestNextQuestion");
         const parsed = parseSuggestNextQuestionInput(input);
         if (parsed.currentCaseStatus !== "DRAFT" && parsed.currentCaseStatus !== "IN_ANALYSIS") {
             return parseSuggestNextQuestionResult({
@@ -271,6 +301,7 @@ export class MockAIProvider {
         });
     }
     async reviewCase(input) {
+        trackAIInvocation("reviewCase");
         const parsed = parseReviewCaseInput(input);
         if (!isDynamicsReviewFixture(parsed)) {
             return parseReviewCaseResult({
@@ -299,6 +330,7 @@ export class MockAIProvider {
         });
     }
     async generateBrief(input) {
+        trackAIInvocation("generateBrief");
         parseGenerateBriefInput(input);
         return parseGenerateBriefResult({ executiveSummary: "", expandedSummary: "" });
     }

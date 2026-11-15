@@ -119,6 +119,48 @@ function normalizeNarrative(value: string): string {
   return value.trim().replace(/\s+/g, " ");
 }
 
+type AIObservationCounters = {
+  analyzeNarrative: number;
+  suggestNextQuestion: number;
+  reviewCase: number;
+  generateBrief: number;
+};
+
+const AI_OBSERVATION_KEY = "dw.ai.observation";
+
+function trackAIInvocation(method: keyof AIObservationCounters): void {
+  const windowTarget = (globalThis as { __DW_AI_OBSERVATION__?: AIObservationCounters }).__DW_AI_OBSERVATION__;
+  if (windowTarget) {
+    windowTarget[method] += 1;
+  }
+
+  try {
+    const raw = localStorage.getItem(AI_OBSERVATION_KEY);
+    if (!raw) {
+      return;
+    }
+
+    const parsed = JSON.parse(raw) as AIObservationCounters;
+    if (
+      typeof parsed.analyzeNarrative !== "number" ||
+      typeof parsed.suggestNextQuestion !== "number" ||
+      typeof parsed.reviewCase !== "number" ||
+      typeof parsed.generateBrief !== "number"
+    ) {
+      return;
+    }
+
+    const next: AIObservationCounters = {
+      ...parsed,
+      [method]: parsed[method] + 1
+    };
+
+    localStorage.setItem(AI_OBSERVATION_KEY, JSON.stringify(next));
+  } catch {
+    return;
+  }
+}
+
 function isDynamicsReviewFixture(input: ReviewCaseInput): boolean {
   const normalized = normalizeNarrative(input.initialNarrative);
   if (normalized !== DYNAMICS_NARRATIVE) {
@@ -230,6 +272,7 @@ function buildDynamicsFindings(input: ReviewCaseInput): ReviewFinding[] {
 
 export class MockAIProvider implements AIProvider {
   async analyzeNarrative(input: AnalyzeNarrativeInput): Promise<AnalyzeNarrativeResult> {
+    trackAIInvocation("analyzeNarrative");
     const parsedInput = parseAnalyzeNarrativeInput(input);
     const normalized = normalizeNarrative(parsedInput.initialNarrative);
 
@@ -241,6 +284,7 @@ export class MockAIProvider implements AIProvider {
   }
 
   async suggestNextQuestion(input: SuggestNextQuestionInput): Promise<SuggestNextQuestionResult> {
+    trackAIInvocation("suggestNextQuestion");
     const parsed = parseSuggestNextQuestionInput(input);
 
     if (parsed.currentCaseStatus !== "DRAFT" && parsed.currentCaseStatus !== "IN_ANALYSIS") {
@@ -352,6 +396,7 @@ export class MockAIProvider implements AIProvider {
   }
 
   async reviewCase(input: ReviewCaseInput): Promise<ReviewCaseResult> {
+    trackAIInvocation("reviewCase");
     const parsed = parseReviewCaseInput(input);
 
     if (!isDynamicsReviewFixture(parsed)) {
@@ -384,6 +429,7 @@ export class MockAIProvider implements AIProvider {
   }
 
   async generateBrief(input: GenerateBriefInput): Promise<GenerateBriefResult> {
+    trackAIInvocation("generateBrief");
     parseGenerateBriefInput(input);
     return parseGenerateBriefResult({ executiveSummary: "", expandedSummary: "" });
   }

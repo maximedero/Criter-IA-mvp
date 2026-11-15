@@ -1,25 +1,63 @@
 import type { CanvasItem } from "../../domain/models/CanvasItem";
-import { CASE_STATUS_LABELS, type CaseStatus } from "../../domain/models/CaseStatus";
+import { CASE_STATUS_LABELS, type CaseStatus, type HumanSeverity } from "../../domain/models/CaseStatus";
 import { COVERAGE_DIMENSION_LABELS } from "../../domain/models/CoverageResult";
 import { evaluateMinimumCoverage } from "../../domain/rules/coverageRules";
 import { canTransition } from "../../domain/workflow/caseStateMachine";
+import { canAdvanceToHumanEvaluation } from "../../domain/workflow/humanSeverityWorkflow";
 
 type Props = {
   status: CaseStatus;
   items: CanvasItem[];
+  criticalReviewComplete: boolean;
+  openBlockers: number;
+  humanSeverity: HumanSeverity;
   onStatusChange: (status: CaseStatus) => void;
 };
 
-export function CaseStatusControl({ status, items, onStatusChange }: Props) {
+export function CaseStatusControl({
+  status,
+  items,
+  criticalReviewComplete,
+  openBlockers,
+  humanSeverity,
+  onStatusChange
+}: Props) {
   const coverage = evaluateMinimumCoverage(items);
 
   if (status === "CRITICAL_REVIEW") {
+    const humanEvaluationTransition = canAdvanceToHumanEvaluation({
+      currentStatus: "CRITICAL_REVIEW",
+      criticalReviewComplete,
+      hasMinimumCoverage: coverage.hasMinimumCoverage,
+      openBlockers,
+      humanSeverity
+    });
+
     return (
       <section>
         <p>
           <strong>Estado:</strong> {CASE_STATUS_LABELS[status]}
         </p>
-        <p>Revisión crítica pendiente.</p>
+
+        {humanEvaluationTransition.allowed ? (
+          <>
+            <p>Revisión completada. El caso puede avanzar a evaluación humana.</p>
+            <button type="button" onClick={() => onStatusChange("HUMAN_EVALUATION")}>Avanzar a evaluación humana</button>
+          </>
+        ) : (
+          <p>Revisión crítica pendiente.</p>
+        )}
+      </section>
+    );
+  }
+
+  if (status === "BRIEF_DRAFT") {
+    return (
+      <section>
+        <p>
+          <strong>Estado:</strong> {CASE_STATUS_LABELS[status]}
+        </p>
+        <p>El caso está listo para preparar el brief.</p>
       </section>
     );
   }

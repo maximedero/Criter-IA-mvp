@@ -16,7 +16,8 @@
     "test:e2e:slice4": "playwright test tests/e2e/slice4-dynamics-workflow.spec.ts",
     "test:e2e:slice5": "playwright test tests/e2e/slice5-dynamics-mock-ai.spec.ts",
     "test:e2e:slice6": "playwright test tests/e2e/slice6-dynamics-contextual-assistance.spec.ts",
-    "test:e2e:slice7": "playwright test tests/e2e/slice7-dynamics-critical-review.spec.ts"
+    "test:e2e:slice7": "playwright test tests/e2e/slice7-dynamics-critical-review.spec.ts",
+    "test:e2e:slice8": "playwright test tests/e2e/slice8-human-severity.spec.ts"
   },
   "dependencies": {
     "react": "^18.3.1",

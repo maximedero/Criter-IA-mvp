@@ -195,11 +195,161 @@ export const reviewCaseResultSchema = z
         }
     }
 });
-export const generateBriefInputSchema = z.object({
-    caseId: z.string().min(1),
-    items: z.array(canvasItemSchema)
+export const briefStatusSchema = z.enum(["NOT_GENERATED", "GENERATED", "EDITED_BY_USER", "REVIEWED_BY_USER"]);
+export const briefSectionSchema = z
+    .object({
+    content: z.string().min(1),
+    sourceItemIds: z.array(z.string().min(1)),
+    hasSufficientInformation: z.boolean(),
+    limitations: z.array(z.string().min(1))
+})
+    .superRefine((value, ctx) => {
+    if (!value.hasSufficientInformation && value.limitations.length === 0) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["limitations"],
+            message: "limitations are required when hasSufficientInformation is false"
+        });
+    }
 });
-export const generateBriefResultSchema = z.object({
-    executiveSummary: z.string(),
-    expandedSummary: z.string()
+export const briefSeveritySectionSchema = z.object({
+    value: z.enum(["UNASSESSED", "LOW", "MEDIUM", "HIGH", "CRITICAL"]),
+    label: z.string().min(1),
+    rationale: z.string().nullable(),
+    assessedBy: z.literal("USER"),
+    assessedAt: z.string().min(1),
+    notice: z.literal("Evaluación realizada por el usuario.")
+});
+export const executiveBriefSchema = z.object({
+    situation: briefSectionSchema,
+    whyItMatters: briefSectionSchema,
+    possibleImpacts: briefSectionSchema,
+    evidence: briefSectionSchema,
+    uncertainties: briefSectionSchema,
+    scenariosAndAlternatives: briefSectionSchema,
+    severity: briefSeveritySectionSchema,
+    requiredIntervention: briefSectionSchema
+});
+const expandedBriefItemSchema = z.object({
+    itemId: z.string().min(1),
+    dimension: z.enum(CANVAS_DIMENSIONS),
+    epistemicType: z.enum(EPISTEMIC_TYPES),
+    origin: z.enum(["USER", "AI"]),
+    validationStatus: z.enum(["PENDING", "VALIDATED", "EDITED", "REJECTED"]),
+    content: z.string().min(1)
+});
+export const expandedBriefSchema = z.object({
+    facts: z.array(expandedBriefItemSchema),
+    inferences: z.array(expandedBriefItemSchema),
+    assumptions: z.array(expandedBriefItemSchema),
+    missingInformation: z.array(expandedBriefItemSchema),
+    humanEvaluations: z.array(expandedBriefItemSchema),
+    evidenceItems: z.array(expandedBriefItemSchema),
+    openWarnings: z.array(z.object({
+        id: z.string().min(1),
+        title: z.string().min(1),
+        message: z.string().min(1),
+        relatedItemIds: z.array(z.string().min(1))
+    })),
+    resolvedFindings: z.array(z.object({
+        id: z.string().min(1),
+        title: z.string().min(1),
+        resolution: z.string().min(1),
+        relatedItemIds: z.array(z.string().min(1))
+    })),
+    sources: z.array(z.string()),
+    generationLimitations: z.array(z.string().min(1))
+});
+export const briefTraceabilitySchema = z.object({
+    sectionSources: z.object({
+        situation: z.array(z.string().min(1)),
+        whyItMatters: z.array(z.string().min(1)),
+        possibleImpacts: z.array(z.string().min(1)),
+        evidence: z.array(z.string().min(1)),
+        uncertainties: z.array(z.string().min(1)),
+        scenariosAndAlternatives: z.array(z.string().min(1)),
+        requiredIntervention: z.array(z.string().min(1))
+    }),
+    severityAssessmentRef: z.string().min(1),
+    criticalReviewId: z.string().min(1),
+    generatedFromCanvasUpdatedAt: z.string().min(1),
+    generationProvider: z.literal("MockAIProvider"),
+    generationTimestamp: z.string().min(1),
+    editedSections: z.array(z.enum([
+        "situation",
+        "whyItMatters",
+        "possibleImpacts",
+        "evidence",
+        "uncertainties",
+        "scenariosAndAlternatives",
+        "requiredIntervention"
+    ])),
+    userReviewTimestamp: z.string().optional()
+});
+export const generateBriefInputSchema = z
+    .object({
+    caseId: z.string().min(1),
+    caseTitle: z.string().min(1),
+    initialNarrative: z.string().min(1),
+    activeCanvasItems: z.array(canvasItemSchema),
+    humanSeverityAssessment: z.object({
+        caseId: z.string().min(1),
+        severity: z.enum(["UNASSESSED", "LOW", "MEDIUM", "HIGH", "CRITICAL"]),
+        rationale: z.string().optional(),
+        assessedBy: z.literal("USER"),
+        assessedAt: z.string().nullable(),
+        updatedAt: z.string().min(1),
+        status: z.enum(["UNASSESSED", "ASSESSED"])
+    }),
+    completedCriticalReview: z.object({
+        reviewId: z.string().min(1),
+        caseId: z.string().min(1),
+        createdAt: z.string().min(1),
+        updatedAt: z.string().min(1),
+        completedAt: z.string().optional(),
+        findings: z.array(reviewFindingSchema),
+        summary: reviewSummarySchema,
+        canCompleteReview: z.boolean(),
+        status: z.literal("COMPLETED")
+    }),
+    openWarnings: z.array(reviewFindingSchema),
+    contextualQuestionHistory: z.array(persistedQuestionSchema),
+    currentCaseStatus: z.enum(CASE_STATUSES)
+})
+    .superRefine((value, ctx) => {
+    if (value.currentCaseStatus !== "BRIEF_DRAFT") {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["currentCaseStatus"], message: "brief generation requires BRIEF_DRAFT" });
+    }
+    const nonConsolidable = value.activeCanvasItems.find((item) => item.validationStatus !== "VALIDATED" && item.validationStatus !== "EDITED");
+    if (nonConsolidable) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["activeCanvasItems"], message: "only VALIDATED/EDITED items are allowed" });
+    }
+    if (value.humanSeverityAssessment.severity === "UNASSESSED") {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["humanSeverityAssessment", "severity"], message: "severity cannot be UNASSESSED" });
+    }
+});
+export const decisionBriefSchema = z.object({
+    id: z.string().min(1),
+    caseId: z.string().min(1),
+    version: z.number().int().min(1),
+    status: briefStatusSchema,
+    executive: executiveBriefSchema,
+    expanded: expandedBriefSchema,
+    traceability: briefTraceabilitySchema,
+    generatedBy: z.literal("AI"),
+    reviewedByUser: z.boolean(),
+    createdAt: z.string().min(1),
+    updatedAt: z.string().min(1),
+    reviewedAt: z.string().nullable()
+});
+export const generateBriefResultSchema = decisionBriefSchema.superRefine((value, ctx) => {
+    if (value.status === "NOT_GENERATED") {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["status"], message: "status must not be NOT_GENERATED" });
+    }
+    if (!value.reviewedByUser && value.reviewedAt !== null) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["reviewedAt"], message: "reviewedAt must be null when not reviewed" });
+    }
+    if (value.generatedBy !== "AI") {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["generatedBy"], message: "generatedBy must be AI" });
+    }
 });

@@ -12,6 +12,7 @@ import { getCriticalReview, isCriticalReviewComplete } from "../../providers/sto
 import { getHumanSeverityAssessment } from "../../providers/storage/humanSeverityStorage";
 import { HumanSeverityPanel, mapMissingCoverageLabels } from "../canvas/HumanSeverityPanel";
 import { CanvasPage } from "../canvas/canvas-page";
+import { BriefWorkspace } from "../brief/BriefWorkspace";
 import { CriticalReviewPanel } from "../review/CriticalReviewPanel";
 import { CaseForm } from "./CaseForm";
 import { CaseStatusControl } from "./CaseStatusControl";
@@ -29,6 +30,7 @@ export function InboxPage({ aiProvider }) {
     const [showCreateForm, setShowCreateForm] = useState(false);
     const [selectedCaseId, setSelectedCaseId] = useState(null);
     const [selectedCaseItems, setSelectedCaseItems] = useState([]);
+    const [briefError, setBriefError] = useState(null);
     const [viewMode, setViewMode] = useState("inbox");
     const refresh = () => {
         const listed = listDecisionCases();
@@ -62,6 +64,7 @@ export function InboxPage({ aiProvider }) {
         const shouldRenderHumanSeverityPanel = selectedCase.status === "HUMAN_EVALUATION" ||
             (selectedCase.status === "CRITICAL_REVIEW" && criticalReviewComplete) ||
             selectedCase.status === "BRIEF_DRAFT";
+        const shouldRenderBriefWorkspace = selectedCase.status === "BRIEF_DRAFT";
         return (_jsxs("section", { children: [_jsx("h2", { children: "Detalle de caso" }), _jsxs("p", { children: [_jsx("strong", { children: "T\u00EDtulo:" }), " ", selectedCase.title] }), _jsxs("p", { children: [_jsx("strong", { children: "Estado:" }), " ", CASE_STATUS_LABELS[selectedCase.status]] }), _jsxs("p", { children: [_jsx("strong", { children: "Relato inicial:" }), " ", selectedCase.initialNarrative] }), _jsx(CaseStatusControl, { status: selectedCase.status, items: selectedCaseItems, criticalReviewComplete: criticalReviewComplete, openBlockers: openBlockers, humanSeverity: severityAssessment.severity, onStatusChange: handleStatusChange }), _jsx(CanvasPage, { caseId: selectedCase.id, initialNarrative: selectedCase.initialNarrative, caseStatus: selectedCase.status, aiProvider: provider, onItemsChange: (nextItems) => {
                         setSelectedCaseItems(nextItems);
                         if (selectedCase.status === "DRAFT") {
@@ -95,7 +98,12 @@ export function InboxPage({ aiProvider }) {
                         if (gate.allowed) {
                             handleStatusChange("BRIEF_DRAFT");
                         }
-                    } })) : null, _jsx("button", { type: "button", onClick: () => {
+                    } })) : null, shouldRenderBriefWorkspace ? (_jsx(BriefWorkspace, { decisionCase: selectedCase, items: selectedCaseItems, hasMinimumCoverage: coverage.hasMinimumCoverage, criticalReviewComplete: criticalReviewComplete, review: review, openBlockers: openBlockers, openWarnings: openWarnings, severityAssessment: severityAssessment, provider: provider, onBriefSaved: () => {
+                        setBriefError(null);
+                        refresh();
+                    }, onError: (message) => {
+                        setBriefError(message);
+                    } })) : null, briefError ? _jsx("p", { role: "alert", children: briefError }) : null, _jsx("button", { type: "button", onClick: () => {
                         setViewMode("inbox");
                         refresh();
                     }, children: "Volver al Inbox" })] }));

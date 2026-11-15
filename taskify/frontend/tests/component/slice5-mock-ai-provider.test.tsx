@@ -35,7 +35,68 @@ function makeInvalidProvider(): AIProvider {
     }),
     suggestNextQuestion: async () => ({ suggestedQuestion: null }),
     reviewCase: async () => ({ findings: [] }),
-    generateBrief: async () => ({ executiveSummary: "", expandedSummary: "" })
+    generateBrief: async () => ({
+      id: "brief-invalid",
+      caseId: "case-1",
+      version: 1,
+      status: "GENERATED",
+      executive: {
+        situation: { content: "x", sourceItemIds: [], hasSufficientInformation: false, limitations: ["x"] },
+        whyItMatters: { content: "x", sourceItemIds: [], hasSufficientInformation: false, limitations: ["x"] },
+        possibleImpacts: { content: "x", sourceItemIds: [], hasSufficientInformation: false, limitations: ["x"] },
+        evidence: { content: "x", sourceItemIds: [], hasSufficientInformation: false, limitations: ["x"] },
+        uncertainties: { content: "x", sourceItemIds: [], hasSufficientInformation: false, limitations: ["x"] },
+        scenariosAndAlternatives: {
+          content: "No identificados con la evidencia disponible.",
+          sourceItemIds: [],
+          hasSufficientInformation: false,
+          limitations: ["x"]
+        },
+        severity: {
+          value: "HIGH",
+          label: "Alta",
+          rationale: null,
+          assessedBy: "USER",
+          assessedAt: new Date().toISOString(),
+          notice: "Evaluación realizada por el usuario."
+        },
+        requiredIntervention: { content: "x", sourceItemIds: [], hasSufficientInformation: false, limitations: ["x"] }
+      },
+      expanded: {
+        facts: [],
+        inferences: [],
+        assumptions: [],
+        missingInformation: [],
+        humanEvaluations: [],
+        evidenceItems: [],
+        openWarnings: [],
+        resolvedFindings: [],
+        sources: [],
+        generationLimitations: ["x"]
+      },
+      traceability: {
+        sectionSources: {
+          situation: [],
+          whyItMatters: [],
+          possibleImpacts: [],
+          evidence: [],
+          uncertainties: [],
+          scenariosAndAlternatives: [],
+          requiredIntervention: []
+        },
+        severityAssessmentRef: "s",
+        criticalReviewId: "r",
+        generatedFromCanvasUpdatedAt: new Date().toISOString(),
+        generationProvider: "MockAIProvider",
+        generationTimestamp: new Date().toISOString(),
+        editedSections: []
+      },
+      generatedBy: "AI",
+      reviewedByUser: false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      reviewedAt: null
+    })
   };
 }
 

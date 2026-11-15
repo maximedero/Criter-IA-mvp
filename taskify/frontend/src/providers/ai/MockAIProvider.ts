@@ -10,7 +10,9 @@ import type {
   SuggestNextQuestionInput,
   SuggestNextQuestionResult
 } from "./AIProvider";
+import type { CanvasItem, EpistemicType } from "../../domain/models/CanvasItem";
 import type { ReviewFinding } from "../../domain/models/CriticalReview";
+import { HUMAN_SEVERITY_LABELS } from "../../domain/models/HumanSeverityAssessment";
 import {
   parseAnalyzeNarrativeInput,
   parseAnalyzeNarrativeResult,
@@ -24,6 +26,8 @@ import {
 
 const DYNAMICS_NARRATIVE =
   "El contrato con el proveedor venció el 31/10/2026. Actualmente continúa trabajando hasta finalizar el proyecto en curso, pero no podemos iniciar nuevos proyectos ni tareas.";
+const DYNAMICS_NARRATIVE_SLICE9 =
+  "El contrato con el proveedor venció el 31/10/2026. El proveedor continúa únicamente hasta finalizar el proyecto actual. Actualmente no pueden iniciarse nuevos proyectos ni tareas.";
 
 const DYNAMICS_SUGGESTIONS: AnalyzeNarrativeResult = {
   suggestions: [
@@ -270,6 +274,402 @@ function buildDynamicsFindings(input: ReviewCaseInput): ReviewFinding[] {
   return findings;
 }
 
+function nowIso(): string {
+  return new Date().toISOString();
+}
+
+function toExpandedItem(item: CanvasItem) {
+  return {
+    itemId: item.id,
+    dimension: item.dimension,
+    epistemicType: item.epistemicType,
+    origin: item.origin,
+    validationStatus: item.validationStatus,
+    content: item.content
+  };
+}
+
+function joinOrPlaceholder(values: string[], placeholder: string): string {
+  if (values.length === 0) {
+    return placeholder;
+  }
+
+  return values.join(" ");
+}
+
+function determineSectionFromItem(item: CanvasItem): "situation" | "whyItMatters" | "possibleImpacts" | "evidence" | "uncertainties" | "scenariosAndAlternatives" | "requiredIntervention" {
+  if (item.dimension === "CONTEXT") {
+    return "situation";
+  }
+
+  if (item.dimension === "EXPOSURE") {
+    return "whyItMatters";
+  }
+
+  if (item.dimension === "IMPACT") {
+    return "possibleImpacts";
+  }
+
+  if (item.dimension === "EVIDENCE") {
+    return "evidence";
+  }
+
+  if (item.dimension === "UNCERTAINTY") {
+    return "uncertainties";
+  }
+
+  if (item.dimension === "SCENARIO" || item.dimension === "ALTERNATIVE") {
+    return "scenariosAndAlternatives";
+  }
+
+  return "requiredIntervention";
+}
+
+function buildGeneralBrief(input: GenerateBriefInput): GenerateBriefResult {
+  const validItems = input.activeCanvasItems;
+  const facts = validItems.filter((item) => item.epistemicType === "FACT");
+  const inferences = validItems.filter((item) => item.epistemicType === "INFERENCE");
+  const assumptions = validItems.filter((item) => item.epistemicType === "ASSUMPTION");
+  const missing = validItems.filter((item) => item.epistemicType === "MISSING_INFORMATION");
+  const humanEvaluations = validItems.filter((item) => item.epistemicType === "HUMAN_EVALUATION");
+  const evidence = validItems.filter((item) => item.dimension === "EVIDENCE");
+
+  const map: Record<string, string[]> = {
+    situation: [],
+    whyItMatters: [],
+    possibleImpacts: [],
+    evidence: [],
+    uncertainties: [],
+    scenariosAndAlternatives: [],
+    requiredIntervention: []
+  };
+
+  for (const item of validItems) {
+    map[determineSectionFromItem(item)].push(item.id);
+  }
+
+  const placeholder = "No hay información suficiente para completar esta sección.";
+
+  return {
+    id: `dw-brief-${input.caseId}-${Date.now()}`,
+    caseId: input.caseId,
+    version: 1,
+    status: "GENERATED",
+    executive: {
+      situation: {
+        content: joinOrPlaceholder(
+          validItems.filter((item) => item.dimension === "CONTEXT").map((item) => item.content),
+          placeholder
+        ),
+        sourceItemIds: map.situation,
+        hasSufficientInformation: map.situation.length > 0,
+        limitations: map.situation.length > 0 ? [] : [placeholder]
+      },
+      whyItMatters: {
+        content: joinOrPlaceholder(
+          validItems.filter((item) => item.dimension === "EXPOSURE").map((item) => item.content),
+          placeholder
+        ),
+        sourceItemIds: map.whyItMatters,
+        hasSufficientInformation: map.whyItMatters.length > 0,
+        limitations: map.whyItMatters.length > 0 ? [] : [placeholder]
+      },
+      possibleImpacts: {
+        content: joinOrPlaceholder(
+          validItems.filter((item) => item.dimension === "IMPACT").map((item) => item.content),
+          placeholder
+        ),
+        sourceItemIds: map.possibleImpacts,
+        hasSufficientInformation: map.possibleImpacts.length > 0,
+        limitations: map.possibleImpacts.length > 0 ? [] : [placeholder]
+      },
+      evidence: {
+        content: joinOrPlaceholder(evidence.map((item) => item.content), placeholder),
+        sourceItemIds: map.evidence,
+        hasSufficientInformation: map.evidence.length > 0,
+        limitations: map.evidence.length > 0 ? [] : [placeholder]
+      },
+      uncertainties: {
+        content: joinOrPlaceholder(missing.map((item) => item.content), placeholder),
+        sourceItemIds: map.uncertainties,
+        hasSufficientInformation: map.uncertainties.length > 0,
+        limitations: map.uncertainties.length > 0 ? [] : [placeholder]
+      },
+      scenariosAndAlternatives: {
+        content:
+          map.scenariosAndAlternatives.length > 0
+            ? validItems
+                .filter((item) => item.dimension === "SCENARIO" || item.dimension === "ALTERNATIVE")
+                .map((item) => item.content)
+                .join(" ")
+            : "No identificados con la evidencia disponible.",
+        sourceItemIds: map.scenariosAndAlternatives,
+        hasSufficientInformation: map.scenariosAndAlternatives.length > 0,
+        limitations: map.scenariosAndAlternatives.length > 0 ? [] : ["No se identificaron escenarios o alternativas válidas."]
+      },
+      severity: {
+        value: input.humanSeverityAssessment.severity,
+        label: HUMAN_SEVERITY_LABELS[input.humanSeverityAssessment.severity],
+        rationale: input.humanSeverityAssessment.rationale ?? null,
+        assessedBy: "USER",
+        assessedAt: input.humanSeverityAssessment.assessedAt ?? nowIso(),
+        notice: "Evaluación realizada por el usuario."
+      },
+      requiredIntervention: {
+        content: joinOrPlaceholder(
+          validItems.filter((item) => item.dimension === "INTERVENTION").map((item) => item.content),
+          placeholder
+        ),
+        sourceItemIds: map.requiredIntervention,
+        hasSufficientInformation: map.requiredIntervention.length > 0,
+        limitations: map.requiredIntervention.length > 0 ? [] : [placeholder]
+      }
+    },
+    expanded: {
+      facts: facts.map(toExpandedItem),
+      inferences: inferences.map((item) =>
+        /podría|es posible|riesgo/i.test(item.content) ? toExpandedItem(item) : { ...toExpandedItem(item), content: `Es posible que ${item.content}` }
+      ),
+      assumptions: assumptions.map(toExpandedItem),
+      missingInformation: missing.map(toExpandedItem),
+      humanEvaluations: humanEvaluations.map(toExpandedItem),
+      evidenceItems: evidence.map(toExpandedItem),
+      openWarnings: input.openWarnings.map((warning) => ({
+        id: warning.id,
+        title: warning.title,
+        message: warning.message,
+        relatedItemIds: warning.relatedItemIds
+      })),
+      resolvedFindings: input.completedCriticalReview.findings
+        .filter((finding) => finding.status !== "OPEN")
+        .map((finding) => ({
+          id: finding.id,
+          title: finding.title,
+          resolution: finding.status,
+          relatedItemIds: finding.relatedItemIds
+        })),
+      sources: evidence.map((item) => item.content),
+      generationLimitations: [
+        "La IA solo consolidó contenido validado o editado por el usuario.",
+        ...(missing.length > 0 ? ["Persisten datos faltantes que requieren validación humana."] : [])
+      ]
+    },
+    traceability: {
+      sectionSources: {
+        situation: map.situation,
+        whyItMatters: map.whyItMatters,
+        possibleImpacts: map.possibleImpacts,
+        evidence: map.evidence,
+        uncertainties: map.uncertainties,
+        scenariosAndAlternatives: map.scenariosAndAlternatives,
+        requiredIntervention: map.requiredIntervention
+      },
+      severityAssessmentRef: `${input.caseId}:${input.humanSeverityAssessment.assessedAt ?? "unknown"}`,
+      criticalReviewId: input.completedCriticalReview.reviewId,
+      generatedFromCanvasUpdatedAt: validItems.reduce((max, item) =>
+        new Date(item.updatedAt).getTime() > new Date(max).getTime() ? item.updatedAt : max,
+      validItems[0]?.updatedAt ?? nowIso()),
+      generationProvider: "MockAIProvider",
+      generationTimestamp: nowIso(),
+      editedSections: []
+    },
+    generatedBy: "AI",
+    reviewedByUser: false,
+    createdAt: nowIso(),
+    updatedAt: nowIso(),
+    reviewedAt: null
+  };
+}
+
+function hasDynamicsSignature(input: GenerateBriefInput): boolean {
+  const normalized = normalizeNarrative(input.initialNarrative);
+  if (normalized !== DYNAMICS_NARRATIVE && normalized !== DYNAMICS_NARRATIVE_SLICE9) {
+    return false;
+  }
+
+  const requiredSnippets = [
+    "El contrato con el proveedor venció el 31/10/2026.",
+    "El proveedor continúa únicamente hasta finalizar el proyecto actual.",
+    "Actualmente no pueden iniciarse nuevos proyectos ni tareas.",
+    "Nuevas necesidades de mantenimiento correctivo y evolutivo podrían quedar sin capacidad externa.",
+    "El proceso de Compras puede demorar aproximadamente entre 1 y 6 meses según conocimiento aportado por el usuario.",
+    "No conocemos cuándo termina exactamente el proyecto actual.",
+    "No conocemos la demanda de nuevos trabajos durante los próximos meses.",
+    "Una prórroga contractual podría ser una alternativa, pero su viabilidad no está confirmada.",
+    "Necesito que mi superior consulte con Compras qué alternativas contractuales son viables y cuáles son sus plazos."
+  ];
+
+  return requiredSnippets.every((snippet) => input.activeCanvasItems.some((item) => item.content.trim() === snippet));
+}
+
+function pickItemsBy(
+  items: CanvasItem[],
+  predicate: (item: CanvasItem) => boolean
+): CanvasItem[] {
+  return items.filter(predicate);
+}
+
+function buildDynamicsBrief(input: GenerateBriefInput): GenerateBriefResult {
+  const all = input.activeCanvasItems;
+  const byContent = (content: string) => all.find((item) => item.content.trim() === content.trim()) ?? null;
+
+  const situationItems = [
+    byContent("El contrato con el proveedor venció el 31/10/2026."),
+    byContent("El proveedor continúa únicamente hasta finalizar el proyecto actual.")
+  ].filter((item): item is CanvasItem => Boolean(item));
+
+  const exposureItem = byContent("Actualmente no pueden iniciarse nuevos proyectos ni tareas.");
+  const impactItem =
+    byContent("Nuevas necesidades de mantenimiento correctivo y evolutivo podrían quedar sin capacidad externa.") ??
+    all.find((item) => item.dimension === "IMPACT" && item.validationStatus !== "REJECTED") ??
+    null;
+  const evidenceItem = byContent(
+    "El proceso de Compras puede demorar aproximadamente entre 1 y 6 meses según conocimiento aportado por el usuario."
+  );
+  const uncertaintyOne = byContent("No conocemos cuándo termina exactamente el proyecto actual.");
+  const uncertaintyTwo = byContent("No conocemos la demanda de nuevos trabajos durante los próximos meses.");
+  const alternativeItem = byContent("Una prórroga contractual podría ser una alternativa, pero su viabilidad no está confirmada.");
+  const interventionItem = byContent(
+    "Necesito que mi superior consulte con Compras qué alternativas contractuales son viables y cuáles son sus plazos."
+  );
+
+  const unresolvedWarning = input.openWarnings.find((warning) => /prórroga contractual/i.test(warning.message));
+
+  const missingLimit = "No hay información suficiente para completar esta sección.";
+
+  const sectionSources = {
+    situation: situationItems.map((item) => item.id),
+    whyItMatters: exposureItem ? [exposureItem.id] : [],
+    possibleImpacts: impactItem ? [impactItem.id] : [],
+    evidence: evidenceItem ? [evidenceItem.id] : [],
+    uncertainties: [uncertaintyOne?.id, uncertaintyTwo?.id].filter((id): id is string => Boolean(id)),
+    scenariosAndAlternatives: alternativeItem ? [alternativeItem.id] : [],
+    requiredIntervention: interventionItem ? [interventionItem.id] : []
+  };
+
+  return {
+    id: `dw-brief-${input.caseId}-${Date.now()}`,
+    caseId: input.caseId,
+    version: 1,
+    status: "GENERATED",
+    executive: {
+      situation: {
+        content:
+          situationItems.length > 0
+            ? "El contrato con el proveedor venció el 31/10/2026. El proveedor continúa únicamente hasta finalizar el proyecto actual."
+            : missingLimit,
+        sourceItemIds: sectionSources.situation,
+        hasSufficientInformation: situationItems.length > 0,
+        limitations: situationItems.length > 0 ? [] : [missingLimit]
+      },
+      whyItMatters: {
+        content:
+          exposureItem
+            ? "Actualmente no pueden iniciarse nuevos proyectos ni tareas. Esta restricción expone la capacidad de atender nuevas necesidades sobre las soluciones."
+            : missingLimit,
+        sourceItemIds: sectionSources.whyItMatters,
+        hasSufficientInformation: Boolean(exposureItem),
+        limitations: exposureItem ? [] : [missingLimit]
+      },
+      possibleImpacts: {
+        content: impactItem ? impactItem.content : missingLimit,
+        sourceItemIds: sectionSources.possibleImpacts,
+        hasSufficientInformation: Boolean(impactItem),
+        limitations: impactItem ? [] : [missingLimit]
+      },
+      evidence: {
+        content: evidenceItem
+          ? "El proceso de Compras puede demorar aproximadamente entre 1 y 6 meses, según conocimiento aportado por el usuario."
+          : missingLimit,
+        sourceItemIds: sectionSources.evidence,
+        hasSufficientInformation: Boolean(evidenceItem),
+        limitations: evidenceItem ? [] : [missingLimit]
+      },
+      uncertainties: {
+        content:
+          uncertaintyOne && uncertaintyTwo
+            ? "No se conoce cuándo termina exactamente el proyecto actual ni cuál será la demanda de nuevos trabajos durante los próximos meses."
+            : missingLimit,
+        sourceItemIds: sectionSources.uncertainties,
+        hasSufficientInformation: Boolean(uncertaintyOne && uncertaintyTwo),
+        limitations: uncertaintyOne && uncertaintyTwo ? [] : [missingLimit]
+      },
+      scenariosAndAlternatives: {
+        content: alternativeItem
+          ? "Una prórroga contractual podría ser una alternativa, pero su viabilidad no está confirmada."
+          : "No identificados con la evidencia disponible.",
+        sourceItemIds: sectionSources.scenariosAndAlternatives,
+        hasSufficientInformation: Boolean(alternativeItem),
+        limitations: alternativeItem
+          ? unresolvedWarning
+            ? [unresolvedWarning.message]
+            : []
+          : ["No se identificaron escenarios o alternativas válidas."]
+      },
+      severity: {
+        value: input.humanSeverityAssessment.severity,
+        label: HUMAN_SEVERITY_LABELS[input.humanSeverityAssessment.severity],
+        rationale: input.humanSeverityAssessment.rationale ?? null,
+        assessedBy: "USER",
+        assessedAt: input.humanSeverityAssessment.assessedAt ?? nowIso(),
+        notice: "Evaluación realizada por el usuario."
+      },
+      requiredIntervention: {
+        content: interventionItem
+          ? "Se necesita que el superior consulte con Compras qué alternativas contractuales son viables y cuáles son sus plazos."
+          : missingLimit,
+        sourceItemIds: sectionSources.requiredIntervention,
+        hasSufficientInformation: Boolean(interventionItem),
+        limitations: interventionItem ? [] : [missingLimit]
+      }
+    },
+    expanded: {
+      facts: pickItemsBy(all, (item) => item.epistemicType === "FACT").map(toExpandedItem),
+      inferences: pickItemsBy(all, (item) => item.epistemicType === "INFERENCE").map(toExpandedItem),
+      assumptions: pickItemsBy(all, (item) => item.epistemicType === "ASSUMPTION").map(toExpandedItem),
+      missingInformation: pickItemsBy(all, (item) => item.epistemicType === "MISSING_INFORMATION").map(toExpandedItem),
+      humanEvaluations: pickItemsBy(all, (item) => item.epistemicType === "HUMAN_EVALUATION").map(toExpandedItem),
+      evidenceItems: pickItemsBy(all, (item) => item.dimension === "EVIDENCE").map(toExpandedItem),
+      openWarnings: input.openWarnings.map((warning) => ({
+        id: warning.id,
+        title: warning.title,
+        message: warning.message,
+        relatedItemIds: warning.relatedItemIds
+      })),
+      resolvedFindings: input.completedCriticalReview.findings
+        .filter((finding) => finding.status !== "OPEN")
+        .map((finding) => ({
+          id: finding.id,
+          title: finding.title,
+          resolution: finding.status,
+          relatedItemIds: finding.relatedItemIds
+        })),
+      sources: evidenceItem ? [evidenceItem.content] : [],
+      generationLimitations: [
+        "No se inventaron hechos, cifras, fechas ni fuentes fuera del canvas validado.",
+        ...(unresolvedWarning ? [unresolvedWarning.message] : [])
+      ]
+    },
+    traceability: {
+      sectionSources,
+      severityAssessmentRef: `${input.caseId}:${input.humanSeverityAssessment.assessedAt ?? "unknown"}`,
+      criticalReviewId: input.completedCriticalReview.reviewId,
+      generatedFromCanvasUpdatedAt: all.reduce(
+        (max, item) => (new Date(item.updatedAt).getTime() > new Date(max).getTime() ? item.updatedAt : max),
+        all[0]?.updatedAt ?? nowIso()
+      ),
+      generationProvider: "MockAIProvider",
+      generationTimestamp: nowIso(),
+      editedSections: []
+    },
+    generatedBy: "AI",
+    reviewedByUser: false,
+    createdAt: nowIso(),
+    updatedAt: nowIso(),
+    reviewedAt: null
+  };
+}
+
 export class MockAIProvider implements AIProvider {
   async analyzeNarrative(input: AnalyzeNarrativeInput): Promise<AnalyzeNarrativeResult> {
     trackAIInvocation("analyzeNarrative");
@@ -430,7 +830,10 @@ export class MockAIProvider implements AIProvider {
 
   async generateBrief(input: GenerateBriefInput): Promise<GenerateBriefResult> {
     trackAIInvocation("generateBrief");
-    parseGenerateBriefInput(input);
-    return parseGenerateBriefResult({ executiveSummary: "", expandedSummary: "" });
+    const parsed = parseGenerateBriefInput(input);
+
+    const brief = hasDynamicsSignature(parsed) ? buildDynamicsBrief(parsed) : buildGeneralBrief(parsed);
+
+    return parseGenerateBriefResult(brief);
   }
 }

@@ -19,6 +19,7 @@ import { getCriticalReview, isCriticalReviewComplete } from "../../providers/sto
 import { getHumanSeverityAssessment } from "../../providers/storage/humanSeverityStorage";
 import { HumanSeverityPanel, mapMissingCoverageLabels } from "../canvas/HumanSeverityPanel";
 import { CanvasPage } from "../canvas/canvas-page";
+import { BriefWorkspace } from "../brief/BriefWorkspace";
 import { CriticalReviewPanel } from "../review/CriticalReviewPanel";
 import { CaseForm } from "./CaseForm";
 import { CaseStatusControl } from "./CaseStatusControl";
@@ -44,6 +45,7 @@ export function InboxPage({ aiProvider }: Props) {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [selectedCaseId, setSelectedCaseId] = useState<string | null>(null);
   const [selectedCaseItems, setSelectedCaseItems] = useState<CanvasItem[]>([]);
+  const [briefError, setBriefError] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("inbox");
 
   const refresh = () => {
@@ -87,6 +89,8 @@ export function InboxPage({ aiProvider }: Props) {
       selectedCase.status === "HUMAN_EVALUATION" ||
       (selectedCase.status === "CRITICAL_REVIEW" && criticalReviewComplete) ||
       selectedCase.status === "BRIEF_DRAFT";
+
+    const shouldRenderBriefWorkspace = selectedCase.status === "BRIEF_DRAFT";
 
     return (
       <section>
@@ -179,6 +183,29 @@ export function InboxPage({ aiProvider }: Props) {
             }}
           />
         ) : null}
+
+        {shouldRenderBriefWorkspace ? (
+          <BriefWorkspace
+            decisionCase={selectedCase}
+            items={selectedCaseItems}
+            hasMinimumCoverage={coverage.hasMinimumCoverage}
+            criticalReviewComplete={criticalReviewComplete}
+            review={review}
+            openBlockers={openBlockers}
+            openWarnings={openWarnings}
+            severityAssessment={severityAssessment}
+            provider={provider}
+            onBriefSaved={() => {
+              setBriefError(null);
+              refresh();
+            }}
+            onError={(message) => {
+              setBriefError(message);
+            }}
+          />
+        ) : null}
+
+        {briefError ? <p role="alert">{briefError}</p> : null}
 
         <button
           type="button"

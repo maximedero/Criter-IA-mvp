@@ -2,6 +2,7 @@ import type { CanvasItem } from "../../domain/models/CanvasItem";
 import { CASE_STATUS_LABELS, type CaseStatus, type HumanSeverity } from "../../domain/models/CaseStatus";
 import { COVERAGE_DIMENSION_LABELS } from "../../domain/models/CoverageResult";
 import { evaluateMinimumCoverage } from "../../domain/rules/coverageRules";
+import { getBriefRecord } from "../../providers/storage/briefStorage";
 import { canTransition } from "../../domain/workflow/caseStateMachine";
 import { canAdvanceToHumanEvaluation } from "../../domain/workflow/humanSeverityWorkflow";
 
@@ -52,12 +53,15 @@ export function CaseStatusControl({
   }
 
   if (status === "BRIEF_DRAFT") {
+    const hasBrief = getBriefRecord(items[0]?.caseId ?? "").current !== null;
+
     return (
       <section>
         <p>
           <strong>Estado:</strong> {CASE_STATUS_LABELS[status]}
         </p>
         <p>El caso está listo para preparar el brief.</p>
+        <p>{hasBrief ? "Existe un borrador de brief disponible para revisión." : "Todavía no hay un brief generado."}</p>
       </section>
     );
   }

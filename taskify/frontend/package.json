@@ -17,7 +17,10 @@
     "test:e2e:slice5": "playwright test tests/e2e/slice5-dynamics-mock-ai.spec.ts",
     "test:e2e:slice6": "playwright test tests/e2e/slice6-dynamics-contextual-assistance.spec.ts",
     "test:e2e:slice7": "playwright test tests/e2e/slice7-dynamics-critical-review.spec.ts",
-    "test:e2e:slice8": "playwright test tests/e2e/slice8-human-severity.spec.ts"
+    "test:e2e:slice8": "playwright test tests/e2e/slice8-human-severity.spec.ts",
+    "test:e2e:slice9": "playwright test tests/e2e/slice9-decision-brief.spec.ts",
+    "test:e2e:slice9:stale": "playwright test tests/e2e/slice9-decision-brief-stale.spec.ts",
+    "test:e2e:slice9:preconditions": "playwright test tests/e2e/slice9-decision-brief-preconditions.spec.ts"
   },
   "dependencies": {
     "react": "^18.3.1",

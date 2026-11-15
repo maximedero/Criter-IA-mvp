@@ -1,18 +1,11 @@
+import type { AISuggestionSource, CanvasDimension, CanvasItem, EpistemicType } from "../../domain/models/CanvasItem";
+import type { DynamicQuestion, SuggestNextQuestionInput, SuggestNextQuestionResult } from "../../domain/models/ContextualQuestion";
+import type { ReviewCaseInput, ReviewCaseResult } from "../../domain/models/CriticalReview";
 import type {
-  AISuggestionSource,
-  CanvasDimension,
-  CanvasItem,
-  EpistemicType
-} from "../../domain/models/CanvasItem";
-import type {
-  DynamicQuestion,
-  SuggestNextQuestionInput,
-  SuggestNextQuestionResult
-} from "../../domain/models/ContextualQuestion";
-import type {
-  ReviewCaseInput,
-  ReviewCaseResult
-} from "../../domain/models/CriticalReview";
+  DecisionBrief,
+  GenerateBriefInput as DomainGenerateBriefInput,
+  GenerateBriefResult as DomainGenerateBriefResult
+} from "../../domain/models/DecisionBrief";
 
 export type AnalyzeNarrativeInput = {
   caseId: string;
@@ -34,18 +27,10 @@ export type AnalyzeNarrativeResult = {
 };
 
 export type { SuggestNextQuestionInput, SuggestNextQuestionResult, DynamicQuestion };
-
 export type { ReviewCaseInput, ReviewCaseResult };
-
-export type GenerateBriefInput = {
-  caseId: string;
-  items: CanvasItem[];
-};
-
-export type GenerateBriefResult = {
-  executiveSummary: string;
-  expandedSummary: string;
-};
+export type GenerateBriefInput = DomainGenerateBriefInput;
+export type GenerateBriefResult = DomainGenerateBriefResult;
+export type { DecisionBrief };
 
 export interface AIProvider {
   analyzeNarrative(input: AnalyzeNarrativeInput): Promise<AnalyzeNarrativeResult>;

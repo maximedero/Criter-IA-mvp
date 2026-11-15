@@ -1,3 +1,5 @@
+export * from "./aiSchemas";
+
 export type ValidationModule = {
   name: "validation";
 };

@@ -44,6 +44,9 @@ export function listCanvasItemsByCase(caseId) {
     return [...(map[safeCaseId] ?? [])].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
 }
 export function createCanvasItem(input) {
+    return createCanvasItemWithMetadata(input, undefined);
+}
+export function createCanvasItemWithMetadata(input, options) {
     const caseId = assertCaseId(input.caseId);
     const content = assertContent(input.content);
     if (!isValidCanvasDimension(input.dimension)) {
@@ -60,8 +63,9 @@ export function createCanvasItem(input) {
         dimension: input.dimension,
         content,
         epistemicType: input.epistemicType,
-        origin: "USER",
-        validationStatus: "VALIDATED",
+        origin: options?.origin ?? "USER",
+        validationStatus: options?.validationStatus ?? "VALIDATED",
+        aiSuggestion: options?.aiSuggestion,
         createdAt: now,
         updatedAt: now
     };
@@ -71,6 +75,9 @@ export function createCanvasItem(input) {
     return created;
 }
 export function updateCanvasItem(caseId, itemId, input) {
+    return updateCanvasItemWithMetadata(caseId, itemId, input, undefined);
+}
+export function updateCanvasItemWithMetadata(caseId, itemId, input, options) {
     const safeCaseId = assertCaseId(caseId);
     const safeItemId = itemId.trim();
     const content = assertContent(input.content);
@@ -91,7 +98,7 @@ export function updateCanvasItem(caseId, itemId, input) {
         ...current,
         content,
         epistemicType: input.epistemicType,
-        validationStatus: "EDITED",
+        validationStatus: options?.validationStatus ?? "EDITED",
         updatedAt: new Date().toISOString()
     };
     const next = [...list];

@@ -3,3 +3,4 @@ export const foundationStorageProviderContract = {
 };
 export * from "./casesStorage";
 export * from "./canvasStorage";
+export * from "./aiSessionStorage";

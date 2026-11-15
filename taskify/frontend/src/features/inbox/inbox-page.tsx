@@ -3,6 +3,7 @@ import type { CanvasItem } from "../../domain/models/CanvasItem";
 import { CASE_STATUS_LABELS } from "../../domain/models/CaseStatus";
 import type { DecisionCase } from "../../domain/models/DecisionCase";
 import { canTransition } from "../../domain/workflow/caseStateMachine";
+import type { AIProvider } from "../../providers/ai";
 import { listCanvasItemsByCase } from "../../providers/storage/canvasStorage";
 import {
   createDecisionCase,
@@ -16,6 +17,10 @@ import { CaseStatusControl } from "./CaseStatusControl";
 
 type ViewMode = "inbox" | "detail";
 
+type Props = {
+  aiProvider?: AIProvider;
+};
+
 function formatUpdatedAt(value: string): string {
   return new Date(value).toLocaleString("es-AR", {
     year: "numeric",
@@ -26,7 +31,7 @@ function formatUpdatedAt(value: string): string {
   });
 }
 
-export function InboxPage() {
+export function InboxPage({ aiProvider }: Props) {
   const [items, setItems] = useState<DecisionCase[]>([]);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [selectedCaseId, setSelectedCaseId] = useState<string | null>(null);
@@ -79,6 +84,9 @@ export function InboxPage() {
 
         <CanvasPage
           caseId={selectedCase.id}
+          initialNarrative={selectedCase.initialNarrative}
+          caseStatus={selectedCase.status}
+          aiProvider={aiProvider}
           onItemsChange={(nextItems) => {
             setSelectedCaseItems(nextItems);
 

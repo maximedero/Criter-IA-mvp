@@ -28,6 +28,7 @@ export const EPISTEMIC_TYPE_LABELS = {
 };
 export const ORIGINS = ["USER", "AI"];
 export const VALIDATION_STATUSES = ["PENDING", "VALIDATED", "EDITED", "REJECTED"];
+export const AI_SUGGESTION_SOURCES = ["INITIAL_NARRATIVE"];
 export function isValidCanvasDimension(value) {
     return CANVAS_DIMENSIONS.includes(value);
 }

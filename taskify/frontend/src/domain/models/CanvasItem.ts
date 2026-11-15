@@ -40,6 +40,16 @@ export type CanvasItemOrigin = (typeof ORIGINS)[number];
 export const VALIDATION_STATUSES = ["PENDING", "VALIDATED", "EDITED", "REJECTED"] as const;
 export type CanvasItemValidationStatus = (typeof VALIDATION_STATUSES)[number];
 
+export const AI_SUGGESTION_SOURCES = ["INITIAL_NARRATIVE"] as const;
+export type AISuggestionSource = (typeof AI_SUGGESTION_SOURCES)[number];
+
+export type AISuggestionMetadata = {
+  suggestionId: string;
+  rationale: string;
+  source: AISuggestionSource;
+  originalContent: string;
+};
+
 export type CanvasItem = {
   id: string;
   caseId: string;
@@ -48,6 +58,7 @@ export type CanvasItem = {
   epistemicType: EpistemicType;
   origin: CanvasItemOrigin;
   validationStatus: CanvasItemValidationStatus;
+  aiSuggestion?: AISuggestionMetadata;
   createdAt: string;
   updatedAt: string;
 };

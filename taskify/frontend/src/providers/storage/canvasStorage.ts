@@ -1,4 +1,5 @@
 import {
+  type AISuggestionMetadata,
   type CanvasItem,
   type CreateCanvasItemInput,
   type UpdateCanvasItemInput,
@@ -67,6 +68,16 @@ export function listCanvasItemsByCase(caseId: string): CanvasItem[] {
 }
 
 export function createCanvasItem(input: CreateCanvasItemInput): CanvasItem {
+  return createCanvasItemWithMetadata(input, undefined);
+}
+
+type CreateCanvasItemOptions = {
+  origin?: CanvasItem["origin"];
+  validationStatus?: CanvasItem["validationStatus"];
+  aiSuggestion?: AISuggestionMetadata;
+};
+
+export function createCanvasItemWithMetadata(input: CreateCanvasItemInput, options?: CreateCanvasItemOptions): CanvasItem {
   const caseId = assertCaseId(input.caseId);
   const content = assertContent(input.content);
 
@@ -87,8 +98,9 @@ export function createCanvasItem(input: CreateCanvasItemInput): CanvasItem {
     dimension: input.dimension,
     content,
     epistemicType: input.epistemicType,
-    origin: "USER",
-    validationStatus: "VALIDATED",
+    origin: options?.origin ?? "USER",
+    validationStatus: options?.validationStatus ?? "VALIDATED",
+    aiSuggestion: options?.aiSuggestion,
     createdAt: now,
     updatedAt: now
   };
@@ -101,7 +113,20 @@ export function createCanvasItem(input: CreateCanvasItemInput): CanvasItem {
   return created;
 }
 
+type UpdateCanvasItemOptions = {
+  validationStatus?: CanvasItem["validationStatus"];
+};
+
 export function updateCanvasItem(caseId: string, itemId: string, input: UpdateCanvasItemInput): CanvasItem {
+  return updateCanvasItemWithMetadata(caseId, itemId, input, undefined);
+}
+
+export function updateCanvasItemWithMetadata(
+  caseId: string,
+  itemId: string,
+  input: UpdateCanvasItemInput,
+  options?: UpdateCanvasItemOptions
+): CanvasItem {
   const safeCaseId = assertCaseId(caseId);
   const safeItemId = itemId.trim();
   const content = assertContent(input.content);
@@ -127,7 +152,7 @@ export function updateCanvasItem(caseId: string, itemId: string, input: UpdateCa
     ...current,
     content,
     epistemicType: input.epistemicType,
-    validationStatus: "EDITED",
+    validationStatus: options?.validationStatus ?? "EDITED",
     updatedAt: new Date().toISOString()
   };
 

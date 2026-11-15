@@ -9,6 +9,10 @@ import type {
   SuggestNextQuestionInput,
   SuggestNextQuestionResult
 } from "../../domain/models/ContextualQuestion";
+import type {
+  ReviewCaseInput,
+  ReviewCaseResult
+} from "../../domain/models/CriticalReview";
 
 export type AnalyzeNarrativeInput = {
   caseId: string;
@@ -31,18 +35,7 @@ export type AnalyzeNarrativeResult = {
 
 export type { SuggestNextQuestionInput, SuggestNextQuestionResult, DynamicQuestion };
 
-export type ReviewCaseInput = {
-  caseId: string;
-  items: CanvasItem[];
-};
-
-export type ReviewCaseResult = {
-  findings: {
-    id: string;
-    level: "CRITICAL" | "WARNING";
-    message: string;
-  }[];
-};
+export type { ReviewCaseInput, ReviewCaseResult };
 
 export type GenerateBriefInput = {
   caseId: string;

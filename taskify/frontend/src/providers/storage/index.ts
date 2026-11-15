@@ -9,3 +9,4 @@ export const foundationStorageProviderContract: StorageProvider = {
 export * from "./casesStorage";
 export * from "./canvasStorage";
 export * from "./aiSessionStorage";
+export * from "./criticalReviewStorage";

@@ -10,6 +10,7 @@ import type {
   SuggestNextQuestionInput,
   SuggestNextQuestionResult
 } from "./AIProvider";
+import type { ReviewFinding } from "../../domain/models/CriticalReview";
 import {
   parseAnalyzeNarrativeInput,
   parseAnalyzeNarrativeResult,
@@ -116,6 +117,115 @@ const DYNAMICS_QUESTIONS: Record<string, DynamicQuestion> = {
 
 function normalizeNarrative(value: string): string {
   return value.trim().replace(/\s+/g, " ");
+}
+
+function isDynamicsReviewFixture(input: ReviewCaseInput): boolean {
+  const normalized = normalizeNarrative(input.initialNarrative);
+  if (normalized !== DYNAMICS_NARRATIVE) {
+    return false;
+  }
+
+  if (input.currentCaseStatus !== "CRITICAL_REVIEW") {
+    return false;
+  }
+
+  return true;
+}
+
+function findItemIdByContent(items: ReviewCaseInput["currentItems"], content: string): string | null {
+  const found = items.find((item) => item.content.trim() === content.trim() && item.validationStatus !== "REJECTED");
+  return found?.id ?? null;
+}
+
+function hasStrongIntervention(items: ReviewCaseInput["currentItems"]): boolean {
+  return items.some(
+    (item) =>
+      item.dimension === "INTERVENTION" &&
+      (item.validationStatus === "VALIDATED" || item.validationStatus === "EDITED") &&
+      /consulte|decida|priorice|autorice|escale/i.test(item.content)
+  );
+}
+
+function buildDynamicsFindings(input: ReviewCaseInput): ReviewFinding[] {
+  const findings: ReviewFinding[] = [];
+
+  const contextExpiryId = findItemIdByContent(input.currentItems, "El contrato con el proveedor venció el 31/10/2026.");
+  const contextContinuityId = findItemIdByContent(
+    input.currentItems,
+    "El proveedor continúa trabajando hasta finalizar el proyecto actualmente en curso."
+  );
+
+  if (contextExpiryId && contextContinuityId) {
+    findings.push({
+      id: "dw-review-dyn-1",
+      type: "POTENTIAL_CONTRADICTION",
+      level: "WARNING",
+      title: "Vencimiento y continuidad requieren aclaración",
+      message:
+        "El caso registra un vencimiento contractual y, al mismo tiempo, continuidad del proveedor durante el proyecto actual. Aclarar si se trata de un vencimiento formal con una continuidad transitoria.",
+      relatedItemIds: [contextExpiryId, contextContinuityId],
+      rationale: "La coexistencia de ambas afirmaciones requiere precisión contextual para evitar ambigüedad en el brief.",
+      suggestedHumanAction: "Aclarar la relación entre ambas afirmaciones sin eliminar ninguna automáticamente.",
+      status: "OPEN"
+    });
+  }
+
+  const impact200Id = findItemIdByContent(input.currentItems, "200 usuarios quedarán sin servicio.");
+  const hasRelatedEvidence = input.currentItems.some(
+    (item) =>
+      item.dimension === "EVIDENCE" &&
+      (item.validationStatus === "VALIDATED" || item.validationStatus === "EDITED") &&
+      /(200|usuarios|sin servicio)/i.test(item.content)
+  );
+
+  if (impact200Id && !hasRelatedEvidence) {
+    findings.push({
+      id: "dw-review-dyn-2",
+      type: "UNSUPPORTED_CLAIM",
+      level: "BLOCKER",
+      title: "Impacto cuantitativo sin sustento suficiente",
+      message:
+        "La afirmación de que 200 usuarios quedarán sin servicio es material para el análisis y no tiene evidencia relacionada suficiente en el caso.",
+      relatedItemIds: [impact200Id],
+      rationale: "Una cifra material sin sustento verificable puede volver engañosa la comunicación del impacto.",
+      suggestedHumanAction: "Aportar evidencia, corregir la cifra o reclasificar la afirmación según corresponda.",
+      status: "OPEN"
+    });
+  }
+
+  const alternativeAssumptionId = findItemIdByContent(input.currentItems, "Una prórroga contractual podría ser una alternativa.");
+  if (alternativeAssumptionId) {
+    findings.push({
+      id: "dw-review-dyn-3",
+      type: "HIDDEN_ASSUMPTION",
+      level: "WARNING",
+      title: "Alternativa todavía no confirmada",
+      message:
+        "La prórroga aparece como una alternativa posible, pero su viabilidad todavía no está confirmada.",
+      relatedItemIds: [alternativeAssumptionId],
+      rationale: "La alternativa se presenta como supuesto válido pero requiere contraste adicional para fortalecer el análisis.",
+      suggestedHumanAction: "Mantener visible el supuesto o incorporar información de Compras cuando esté disponible.",
+      status: "OPEN"
+    });
+  }
+
+  const weakInterventionId = findItemIdByContent(input.currentItems, "Que mi jefe vea el tema.");
+  if (weakInterventionId && !hasStrongIntervention(input.currentItems)) {
+    findings.push({
+      id: "dw-review-dyn-4",
+      type: "INTERVENTION_NOT_ACTIONABLE",
+      level: "BLOCKER",
+      title: "Intervención requerida poco accionable",
+      message: "No está claro qué intervención concreta se necesita del nivel superior.",
+      relatedItemIds: [weakInterventionId],
+      rationale: "Una intervención indefinida impide convertir el análisis en pedido accionable hacia arriba.",
+      suggestedHumanAction:
+        "Definir si se necesita una consulta, decisión, priorización, autorización, recurso o escalamiento.",
+      status: "OPEN"
+    });
+  }
+
+  return findings;
 }
 
 export class MockAIProvider implements AIProvider {
@@ -242,8 +352,35 @@ export class MockAIProvider implements AIProvider {
   }
 
   async reviewCase(input: ReviewCaseInput): Promise<ReviewCaseResult> {
-    parseReviewCaseInput(input);
-    return parseReviewCaseResult({ findings: [] });
+    const parsed = parseReviewCaseInput(input);
+
+    if (!isDynamicsReviewFixture(parsed)) {
+      return parseReviewCaseResult({
+        reviewId: `dw-review-${parsed.caseId}-none`,
+        findings: [],
+        summary: {
+          totalFindings: 0,
+          openBlockers: 0,
+          openWarnings: 0,
+          resolvedFindings: 0
+        },
+        canCompleteReview: true
+      });
+    }
+
+    const findings = buildDynamicsFindings(parsed);
+
+    return parseReviewCaseResult({
+      reviewId: `dw-review-${parsed.caseId}-dynamics-v1`,
+      findings,
+      summary: {
+        totalFindings: findings.length,
+        openBlockers: findings.filter((item) => item.level === "BLOCKER").length,
+        openWarnings: findings.filter((item) => item.level === "WARNING").length,
+        resolvedFindings: 0
+      },
+      canCompleteReview: findings.every((item) => item.level !== "BLOCKER")
+    });
   }
 
   async generateBrief(input: GenerateBriefInput): Promise<GenerateBriefResult> {

@@ -2,9 +2,11 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useEffect, useMemo, useState } from "react";
 import { CASE_STATUS_LABELS } from "../../domain/models/CaseStatus";
 import { canTransition } from "../../domain/workflow/caseStateMachine";
+import { MockAIProvider } from "../../providers/ai";
 import { listCanvasItemsByCase } from "../../providers/storage/canvasStorage";
 import { createDecisionCase, getDecisionCaseById, listDecisionCases, updateDecisionCaseStatus } from "../../providers/storage/casesStorage";
 import { CanvasPage } from "../canvas/canvas-page";
+import { CriticalReviewPanel } from "../review/CriticalReviewPanel";
 import { CaseForm } from "./CaseForm";
 import { CaseStatusControl } from "./CaseStatusControl";
 function formatUpdatedAt(value) {
@@ -32,6 +34,7 @@ export function InboxPage({ aiProvider }) {
     useEffect(() => {
         refresh();
     }, []);
+    const provider = useMemo(() => aiProvider ?? new MockAIProvider(), [aiProvider]);
     const selectedCase = useMemo(() => {
         if (!selectedCaseId) {
             return null;
@@ -42,7 +45,7 @@ export function InboxPage({ aiProvider }) {
         return (_jsxs("section", { children: [_jsx("h2", { children: "Detalle de caso" }), _jsxs("p", { children: [_jsx("strong", { children: "T\u00EDtulo:" }), " ", selectedCase.title] }), _jsxs("p", { children: [_jsx("strong", { children: "Estado:" }), " ", CASE_STATUS_LABELS[selectedCase.status]] }), _jsxs("p", { children: [_jsx("strong", { children: "Relato inicial:" }), " ", selectedCase.initialNarrative] }), _jsx(CaseStatusControl, { status: selectedCase.status, items: selectedCaseItems, onStatusChange: (status) => {
                         updateDecisionCaseStatus(selectedCase.id, status);
                         refresh();
-                    } }), _jsx(CanvasPage, { caseId: selectedCase.id, initialNarrative: selectedCase.initialNarrative, caseStatus: selectedCase.status, aiProvider: aiProvider, onItemsChange: (nextItems) => {
+                    } }), _jsx(CanvasPage, { caseId: selectedCase.id, initialNarrative: selectedCase.initialNarrative, caseStatus: selectedCase.status, aiProvider: provider, onItemsChange: (nextItems) => {
                         setSelectedCaseItems(nextItems);
                         if (selectedCase.status === "DRAFT") {
                             const hasUserValidatedOrEditedItem = nextItems.some((item) => item.origin === "USER" && (item.validationStatus === "VALIDATED" || item.validationStatus === "EDITED"));
@@ -62,7 +65,7 @@ export function InboxPage({ aiProvider }) {
                                 refresh();
                             }
                         }
-                    } }), _jsx("button", { type: "button", onClick: () => {
+                    } }), _jsx(CriticalReviewPanel, { caseId: selectedCase.id, initialNarrative: selectedCase.initialNarrative, caseStatus: selectedCase.status, items: selectedCaseItems, provider: provider, onItemsUpdated: refresh }), _jsx("button", { type: "button", onClick: () => {
                         setViewMode("inbox");
                         refresh();
                     }, children: "Volver al Inbox" })] }));

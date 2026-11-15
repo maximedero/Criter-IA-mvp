@@ -1,4 +1,10 @@
 import { z } from "zod";
+import {
+  CRITICAL_REVIEW_STATUSES,
+  REVIEW_FINDING_LEVELS,
+  REVIEW_FINDING_STATUSES,
+  REVIEW_FINDING_TYPES
+} from "../domain/models/CriticalReview";
 
 const CANVAS_DIMENSIONS = [
   "CONTEXT",
@@ -156,20 +162,68 @@ export const suggestNextQuestionResultSchema = z
     }
   });
 
-export const reviewCaseInputSchema = z.object({
-  caseId: z.string().min(1),
-  items: z.array(canvasItemSchema)
+export const reviewFindingTypeSchema = z.enum(REVIEW_FINDING_TYPES);
+export const reviewFindingLevelSchema = z.enum(REVIEW_FINDING_LEVELS);
+export const reviewFindingStatusSchema = z.enum(REVIEW_FINDING_STATUSES);
+export const criticalReviewStatusSchema = z.enum(CRITICAL_REVIEW_STATUSES);
+
+export const reviewSummarySchema = z.object({
+  totalFindings: z.number().int().min(0),
+  openBlockers: z.number().int().min(0),
+  openWarnings: z.number().int().min(0),
+  resolvedFindings: z.number().int().min(0)
 });
 
-export const reviewCaseResultSchema = z.object({
-  findings: z.array(
-    z.object({
-      id: z.string().min(1),
-      level: z.enum(["CRITICAL", "WARNING"]),
-      message: z.string().min(1)
-    })
-  )
+export const reviewFindingSchema = z.object({
+  id: z.string().min(1),
+  type: reviewFindingTypeSchema,
+  level: reviewFindingLevelSchema,
+  title: z.string().min(1),
+  message: z.string().min(1),
+  relatedItemIds: z.array(z.string().min(1)),
+  rationale: z.string().min(1),
+  suggestedHumanAction: z.string().min(1),
+  status: reviewFindingStatusSchema,
+  clarification: z.string().min(1).optional(),
+  dismissReason: z.string().min(1).optional(),
+  resultingCanvasItemId: z.string().min(1).optional(),
+  resolvedAt: z.string().min(1).optional()
 });
+
+export const reviewCaseInputSchema = z.object({
+  caseId: z.string().min(1),
+  initialNarrative: z.string().min(1),
+  currentItems: z.array(canvasItemSchema),
+  rejectedAiItems: z.array(canvasItemSchema),
+  coverageResult: z.object({
+    coveredDimensions: z.array(z.enum(COVERAGE_DIMENSIONS)),
+    missingDimensions: z.array(z.enum(COVERAGE_DIMENSIONS)),
+    coveredCount: z.number().int().min(0),
+    requiredCount: z.literal(6),
+    hasMinimumCoverage: z.boolean()
+  }),
+  contextualQuestionHistory: z.array(persistedQuestionSchema),
+  currentCaseStatus: z.enum(CASE_STATUSES)
+});
+
+export const reviewCaseResultSchema = z
+  .object({
+    reviewId: z.string().min(1),
+    findings: z.array(reviewFindingSchema),
+    summary: reviewSummarySchema,
+    canCompleteReview: z.boolean()
+  })
+  .superRefine((value, ctx) => {
+    for (const finding of value.findings) {
+      if (finding.status !== "OPEN") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["findings", finding.id, "status"],
+          message: "new review findings must start as OPEN"
+        });
+      }
+    }
+  });
 
 export const generateBriefInputSchema = z.object({
   caseId: z.string().min(1),

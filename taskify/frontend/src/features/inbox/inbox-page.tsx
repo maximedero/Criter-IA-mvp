@@ -4,6 +4,7 @@ import { CASE_STATUS_LABELS } from "../../domain/models/CaseStatus";
 import type { DecisionCase } from "../../domain/models/DecisionCase";
 import { canTransition } from "../../domain/workflow/caseStateMachine";
 import type { AIProvider } from "../../providers/ai";
+import { MockAIProvider } from "../../providers/ai";
 import { listCanvasItemsByCase } from "../../providers/storage/canvasStorage";
 import {
   createDecisionCase,
@@ -12,6 +13,7 @@ import {
   updateDecisionCaseStatus
 } from "../../providers/storage/casesStorage";
 import { CanvasPage } from "../canvas/canvas-page";
+import { CriticalReviewPanel } from "../review/CriticalReviewPanel";
 import { CaseForm } from "./CaseForm";
 import { CaseStatusControl } from "./CaseStatusControl";
 
@@ -51,6 +53,8 @@ export function InboxPage({ aiProvider }: Props) {
     refresh();
   }, []);
 
+  const provider = useMemo(() => aiProvider ?? new MockAIProvider(), [aiProvider]);
+
   const selectedCase = useMemo(() => {
     if (!selectedCaseId) {
       return null;
@@ -86,7 +90,7 @@ export function InboxPage({ aiProvider }: Props) {
           caseId={selectedCase.id}
           initialNarrative={selectedCase.initialNarrative}
           caseStatus={selectedCase.status}
-          aiProvider={aiProvider}
+          aiProvider={provider}
           onItemsChange={(nextItems) => {
             setSelectedCaseItems(nextItems);
 
@@ -113,6 +117,15 @@ export function InboxPage({ aiProvider }: Props) {
               }
             }
           }}
+        />
+
+        <CriticalReviewPanel
+          caseId={selectedCase.id}
+          initialNarrative={selectedCase.initialNarrative}
+          caseStatus={selectedCase.status}
+          items={selectedCaseItems}
+          provider={provider}
+          onItemsUpdated={refresh}
         />
 
         <button

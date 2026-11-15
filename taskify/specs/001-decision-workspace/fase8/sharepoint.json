@@ -1,0 +1,632 @@
+{
+  "caseKey": "sharepoint",
+  "title": "Fase8 SharePoint Nintex",
+  "narrative": "Microsoft informó que en julio de 2026 dejaría de dar soporte a los workflows de SharePoint sobre los que tenemos montadas distintas soluciones que utilizan Nintex Workflow. En 2023 advertimos esta situación y comenzamos una modernización de las soluciones, primero hacia SharePoint Subscription Edition y luego hacia SharePoint Online, porque inicialmente no estaba claro cuál sería el destino tecnológico definitivo. El proyecto de migración hacia SharePoint Subscription Edition se demoró y actualmente todavía existen soluciones en SharePoint 2016 sobre un motor de workflow sin soporte. Sabemos que estamos expuestos, pero no resulta sencillo dimensionar el impacto si alguno de esos workflows deja de funcionar.",
+  "narrativeLength": 717,
+  "explicitDimensions": [
+    "CONTEXT",
+    "EXPOSURE",
+    "EVIDENCE",
+    "IMPACT",
+    "UNCERTAINTY"
+  ],
+  "missingDimensions": [
+    "INTERVENTION"
+  ],
+  "suggestions": {
+    "total": 0,
+    "accepted": 0,
+    "edited": 0,
+    "rejected": 0
+  },
+  "questions": {
+    "total": 0,
+    "answered": 0,
+    "dontKnow": 0,
+    "skipped": 0,
+    "externalResearchStops": 0
+  },
+  "canvas": {
+    "facts": 4,
+    "inferences": 3,
+    "assumptions": 1,
+    "missingInformation": 2,
+    "humanEvaluations": 1
+  },
+  "coverage": {
+    "reachedMinimum": true,
+    "questionsToSixOfSix": 0,
+    "hardestDimension": "EVIDENCE"
+  },
+  "review": {
+    "initialBlockers": 0,
+    "initialWarnings": 0,
+    "resolvedBlockers": 0,
+    "openWarningsAtEnd": 0,
+    "potentialContradictions": 0
+  },
+  "severity": {
+    "selected": "HIGH",
+    "assessedBy": "USER",
+    "aiCallsDuringSeverity": {
+      "analyzeNarrative": 0,
+      "suggestNextQuestion": 0,
+      "reviewCase": 0,
+      "generateBrief": 0
+    }
+  },
+  "brief": {
+    "version": 1,
+    "completeSections": 7,
+    "sectionsWithLimitations": 0,
+    "sectionsWithoutSufficientInformation": 0,
+    "humanEdits": 1,
+    "stale": false
+  },
+  "approval": {
+    "checklistComplete": true,
+    "approvedBy": "USER",
+    "aiCallsDuringApproval": {
+      "analyzeNarrative": 0,
+      "suggestNextQuestion": 0,
+      "reviewCase": 0,
+      "generateBrief": 0
+    },
+    "finalStatus": "READY_TO_ESCALATE"
+  },
+  "guardrails": {
+    "inventedFacts": 0,
+    "inventedFigures": 0,
+    "inventedDates": 0,
+    "inventedSources": 0,
+    "inferencesAsFacts": 0,
+    "hiddenMissingData": 0,
+    "unauthorizedAutoTransitions": 0,
+    "aiHumanDecisions": 0
+  },
+  "artifacts": {
+    "canvas": [
+      {
+        "id": "d0634377-f611-4727-8f23-5dac440c5df4",
+        "caseId": "456b6449-b620-468f-a924-42b69dbacc19",
+        "dimension": "EVIDENCE",
+        "content": "Existe información de referencia interna pendiente de consolidación formal.",
+        "epistemicType": "FACT",
+        "origin": "USER",
+        "validationStatus": "VALIDATED",
+        "createdAt": "2026-11-15T21:22:04.816Z",
+        "updatedAt": "2026-11-15T21:22:04.816Z"
+      },
+      {
+        "id": "159bd01e-50e6-4130-beef-cf94be6b9281",
+        "caseId": "456b6449-b620-468f-a924-42b69dbacc19",
+        "dimension": "IMPACT",
+        "content": "Podrían generarse impactos operativos relevantes si no se gestiona el riesgo a tiempo.",
+        "epistemicType": "INFERENCE",
+        "origin": "USER",
+        "validationStatus": "VALIDATED",
+        "createdAt": "2026-11-15T21:22:04.934Z",
+        "updatedAt": "2026-11-15T21:22:04.934Z"
+      },
+      {
+        "id": "60c096e2-ebc5-4872-a274-ffcfbc78bbec",
+        "caseId": "456b6449-b620-468f-a924-42b69dbacc19",
+        "dimension": "UNCERTAINTY",
+        "content": "Persisten datos faltantes que requieren investigación externa antes de cerrar conclusiones.",
+        "epistemicType": "MISSING_INFORMATION",
+        "origin": "USER",
+        "validationStatus": "VALIDATED",
+        "createdAt": "2026-11-15T21:22:05.017Z",
+        "updatedAt": "2026-11-15T21:22:05.017Z"
+      },
+      {
+        "id": "b869b1a6-e4ad-4858-80db-246437243ae0",
+        "caseId": "456b6449-b620-468f-a924-42b69dbacc19",
+        "dimension": "SCENARIO",
+        "content": "Si un workflow crítico deja de funcionar sin alternativa manual, podría detenerse temporalmente el proceso asociado.",
+        "epistemicType": "INFERENCE",
+        "origin": "USER",
+        "validationStatus": "VALIDATED",
+        "createdAt": "2026-11-15T21:22:05.099Z",
+        "updatedAt": "2026-11-15T21:22:05.099Z"
+      },
+      {
+        "id": "151f97c8-dc7d-427c-b2c9-f859703a263c",
+        "caseId": "456b6449-b620-468f-a924-42b69dbacc19",
+        "dimension": "ALTERNATIVE",
+        "content": "Una alternativa es priorizar primero los workflows con mayor impacto operativo, pero requiere validación del criterio de prioridad.",
+        "epistemicType": "ASSUMPTION",
+        "origin": "USER",
+        "validationStatus": "VALIDATED",
+        "createdAt": "2026-11-15T21:22:05.183Z",
+        "updatedAt": "2026-11-15T21:22:05.183Z"
+      },
+      {
+        "id": "b969dcb6-963e-460c-8ccb-68b207c243e8",
+        "caseId": "456b6449-b620-468f-a924-42b69dbacc19",
+        "dimension": "INTERVENTION",
+        "content": "Solicito patrocinio para completar el relevamiento de dependencias y definir un plan de mitigación de continuidad.",
+        "epistemicType": "HUMAN_EVALUATION",
+        "origin": "USER",
+        "validationStatus": "VALIDATED",
+        "createdAt": "2026-11-15T21:22:05.266Z",
+        "updatedAt": "2026-11-15T21:22:05.266Z"
+      },
+      {
+        "id": "3cba43c1-39b8-4452-b9b2-65b0fca2133c",
+        "caseId": "456b6449-b620-468f-a924-42b69dbacc19",
+        "dimension": "EVIDENCE",
+        "content": "Existe evidencia de referencia interna pendiente de consolidación formal.",
+        "epistemicType": "FACT",
+        "origin": "USER",
+        "validationStatus": "VALIDATED",
+        "createdAt": "2026-11-15T21:22:05.349Z",
+        "updatedAt": "2026-11-15T21:22:05.349Z"
+      },
+      {
+        "id": "932c115d-2262-4ede-9bf4-47fc2c4e72e0",
+        "caseId": "456b6449-b620-468f-a924-42b69dbacc19",
+        "dimension": "IMPACT",
+        "content": "Podrían generarse impactos operativos relevantes si no se gestiona el riesgo a tiempo.",
+        "epistemicType": "INFERENCE",
+        "origin": "USER",
+        "validationStatus": "VALIDATED",
+        "createdAt": "2026-11-15T21:22:05.433Z",
+        "updatedAt": "2026-11-15T21:22:05.433Z"
+      },
+      {
+        "id": "47ec583f-a796-4102-b447-7d26450f6187",
+        "caseId": "456b6449-b620-468f-a924-42b69dbacc19",
+        "dimension": "UNCERTAINTY",
+        "content": "Persisten datos faltantes que requieren investigación externa antes de cerrar conclusiones.",
+        "epistemicType": "MISSING_INFORMATION",
+        "origin": "USER",
+        "validationStatus": "VALIDATED",
+        "createdAt": "2026-11-15T21:22:05.516Z",
+        "updatedAt": "2026-11-15T21:22:05.516Z"
+      },
+      {
+        "id": "4bc32a38-959a-4a3c-935a-21e6a90352c7",
+        "caseId": "456b6449-b620-468f-a924-42b69dbacc19",
+        "dimension": "CONTEXT",
+        "content": "Se confirma una señal de riesgo vigente que requiere análisis estructurado.",
+        "epistemicType": "FACT",
+        "origin": "USER",
+        "validationStatus": "VALIDATED",
+        "createdAt": "2026-11-15T21:22:05.616Z",
+        "updatedAt": "2026-11-15T21:22:05.616Z"
+      },
+      {
+        "id": "f3f3e1e3-6876-46ca-978b-1e4ecfc85876",
+        "caseId": "456b6449-b620-468f-a924-42b69dbacc19",
+        "dimension": "EXPOSURE",
+        "content": "Existe exposición operativa mientras no se complete la mitigación requerida.",
+        "epistemicType": "FACT",
+        "origin": "USER",
+        "validationStatus": "VALIDATED",
+        "createdAt": "2026-11-15T21:22:05.700Z",
+        "updatedAt": "2026-11-15T21:22:05.700Z"
+      }
+    ],
+    "aiSession": {
+      "caseId": "456b6449-b620-468f-a924-42b69dbacc19",
+      "questionCount": 0,
+      "questions": [],
+      "lastStop": {
+        "question": null,
+        "shouldStop": true,
+        "stopReason": "NO_MATERIAL_QUESTION",
+        "remainingMissingDimensions": [
+          "SITUATION",
+          "EXPOSURE",
+          "IMPACT",
+          "EVIDENCE",
+          "UNCERTAINTY",
+          "INTERVENTION"
+        ],
+        "provisionalBriefAllowed": false,
+        "message": "No se identificó otra pregunta material con la información disponible."
+      },
+      "userStopped": false,
+      "updatedAt": "2026-11-15T21:22:04.700Z"
+    },
+    "criticalReview": [
+      {
+        "reviewId": "dw-review-456b6449-b620-468f-a924-42b69dbacc19-none",
+        "caseId": "456b6449-b620-468f-a924-42b69dbacc19",
+        "createdAt": "2026-11-15T21:22:05.769Z",
+        "updatedAt": "2026-11-15T21:22:05.816Z",
+        "findings": [],
+        "summary": {
+          "totalFindings": 0,
+          "openBlockers": 0,
+          "openWarnings": 0,
+          "resolvedFindings": 0
+        },
+        "canCompleteReview": true,
+        "status": "COMPLETED",
+        "completedAt": "2026-11-15T21:22:05.816Z"
+      }
+    ],
+    "severityAssessment": {
+      "caseId": "456b6449-b620-468f-a924-42b69dbacc19",
+      "severity": "HIGH",
+      "assessedBy": "USER",
+      "assessedAt": "2026-11-15T21:22:05.933Z",
+      "updatedAt": "2026-11-15T21:22:05.933Z",
+      "status": "ASSESSED",
+      "rationale": ""
+    },
+    "briefRecord": {
+      "current": {
+        "id": "dw-brief-456b6449-b620-468f-a924-42b69dbacc19-1794777726017",
+        "caseId": "456b6449-b620-468f-a924-42b69dbacc19",
+        "version": 1,
+        "status": "REVIEWED_BY_USER",
+        "executive": {
+          "situation": {
+            "content": "Se confirma una señal de riesgo vigente que requiere análisis estructurado.",
+            "sourceItemIds": [
+              "4bc32a38-959a-4a3c-935a-21e6a90352c7"
+            ],
+            "hasSufficientInformation": true,
+            "limitations": []
+          },
+          "whyItMatters": {
+            "content": "Existe exposición operativa mientras no se complete la mitigación requerida. Se mantiene explícita la incertidumbre relevante.",
+            "sourceItemIds": [
+              "f3f3e1e3-6876-46ca-978b-1e4ecfc85876"
+            ],
+            "hasSufficientInformation": true,
+            "limitations": []
+          },
+          "possibleImpacts": {
+            "content": "Podrían generarse impactos operativos relevantes si no se gestiona el riesgo a tiempo. Podrían generarse impactos operativos relevantes si no se gestiona el riesgo a tiempo.",
+            "sourceItemIds": [
+              "159bd01e-50e6-4130-beef-cf94be6b9281",
+              "932c115d-2262-4ede-9bf4-47fc2c4e72e0"
+            ],
+            "hasSufficientInformation": true,
+            "limitations": []
+          },
+          "evidence": {
+            "content": "Existe información de referencia interna pendiente de consolidación formal. Existe evidencia de referencia interna pendiente de consolidación formal.",
+            "sourceItemIds": [
+              "d0634377-f611-4727-8f23-5dac440c5df4",
+              "3cba43c1-39b8-4452-b9b2-65b0fca2133c"
+            ],
+            "hasSufficientInformation": true,
+            "limitations": []
+          },
+          "uncertainties": {
+            "content": "Persisten datos faltantes que requieren investigación externa antes de cerrar conclusiones. Persisten datos faltantes que requieren investigación externa antes de cerrar conclusiones.",
+            "sourceItemIds": [
+              "60c096e2-ebc5-4872-a274-ffcfbc78bbec",
+              "47ec583f-a796-4102-b447-7d26450f6187"
+            ],
+            "hasSufficientInformation": true,
+            "limitations": []
+          },
+          "scenariosAndAlternatives": {
+            "content": "Si un workflow crítico deja de funcionar sin alternativa manual, podría detenerse temporalmente el proceso asociado. Una alternativa es priorizar primero los workflows con mayor impacto operativo, pero requiere validación del criterio de prioridad.",
+            "sourceItemIds": [
+              "b869b1a6-e4ad-4858-80db-246437243ae0",
+              "151f97c8-dc7d-427c-b2c9-f859703a263c"
+            ],
+            "hasSufficientInformation": true,
+            "limitations": []
+          },
+          "severity": {
+            "value": "HIGH",
+            "label": "Alta",
+            "rationale": "",
+            "assessedBy": "USER",
+            "assessedAt": "2026-11-15T21:22:05.933Z",
+            "notice": "Evaluación realizada por el usuario."
+          },
+          "requiredIntervention": {
+            "content": "Solicito patrocinio para completar el relevamiento de dependencias y definir un plan de mitigación de continuidad.",
+            "sourceItemIds": [
+              "b969dcb6-963e-460c-8ccb-68b207c243e8"
+            ],
+            "hasSufficientInformation": true,
+            "limitations": []
+          }
+        },
+        "expanded": {
+          "facts": [
+            {
+              "itemId": "d0634377-f611-4727-8f23-5dac440c5df4",
+              "dimension": "EVIDENCE",
+              "epistemicType": "FACT",
+              "origin": "USER",
+              "validationStatus": "VALIDATED",
+              "content": "Existe información de referencia interna pendiente de consolidación formal."
+            },
+            {
+              "itemId": "3cba43c1-39b8-4452-b9b2-65b0fca2133c",
+              "dimension": "EVIDENCE",
+              "epistemicType": "FACT",
+              "origin": "USER",
+              "validationStatus": "VALIDATED",
+              "content": "Existe evidencia de referencia interna pendiente de consolidación formal."
+            },
+            {
+              "itemId": "4bc32a38-959a-4a3c-935a-21e6a90352c7",
+              "dimension": "CONTEXT",
+              "epistemicType": "FACT",
+              "origin": "USER",
+              "validationStatus": "VALIDATED",
+              "content": "Se confirma una señal de riesgo vigente que requiere análisis estructurado."
+            },
+            {
+              "itemId": "f3f3e1e3-6876-46ca-978b-1e4ecfc85876",
+              "dimension": "EXPOSURE",
+              "epistemicType": "FACT",
+              "origin": "USER",
+              "validationStatus": "VALIDATED",
+              "content": "Existe exposición operativa mientras no se complete la mitigación requerida."
+            }
+          ],
+          "inferences": [
+            {
+              "itemId": "159bd01e-50e6-4130-beef-cf94be6b9281",
+              "dimension": "IMPACT",
+              "epistemicType": "INFERENCE",
+              "origin": "USER",
+              "validationStatus": "VALIDATED",
+              "content": "Podrían generarse impactos operativos relevantes si no se gestiona el riesgo a tiempo."
+            },
+            {
+              "itemId": "b869b1a6-e4ad-4858-80db-246437243ae0",
+              "dimension": "SCENARIO",
+              "epistemicType": "INFERENCE",
+              "origin": "USER",
+              "validationStatus": "VALIDATED",
+              "content": "Si un workflow crítico deja de funcionar sin alternativa manual, podría detenerse temporalmente el proceso asociado."
+            },
+            {
+              "itemId": "932c115d-2262-4ede-9bf4-47fc2c4e72e0",
+              "dimension": "IMPACT",
+              "epistemicType": "INFERENCE",
+              "origin": "USER",
+              "validationStatus": "VALIDATED",
+              "content": "Podrían generarse impactos operativos relevantes si no se gestiona el riesgo a tiempo."
+            }
+          ],
+          "assumptions": [
+            {
+              "itemId": "151f97c8-dc7d-427c-b2c9-f859703a263c",
+              "dimension": "ALTERNATIVE",
+              "epistemicType": "ASSUMPTION",
+              "origin": "USER",
+              "validationStatus": "VALIDATED",
+              "content": "Una alternativa es priorizar primero los workflows con mayor impacto operativo, pero requiere validación del criterio de prioridad."
+            }
+          ],
+          "missingInformation": [
+            {
+              "itemId": "60c096e2-ebc5-4872-a274-ffcfbc78bbec",
+              "dimension": "UNCERTAINTY",
+              "epistemicType": "MISSING_INFORMATION",
+              "origin": "USER",
+              "validationStatus": "VALIDATED",
+              "content": "Persisten datos faltantes que requieren investigación externa antes de cerrar conclusiones."
+            },
+            {
+              "itemId": "47ec583f-a796-4102-b447-7d26450f6187",
+              "dimension": "UNCERTAINTY",
+              "epistemicType": "MISSING_INFORMATION",
+              "origin": "USER",
+              "validationStatus": "VALIDATED",
+              "content": "Persisten datos faltantes que requieren investigación externa antes de cerrar conclusiones."
+            }
+          ],
+          "humanEvaluations": [
+            {
+              "itemId": "b969dcb6-963e-460c-8ccb-68b207c243e8",
+              "dimension": "INTERVENTION",
+              "epistemicType": "HUMAN_EVALUATION",
+              "origin": "USER",
+              "validationStatus": "VALIDATED",
+              "content": "Solicito patrocinio para completar el relevamiento de dependencias y definir un plan de mitigación de continuidad."
+            }
+          ],
+          "evidenceItems": [
+            {
+              "itemId": "d0634377-f611-4727-8f23-5dac440c5df4",
+              "dimension": "EVIDENCE",
+              "epistemicType": "FACT",
+              "origin": "USER",
+              "validationStatus": "VALIDATED",
+              "content": "Existe información de referencia interna pendiente de consolidación formal."
+            },
+            {
+              "itemId": "3cba43c1-39b8-4452-b9b2-65b0fca2133c",
+              "dimension": "EVIDENCE",
+              "epistemicType": "FACT",
+              "origin": "USER",
+              "validationStatus": "VALIDATED",
+              "content": "Existe evidencia de referencia interna pendiente de consolidación formal."
+            }
+          ],
+          "openWarnings": [],
+          "resolvedFindings": [],
+          "sources": [
+            "Existe información de referencia interna pendiente de consolidación formal.",
+            "Existe evidencia de referencia interna pendiente de consolidación formal."
+          ],
+          "generationLimitations": [
+            "La IA solo consolidó contenido validado o editado por el usuario.",
+            "Persisten datos faltantes que requieren validación humana."
+          ]
+        },
+        "traceability": {
+          "sectionSources": {
+            "situation": [
+              "4bc32a38-959a-4a3c-935a-21e6a90352c7"
+            ],
+            "whyItMatters": [
+              "f3f3e1e3-6876-46ca-978b-1e4ecfc85876"
+            ],
+            "possibleImpacts": [
+              "159bd01e-50e6-4130-beef-cf94be6b9281",
+              "932c115d-2262-4ede-9bf4-47fc2c4e72e0"
+            ],
+            "evidence": [
+              "d0634377-f611-4727-8f23-5dac440c5df4",
+              "3cba43c1-39b8-4452-b9b2-65b0fca2133c"
+            ],
+            "uncertainties": [
+              "60c096e2-ebc5-4872-a274-ffcfbc78bbec",
+              "47ec583f-a796-4102-b447-7d26450f6187"
+            ],
+            "scenariosAndAlternatives": [
+              "b869b1a6-e4ad-4858-80db-246437243ae0",
+              "151f97c8-dc7d-427c-b2c9-f859703a263c"
+            ],
+            "requiredIntervention": [
+              "b969dcb6-963e-460c-8ccb-68b207c243e8"
+            ]
+          },
+          "severityAssessmentRef": "456b6449-b620-468f-a924-42b69dbacc19:2026-11-15T21:22:05.933Z",
+          "criticalReviewId": "dw-review-456b6449-b620-468f-a924-42b69dbacc19-none",
+          "generatedFromCanvasUpdatedAt": "2026-11-15T21:22:05.700Z",
+          "generationProvider": "MockAIProvider",
+          "generationTimestamp": "2026-11-15T21:22:06.018Z",
+          "editedSections": [
+            "whyItMatters"
+          ],
+          "userReviewTimestamp": "2026-11-15T21:22:06.151Z"
+        },
+        "generatedBy": "AI",
+        "reviewedByUser": true,
+        "createdAt": "2026-11-15T21:22:06.017Z",
+        "updatedAt": "2026-11-15T21:22:06.151Z",
+        "reviewedAt": "2026-11-15T21:22:06.151Z"
+      },
+      "history": [],
+      "stale": false
+    },
+    "approvalRecord": {
+      "caseId": "456b6449-b620-468f-a924-42b69dbacc19",
+      "briefId": "dw-brief-456b6449-b620-468f-a924-42b69dbacc19-1794777726017",
+      "briefVersion": 1,
+      "status": "APPROVED",
+      "approvedBy": "USER",
+      "approvedAt": "2026-11-15T21:22:06.418Z",
+      "confirmedBriefVersion": 1,
+      "checklistSnapshot": {
+        "ready": true,
+        "checks": [
+          {
+            "id": "A",
+            "label": "Situación definida",
+            "passed": true,
+            "reason": "Completá la situación antes de aprobar."
+          },
+          {
+            "id": "B",
+            "label": "Exposición definida",
+            "passed": true,
+            "reason": "Completá la exposición antes de aprobar."
+          },
+          {
+            "id": "C",
+            "label": "Impacto identificado",
+            "passed": true,
+            "reason": "Agregá al menos un impacto plausible."
+          },
+          {
+            "id": "D",
+            "label": "Evidencia disponible",
+            "passed": true,
+            "reason": "Agregá evidencia disponible para sostener el análisis."
+          },
+          {
+            "id": "E",
+            "label": "Incertidumbres visibles",
+            "passed": true,
+            "reason": "Explicitá incertidumbres o registrá su ausencia relevante."
+          },
+          {
+            "id": "F",
+            "label": "Intervención requerida",
+            "passed": true,
+            "reason": "Definí la intervención requerida antes de aprobar."
+          },
+          {
+            "id": "G",
+            "label": "Cobertura mínima",
+            "passed": true,
+            "reason": "La cobertura mínima ya no está completa."
+          },
+          {
+            "id": "H",
+            "label": "Revisión crítica completada",
+            "passed": true,
+            "reason": "Completá la revisión crítica antes de aprobar."
+          },
+          {
+            "id": "I",
+            "label": "Sin bloqueos críticos",
+            "passed": true,
+            "reason": "Existen bloqueos críticos abiertos."
+          },
+          {
+            "id": "J",
+            "label": "Gravedad evaluada",
+            "passed": true,
+            "reason": "La gravedad todavía no fue evaluada por el usuario."
+          },
+          {
+            "id": "K",
+            "label": "Evaluación realizada por el usuario",
+            "passed": true,
+            "reason": "La gravedad debe haber sido evaluada por el usuario."
+          },
+          {
+            "id": "L",
+            "label": "Brief generado",
+            "passed": true,
+            "reason": "Generá el brief antes de aprobar."
+          },
+          {
+            "id": "M",
+            "label": "Versión actual del brief",
+            "passed": true,
+            "reason": "No hay una versión actual de brief para aprobar."
+          },
+          {
+            "id": "N",
+            "label": "Brief actualizado",
+            "passed": true,
+            "reason": "El análisis cambió después de generar este brief."
+          },
+          {
+            "id": "O",
+            "label": "Brief revisado por el usuario",
+            "passed": true,
+            "reason": "Revisá el brief antes de aprobarlo."
+          },
+          {
+            "id": "P",
+            "label": "Estado del brief revisado",
+            "passed": true,
+            "reason": "El brief debe estar en estado REVIEWED_BY_USER."
+          },
+          {
+            "id": "Q",
+            "label": "Estado del caso Brief borrador",
+            "passed": true,
+            "reason": "El caso debe estar en estado Brief borrador."
+          }
+        ],
+        "blockers": [],
+        "evaluatedAt": "2026-11-15T21:22:06.418Z"
+      },
+      "createdAt": "2026-11-15T21:22:06.418Z",
+      "updatedAt": "2026-11-15T21:22:06.418Z"
+    }
+  }
+}

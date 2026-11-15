@@ -1,0 +1,49 @@
+{
+  "caso": "produccion",
+  "relato": "Para producir un bien necesitamos comprometer una fecha de entrega. En la fabricación intervienen distintas áreas y actualmente no conocemos con suficiente precisión la probabilidad de cumplimiento de esa fecha. Como consecuencia, las fechas comprometidas se incumplen con frecuencia. Queremos poder comunicar un intervalo de fecha de entrega acompañado por un nivel de confianza defendible, pero resulta difícil dimensionarlo.",
+  "sugerencias": {
+    "totales": 3,
+    "aceptadas": 1,
+    "editadas": 1,
+    "rechazadas": 1,
+    "detalle": [
+      {
+        "dimension": "CONTEXT",
+        "tipoEpistemologico": "FACT",
+        "contenido": "La fabricación requiere comprometer una fecha de entrega, pero hoy no se conoce con precisión la probabilidad de cumplimiento."
+      },
+      {
+        "dimension": "EXPOSURE",
+        "tipoEpistemologico": "FACT",
+        "contenido": "Las fechas comprometidas se incumplen con frecuencia, afectando la coordinación operativa."
+      },
+      {
+        "dimension": "INTERVENTION",
+        "tipoEpistemologico": "HUMAN_EVALUATION",
+        "contenido": "Se requiere definir cómo comunicar intervalos de entrega con un nivel de confianza defendible sin inventar probabilidades."
+      }
+    ]
+  },
+  "coberturaInicial": "0/6",
+  "coberturaDespuesSugerencias": "2/6",
+  "preguntas": {
+    "totales": 2,
+    "respuestasNormales": 1,
+    "noLoSe": 1,
+    "omitidas": 0,
+    "detenciones": 1,
+    "detalle": [
+      "¿Qué consecuencias operativas concretas se observan cuando no se cumple la fecha comprometida?",
+      "¿Qué información histórica o registros internos hoy existen sobre cumplimiento de fechas?"
+    ]
+  },
+  "coberturaFinal": "4/6",
+  "datosFaltantesDescubiertos": 1,
+  "guardrails": {
+    "hechosInventados": 0,
+    "cifrasInventadas": 0,
+    "fechasInventadas": 0,
+    "fuentesInventadas": 0
+  },
+  "sinTransicionAutomatica": true
+}

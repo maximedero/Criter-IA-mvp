@@ -1,0 +1,51 @@
+{
+  "caso": "sharepoint",
+  "relato": "Microsoft informó que en julio de 2026 dejaría de dar soporte a los workflows de SharePoint sobre los que tenemos montadas distintas soluciones que utilizan Nintex Workflow. En 2023 advertimos esta situación y comenzamos una modernización de las soluciones, primero hacia SharePoint Subscription Edition y luego hacia SharePoint Online, porque inicialmente no estaba claro cuál sería el destino tecnológico definitivo. El proyecto de migración hacia SharePoint Subscription Edition se demoró y actualmente todavía existen soluciones en SharePoint 2016 sobre un motor de workflow sin soporte. Sabemos que estamos expuestos, pero no resulta sencillo dimensionar el impacto si alguno de esos workflows deja de funcionar.",
+  "sugerencias": {
+    "totales": 3,
+    "aceptadas": 1,
+    "editadas": 1,
+    "rechazadas": 1,
+    "detalle": [
+      {
+        "dimension": "CONTEXT",
+        "tipoEpistemologico": "FACT",
+        "contenido": "Microsoft informó que en julio de 2026 dejaría de dar soporte a los workflows de SharePoint utilizados por soluciones con Nintex Workflow."
+      },
+      {
+        "dimension": "CONTEXT",
+        "tipoEpistemologico": "FACT",
+        "contenido": "La modernización comenzó en 2023 y transitó entre alternativas tecnológicas antes de definir un destino final."
+      },
+      {
+        "dimension": "EXPOSURE",
+        "tipoEpistemologico": "FACT",
+        "contenido": "Persisten soluciones en SharePoint 2016 con un motor de workflow sin soporte debido a demoras del proyecto de migración."
+      }
+    ]
+  },
+  "coberturaInicial": "0/6",
+  "coberturaDespuesSugerencias": "1/6",
+  "preguntas": {
+    "totales": 4,
+    "respuestasNormales": 3,
+    "noLoSe": 1,
+    "omitidas": 0,
+    "detenciones": 1,
+    "detalle": [
+      "¿Qué soluciones continúan dependiendo de workflows de SharePoint con Nintex?",
+      "¿Qué procesos de negocio podrían interrumpirse si un workflow deja de funcionar?",
+      "¿Qué evidencia disponible respalda el estado actual de migración y las dependencias remanentes?",
+      "¿Qué intervención concreta necesitás del nivel superior para reducir este riesgo?"
+    ]
+  },
+  "coberturaFinal": "5/6",
+  "datosFaltantesDescubiertos": 1,
+  "guardrails": {
+    "hechosInventados": 0,
+    "cifrasInventadas": 0,
+    "fechasInventadas": 0,
+    "fuentesInventadas": 0
+  },
+  "sinTransicionAutomatica": true
+}

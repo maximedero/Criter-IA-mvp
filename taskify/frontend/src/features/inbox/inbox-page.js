@@ -6,10 +6,12 @@ import { calculateReviewSummary } from "../../domain/rules/reviewRules";
 import { canTransition } from "../../domain/workflow/caseStateMachine";
 import { canAdvanceToBriefDraft } from "../../domain/workflow/humanSeverityWorkflow";
 import { MockAIProvider } from "../../providers/ai";
+import { getBriefRecord } from "../../providers/storage/briefStorage";
 import { listCanvasItemsByCase } from "../../providers/storage/canvasStorage";
 import { createDecisionCase, getDecisionCaseById, listDecisionCases, updateDecisionCaseStatus } from "../../providers/storage/casesStorage";
 import { getCriticalReview, isCriticalReviewComplete } from "../../providers/storage/criticalReviewStorage";
 import { getHumanSeverityAssessment } from "../../providers/storage/humanSeverityStorage";
+import { getHumanBriefApproval } from "../../providers/storage/humanApprovalStorage";
 import { HumanSeverityPanel, mapMissingCoverageLabels } from "../canvas/HumanSeverityPanel";
 import { CanvasPage } from "../canvas/canvas-page";
 import { BriefWorkspace } from "../brief/BriefWorkspace";
@@ -64,7 +66,7 @@ export function InboxPage({ aiProvider }) {
         const shouldRenderHumanSeverityPanel = selectedCase.status === "HUMAN_EVALUATION" ||
             (selectedCase.status === "CRITICAL_REVIEW" && criticalReviewComplete) ||
             selectedCase.status === "BRIEF_DRAFT";
-        const shouldRenderBriefWorkspace = selectedCase.status === "BRIEF_DRAFT";
+        const shouldRenderBriefWorkspace = selectedCase.status === "BRIEF_DRAFT" || selectedCase.status === "READY_TO_ESCALATE";
         return (_jsxs("section", { children: [_jsx("h2", { children: "Detalle de caso" }), _jsxs("p", { children: [_jsx("strong", { children: "T\u00EDtulo:" }), " ", selectedCase.title] }), _jsxs("p", { children: [_jsx("strong", { children: "Estado:" }), " ", CASE_STATUS_LABELS[selectedCase.status]] }), _jsxs("p", { children: [_jsx("strong", { children: "Relato inicial:" }), " ", selectedCase.initialNarrative] }), _jsx(CaseStatusControl, { status: selectedCase.status, items: selectedCaseItems, criticalReviewComplete: criticalReviewComplete, openBlockers: openBlockers, humanSeverity: severityAssessment.severity, onStatusChange: handleStatusChange }), _jsx(CanvasPage, { caseId: selectedCase.id, initialNarrative: selectedCase.initialNarrative, caseStatus: selectedCase.status, aiProvider: provider, onItemsChange: (nextItems) => {
                         setSelectedCaseItems(nextItems);
                         if (selectedCase.status === "DRAFT") {
@@ -103,6 +105,25 @@ export function InboxPage({ aiProvider }) {
                         refresh();
                     }, onError: (message) => {
                         setBriefError(message);
+                    }, onReadyToEscalate: () => {
+                        const currentApproval = getHumanBriefApproval(selectedCase.id);
+                        const transition = canTransition("BRIEF_DRAFT", "READY_TO_ESCALATE", {
+                            hasUserValidatedOrEditedItem: true,
+                            hasMinimumCoverage: coverage.hasMinimumCoverage,
+                            startCriticalReviewRequested: true,
+                            criticalReviewComplete,
+                            criticalBlockers: openBlockers,
+                            humanSeverity: severityAssessment.severity,
+                            briefExists: true,
+                            briefReviewed: getBriefRecord(selectedCase.id).current?.reviewedByUser ?? false,
+                            humanApproved: Boolean(currentApproval?.status === "APPROVED")
+                        });
+                        if (transition.allowed) {
+                            handleStatusChange("READY_TO_ESCALATE");
+                        }
+                        else {
+                            setBriefError("No se pudo completar la transición a Listo para elevar.");
+                        }
                     } })) : null, briefError ? _jsx("p", { role: "alert", children: briefError }) : null, _jsx("button", { type: "button", onClick: () => {
                         setViewMode("inbox");
                         refresh();

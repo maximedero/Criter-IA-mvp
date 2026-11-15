@@ -3,6 +3,7 @@ import type { CanvasItem } from "../../domain/models/CanvasItem";
 import { EPISTEMIC_TYPE_LABELS } from "../../domain/models/CanvasItem";
 import type { CaseStatus } from "../../domain/models/CaseStatus";
 import type { DecisionCase } from "../../domain/models/DecisionCase";
+import type { ApprovalReadiness } from "../../domain/models/HumanBriefApproval";
 import { HUMAN_SEVERITY_LABELS, type HumanSeverityAssessment } from "../../domain/models/HumanSeverityAssessment";
 import type { PersistedQuestion } from "../../domain/models/ContextualQuestion";
 import type { CriticalReview } from "../../domain/models/CriticalReview";
@@ -10,6 +11,7 @@ import type { AIProvider } from "../../providers/ai";
 import { parseGenerateBriefResult } from "../../providers/ai/aiParsing";
 import { getAiQuestionSession } from "../../providers/storage/aiSessionStorage";
 import { getBriefRecord, saveCurrentBrief, saveRegeneratedBrief, setBriefStale } from "../../providers/storage/briefStorage";
+import { getHumanBriefApproval, removeHumanBriefApproval, saveHumanBriefApproval } from "../../providers/storage/humanApprovalStorage";
 import {
   BRIEF_GATE_ERRORS,
   calculateBriefStale,
@@ -22,6 +24,14 @@ import {
   normalizeGeneratedBriefForPersist,
   updateSectionAsEdited
 } from "../../domain/workflow/briefWorkflow";
+import { evaluateApprovalReadiness } from "../../domain/rules/readyToElevateRules";
+import {
+  HUMAN_APPROVAL_ERRORS,
+  approvalAppliesToBrief,
+  canTransitionToReadyWithHumanApproval,
+  createNotApprovedHumanBriefApproval,
+  reevaluateAndCreateApproval
+} from "../../domain/workflow/humanApprovalWorkflow";
 import type { DecisionBrief, ExecutiveSectionKey } from "../../domain/models/DecisionBrief";
 
 type Props = {
@@ -36,6 +46,7 @@ type Props = {
   provider: AIProvider;
   onBriefSaved: () => void;
   onError: (message: string | null) => void;
+  onReadyToEscalate: () => void;
 };
 
 const EDITABLE_SECTIONS: Array<{ key: ExecutiveSectionKey; label: string }> = [
@@ -64,7 +75,8 @@ export function BriefWorkspace({
   severityAssessment,
   provider,
   onBriefSaved,
-  onError
+  onError,
+  onReadyToEscalate
 }: Props) {
   const [loading, setLoading] = useState(false);
   const [view, setView] = useState<"executive" | "expanded">("executive");
@@ -72,6 +84,8 @@ export function BriefWorkspace({
   const [editingValue, setEditingValue] = useState("");
   const [hasViewedExecutive, setHasViewedExecutive] = useState(false);
   const [record, setRecord] = useState(() => getBriefRecord(decisionCase.id));
+  const [approval, setApproval] = useState(() => getHumanBriefApproval(decisionCase.id));
+  const [showApproveDialog, setShowApproveDialog] = useState(false);
 
   const activeItems = useMemo(() => items.filter((item) => item.validationStatus !== "REJECTED"), [items]);
 
@@ -79,13 +93,27 @@ export function BriefWorkspace({
     const persisted = getBriefRecord(decisionCase.id);
     const staleComputed = calculateBriefStale(persisted.current, activeItems);
 
+    let nextRecord = persisted;
     if (persisted.stale !== staleComputed) {
-      const next = setBriefStale(decisionCase.id, staleComputed);
-      setRecord(next);
+      nextRecord = setBriefStale(decisionCase.id, staleComputed);
+      setRecord(nextRecord);
     } else {
       setRecord(persisted);
     }
-  }, [decisionCase.id, activeItems]);
+
+    const persistedApproval = getHumanBriefApproval(decisionCase.id);
+
+    if (decisionCase.status === "BRIEF_DRAFT" && nextRecord.current) {
+      if (!persistedApproval || persistedApproval.briefVersion !== nextRecord.current.version) {
+        const resetApproval = createNotApprovedHumanBriefApproval(decisionCase.id, nextRecord.current);
+        saveHumanBriefApproval(resetApproval);
+        setApproval(resetApproval);
+        return;
+      }
+    }
+
+    setApproval(persistedApproval);
+  }, [decisionCase.id, decisionCase.status, activeItems]);
 
   useEffect(() => {
     if (view === "executive") {
@@ -112,6 +140,22 @@ export function BriefWorkspace({
     humanSeverity: severityAssessment.severity,
     generationError: false
   });
+
+  const readiness: ApprovalReadiness = evaluateApprovalReadiness({
+    caseStatus: decisionCase.status,
+    activeItems,
+    criticalReviewComplete,
+    openBlockers,
+    severityAssessment,
+    brief,
+    stale: record.stale
+  });
+
+  const approvalMatchesCurrentBrief = approvalAppliesToBrief(approval, brief);
+  const isReadyToEscalate = decisionCase.status === "READY_TO_ESCALATE";
+  const isApprovedForCurrentBrief = isReadyToEscalate && approvalMatchesCurrentBrief;
+  const canApproveBrief =
+    decisionCase.status === "BRIEF_DRAFT" && readiness.ready && Boolean(brief) && approval?.status !== "APPROVED";
 
   const contextualQuestionHistory: PersistedQuestion[] = getAiQuestionSession(decisionCase.id).questions;
 
@@ -175,6 +219,17 @@ export function BriefWorkspace({
 
       const nextRecord = regenerate ? saveRegeneratedBrief(decisionCase.id, normalized) : saveCurrentBrief(decisionCase.id, normalized);
       setRecord(nextRecord);
+
+      const currentApproval = getHumanBriefApproval(decisionCase.id);
+      if (
+        currentApproval &&
+        currentApproval.status === "APPROVED" &&
+        currentApproval.confirmedBriefVersion !== normalized.version
+      ) {
+        removeHumanBriefApproval(decisionCase.id);
+        setApproval(null);
+      }
+
       onBriefSaved();
     } catch (error) {
       if (error instanceof Error && /storage|guardar|quota/i.test(error.message)) {
@@ -220,6 +275,85 @@ export function BriefWorkspace({
     onBriefSaved();
   };
 
+  const openApproveDialog = () => {
+    onError(null);
+    if (!readiness.ready || !brief) {
+      onError(readiness.blockers[0]?.reason ?? "No se cumplen las condiciones para aprobar.");
+      return;
+    }
+
+    setShowApproveDialog(true);
+  };
+
+  const cancelApproval = () => {
+    setShowApproveDialog(false);
+  };
+
+  const confirmApproval = () => {
+    if (!brief) {
+      setShowApproveDialog(false);
+      onError(HUMAN_APPROVAL_ERRORS.CONDITIONS_CHANGED);
+      return;
+    }
+
+    const reevaluated = reevaluateAndCreateApproval({
+      caseStatus: decisionCase.status,
+      activeItems,
+      criticalReviewComplete,
+      openBlockers,
+      severityAssessment,
+      brief,
+      stale: getBriefRecord(decisionCase.id).stale
+    });
+
+    if (!reevaluated.allowed) {
+      setShowApproveDialog(false);
+      onError(reevaluated.message);
+      return;
+    }
+
+    try {
+      saveHumanBriefApproval(reevaluated.approval);
+
+      const transition = canTransitionToReadyWithHumanApproval({
+        caseStatus: decisionCase.status,
+        hasMinimumCoverage,
+        criticalReviewComplete,
+        openBlockers,
+        severity: severityAssessment.severity,
+        briefExists: true,
+        briefReviewed: brief.reviewedByUser,
+        humanApproved: true
+      });
+
+      if (!transition.allowed) {
+        try {
+          removeHumanBriefApproval(decisionCase.id);
+        } catch {
+          // ignore rollback failure
+        }
+        setApproval(null);
+        setShowApproveDialog(false);
+        onError(HUMAN_APPROVAL_ERRORS.TRANSITION_ERROR);
+        return;
+      }
+
+      setApproval(reevaluated.approval);
+      setShowApproveDialog(false);
+      onReadyToEscalate();
+      onBriefSaved();
+    } catch {
+      try {
+        removeHumanBriefApproval(decisionCase.id);
+      } catch {
+        // ignore rollback failure
+      }
+      setApproval(null);
+      setShowApproveDialog(false);
+      onError(HUMAN_APPROVAL_ERRORS.STORAGE_ERROR);
+    }
+  };
+
   return (
     <section aria-label="Preparación del brief">
       <h4>PREPARACIÓN DEL BRIEF</h4>
@@ -228,23 +362,50 @@ export function BriefWorkspace({
         revisado antes de elevarlo.
       </p>
 
-      {!gate.allowed ? <p role="alert">{gate.reasons[0]}</p> : null}
+      {!gate.allowed && decisionCase.status === "BRIEF_DRAFT" ? <p role="alert">{gate.reasons[0]}</p> : null}
 
-      <button type="button" disabled={loading || !gate.allowed} onClick={() => generate(false)}>
-        Generar borrador de brief
-      </button>
+      {decisionCase.status === "BRIEF_DRAFT" ? (
+        <button type="button" disabled={loading || !gate.allowed} onClick={() => generate(false)}>
+          Generar borrador de brief
+        </button>
+      ) : null}
 
       {loading ? <p>Generando borrador...</p> : null}
 
-      {brief ? (
+      {brief && (decisionCase.status === "BRIEF_DRAFT" || decisionCase.status === "READY_TO_ESCALATE") ? (
         <>
-          {record.stale ? (
+          {decisionCase.status === "BRIEF_DRAFT" && record.stale ? (
             <>
               <p role="alert">El análisis cambió después de generar este brief.</p>
-              <button type="button" disabled={loading || !gate.allowed} onClick={() => generate(true)}>
+              <button type="button" disabled={loading || !gate.allowed || isReadyToEscalate} onClick={() => generate(true)}>
                 Regenerar borrador
               </button>
             </>
+          ) : null}
+
+          {isReadyToEscalate && approvalMatchesCurrentBrief && approval ? (
+            <section aria-label="Aprobación confirmada">
+              <h5>LISTO PARA ELEVAR</h5>
+              <p>El brief fue revisado y aprobado por el usuario.</p>
+              <p>Versión aprobada: v{approval.confirmedBriefVersion}</p>
+              <p>Aprobación realizada por el usuario.</p>
+              <p>Fecha de aprobación: {new Date(approval.approvedAt ?? approval.updatedAt).toLocaleString("es-AR")}</p>
+              <p>Gravedad: {brief.executive.severity.label}</p>
+              <p>{brief.executive.severity.notice}</p>
+              <p>
+                Listo para elevar indica preparación del brief, no aprobación de la decisión por parte del destinatario.
+              </p>
+              <details>
+                <summary>Checklist al momento de aprobar</summary>
+                <ul>
+                  {approval.checklistSnapshot.checks.map((check) => (
+                    <li key={check.id}>
+                      {check.label}: {check.passed ? "Cumplido" : "Pendiente"}
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            </section>
           ) : null}
 
           <div role="tablist" aria-label="Vistas del brief">
@@ -271,7 +432,7 @@ export function BriefWorkspace({
                           {label}
                           <textarea value={editingValue} onChange={(event) => setEditingValue(event.target.value)} />
                         </label>
-                        <button type="button" onClick={saveEdit}>
+                        <button type="button" onClick={saveEdit} disabled={isReadyToEscalate}>
                           Guardar edición
                         </button>
                         <button
@@ -297,6 +458,7 @@ export function BriefWorkspace({
                         <button
                           type="button"
                           aria-label={`Editar ${label}`}
+                          disabled={isReadyToEscalate}
                           onClick={() => {
                             setEditingSection(key);
                             setEditingValue(section.content);
@@ -329,11 +491,12 @@ export function BriefWorkspace({
 
               <p>Estado del brief: {brief.status}</p>
 
-              <button type="button" onClick={markReviewed} disabled={!reviewGate.allowed || record.stale}>
+              <button type="button" onClick={markReviewed} disabled={!reviewGate.allowed || record.stale || isReadyToEscalate}>
                 Marcar brief como revisado
               </button>
 
               {brief.reviewedByUser ? <p>Brief revisado por el usuario.</p> : null}
+              {isReadyToEscalate ? <p>Este brief corresponde a una versión aprobada.</p> : null}
             </section>
           ) : (
             <section>
@@ -416,6 +579,54 @@ export function BriefWorkspace({
               <p>Tipos epistemológicos visibles: {Object.keys(EPISTEMIC_TYPE_LABELS).join(", ")}</p>
             </section>
           )}
+
+          {decisionCase.status === "BRIEF_DRAFT" ? (
+            <section aria-label="Aprobación humana">
+              <h5>APROBACIÓN HUMANA</h5>
+              <p>El sistema verifica las condiciones necesarias, pero la aprobación final debe realizarla una persona.</p>
+              <h6>CHECKLIST FINAL</h6>
+              <ul>
+                {readiness.checks.map((check) => (
+                  <li key={check.id}>
+                    {check.passed ? "✓" : "○"} {check.label}
+                    <p>{check.passed ? "Cumplido" : "Pendiente"}</p>
+                    {!check.passed ? <p>Explicación: {check.reason}</p> : null}
+                  </li>
+                ))}
+              </ul>
+
+              <p>
+                {readiness.ready
+                  ? "Se cumplen las condiciones para aprobar el brief."
+                  : "Todavía no se cumplen las condiciones para aprobar el brief."}
+              </p>
+
+              <button type="button" onClick={openApproveDialog} disabled={!canApproveBrief || isReadyToEscalate}>
+                Aprobar brief
+              </button>
+
+              {showApproveDialog ? (
+                <div role="dialog" aria-modal="true" aria-label="Confirmar aprobación">
+                  <h5>Confirmar aprobación</h5>
+                  <p>Estás por marcar este caso como LISTO PARA ELEVAR.</p>
+                  <p>
+                    Esta acción confirma que revisaste el brief actual y que considerás que está en condiciones de ser presentado
+                    al nivel superior correspondiente.
+                  </p>
+                  <p>Caso: {decisionCase.title}</p>
+                  <p>Versión del brief: v{brief.version}</p>
+                  <p>Gravedad: {brief.executive.severity.label}</p>
+                  <p>Evaluación de gravedad realizada por el usuario.</p>
+                  <button type="button" onClick={cancelApproval}>
+                    Cancelar
+                  </button>
+                  <button type="button" onClick={confirmApproval}>
+                    Confirmar aprobación
+                  </button>
+                </div>
+              ) : null}
+            </section>
+          ) : null}
         </>
       ) : null}
     </section>

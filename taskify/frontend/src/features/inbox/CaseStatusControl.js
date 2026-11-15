@@ -21,6 +21,9 @@ export function CaseStatusControl({ status, items, criticalReviewComplete, openB
         const hasBrief = getBriefRecord(items[0]?.caseId ?? "").current !== null;
         return (_jsxs("section", { children: [_jsxs("p", { children: [_jsx("strong", { children: "Estado:" }), " ", CASE_STATUS_LABELS[status]] }), _jsx("p", { children: "El caso est\u00E1 listo para preparar el brief." }), _jsx("p", { children: hasBrief ? "Existe un borrador de brief disponible para revisión." : "Todavía no hay un brief generado." })] }));
     }
+    if (status === "READY_TO_ESCALATE") {
+        return (_jsxs("section", { children: [_jsxs("p", { children: [_jsx("strong", { children: "Estado:" }), " ", CASE_STATUS_LABELS[status]] }), _jsx("p", { children: "El brief fue revisado y aprobado por el usuario." })] }));
+    }
     if (status !== "IN_ANALYSIS") {
         return (_jsx("section", { children: _jsxs("p", { children: [_jsx("strong", { children: "Estado:" }), " ", CASE_STATUS_LABELS[status]] }) }));
     }

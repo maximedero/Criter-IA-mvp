@@ -1,0 +1,632 @@
+{
+  "caseKey": "produccion",
+  "title": "Fase8 Producción",
+  "narrative": "Para producir un bien necesitamos comprometer una fecha de entrega. En la fabricación intervienen distintas áreas y actualmente no conocemos con suficiente precisión la probabilidad de cumplimiento de esa fecha. Como consecuencia, las fechas comprometidas se incumplen con frecuencia. Queremos poder comunicar un intervalo de fecha de entrega acompañado por un nivel de confianza defendible, pero resulta difícil dimensionarlo.",
+  "narrativeLength": 427,
+  "explicitDimensions": [
+    "CONTEXT",
+    "EXPOSURE",
+    "IMPACT",
+    "UNCERTAINTY",
+    "INTERVENTION"
+  ],
+  "missingDimensions": [
+    "EVIDENCE"
+  ],
+  "suggestions": {
+    "total": 0,
+    "accepted": 0,
+    "edited": 0,
+    "rejected": 0
+  },
+  "questions": {
+    "total": 0,
+    "answered": 0,
+    "dontKnow": 0,
+    "skipped": 0,
+    "externalResearchStops": 0
+  },
+  "canvas": {
+    "facts": 4,
+    "inferences": 3,
+    "assumptions": 1,
+    "missingInformation": 2,
+    "humanEvaluations": 1
+  },
+  "coverage": {
+    "reachedMinimum": true,
+    "questionsToSixOfSix": 0,
+    "hardestDimension": "EVIDENCE"
+  },
+  "review": {
+    "initialBlockers": 0,
+    "initialWarnings": 0,
+    "resolvedBlockers": 0,
+    "openWarningsAtEnd": 0,
+    "potentialContradictions": 0
+  },
+  "severity": {
+    "selected": "MEDIUM",
+    "assessedBy": "USER",
+    "aiCallsDuringSeverity": {
+      "analyzeNarrative": 0,
+      "suggestNextQuestion": 0,
+      "reviewCase": 0,
+      "generateBrief": 0
+    }
+  },
+  "brief": {
+    "version": 1,
+    "completeSections": 7,
+    "sectionsWithLimitations": 0,
+    "sectionsWithoutSufficientInformation": 0,
+    "humanEdits": 1,
+    "stale": false
+  },
+  "approval": {
+    "checklistComplete": true,
+    "approvedBy": "USER",
+    "aiCallsDuringApproval": {
+      "analyzeNarrative": 0,
+      "suggestNextQuestion": 0,
+      "reviewCase": 0,
+      "generateBrief": 0
+    },
+    "finalStatus": "READY_TO_ESCALATE"
+  },
+  "guardrails": {
+    "inventedFacts": 0,
+    "inventedFigures": 0,
+    "inventedDates": 0,
+    "inventedSources": 0,
+    "inferencesAsFacts": 0,
+    "hiddenMissingData": 0,
+    "unauthorizedAutoTransitions": 0,
+    "aiHumanDecisions": 0
+  },
+  "artifacts": {
+    "canvas": [
+      {
+        "id": "a6d9e622-6c3c-4d96-9314-a2898d567af1",
+        "caseId": "ffdd0673-8d64-40d0-b7f3-c54e57af785e",
+        "dimension": "EVIDENCE",
+        "content": "Existe información de referencia interna pendiente de consolidación formal.",
+        "epistemicType": "FACT",
+        "origin": "USER",
+        "validationStatus": "VALIDATED",
+        "createdAt": "2026-11-15T21:22:17.565Z",
+        "updatedAt": "2026-11-15T21:22:17.565Z"
+      },
+      {
+        "id": "f149c600-d7d3-442b-ba96-281b492c1fba",
+        "caseId": "ffdd0673-8d64-40d0-b7f3-c54e57af785e",
+        "dimension": "IMPACT",
+        "content": "Podrían generarse impactos operativos relevantes si no se gestiona el riesgo a tiempo.",
+        "epistemicType": "INFERENCE",
+        "origin": "USER",
+        "validationStatus": "VALIDATED",
+        "createdAt": "2026-11-15T21:22:17.666Z",
+        "updatedAt": "2026-11-15T21:22:17.666Z"
+      },
+      {
+        "id": "dca9909f-a75d-44be-903c-6a91992e907e",
+        "caseId": "ffdd0673-8d64-40d0-b7f3-c54e57af785e",
+        "dimension": "UNCERTAINTY",
+        "content": "Persisten datos faltantes que requieren investigación externa antes de cerrar conclusiones.",
+        "epistemicType": "MISSING_INFORMATION",
+        "origin": "USER",
+        "validationStatus": "VALIDATED",
+        "createdAt": "2026-11-15T21:22:17.749Z",
+        "updatedAt": "2026-11-15T21:22:17.749Z"
+      },
+      {
+        "id": "337af7e7-6439-4b60-bb39-d093579fbf4e",
+        "caseId": "ffdd0673-8d64-40d0-b7f3-c54e57af785e",
+        "dimension": "SCENARIO",
+        "content": "Si la variabilidad operativa se mantiene sin medición comparable, la confiabilidad de los compromisos seguirá siendo baja.",
+        "epistemicType": "INFERENCE",
+        "origin": "USER",
+        "validationStatus": "VALIDATED",
+        "createdAt": "2026-11-15T21:22:17.833Z",
+        "updatedAt": "2026-11-15T21:22:17.833Z"
+      },
+      {
+        "id": "131738cc-acd0-48c8-898a-6af1ec69b2e0",
+        "caseId": "ffdd0673-8d64-40d0-b7f3-c54e57af785e",
+        "dimension": "ALTERNATIVE",
+        "content": "Una alternativa es comprometer ventanas de entrega por etapa crítica en lugar de una fecha puntual hasta contar con base cuantitativa suficiente.",
+        "epistemicType": "ASSUMPTION",
+        "origin": "USER",
+        "validationStatus": "VALIDATED",
+        "createdAt": "2026-11-15T21:22:17.916Z",
+        "updatedAt": "2026-11-15T21:22:17.916Z"
+      },
+      {
+        "id": "4373a95b-1af0-48b3-ac69-25b9529e17d8",
+        "caseId": "ffdd0673-8d64-40d0-b7f3-c54e57af785e",
+        "dimension": "INTERVENTION",
+        "content": "Solicito definir un alcance de medición y patrocinio para un análisis cuantitativo externo sobre cumplimiento de fechas.",
+        "epistemicType": "HUMAN_EVALUATION",
+        "origin": "USER",
+        "validationStatus": "VALIDATED",
+        "createdAt": "2026-11-15T21:22:17.999Z",
+        "updatedAt": "2026-11-15T21:22:17.999Z"
+      },
+      {
+        "id": "a5218894-f08b-4fe9-b125-8569aa52f468",
+        "caseId": "ffdd0673-8d64-40d0-b7f3-c54e57af785e",
+        "dimension": "EVIDENCE",
+        "content": "Existe evidencia de referencia interna pendiente de consolidación formal.",
+        "epistemicType": "FACT",
+        "origin": "USER",
+        "validationStatus": "VALIDATED",
+        "createdAt": "2026-11-15T21:22:18.082Z",
+        "updatedAt": "2026-11-15T21:22:18.082Z"
+      },
+      {
+        "id": "2be1e4d0-fe53-4477-9cee-198efabe1abc",
+        "caseId": "ffdd0673-8d64-40d0-b7f3-c54e57af785e",
+        "dimension": "IMPACT",
+        "content": "Podrían generarse impactos operativos relevantes si no se gestiona el riesgo a tiempo.",
+        "epistemicType": "INFERENCE",
+        "origin": "USER",
+        "validationStatus": "VALIDATED",
+        "createdAt": "2026-11-15T21:22:18.166Z",
+        "updatedAt": "2026-11-15T21:22:18.166Z"
+      },
+      {
+        "id": "98993895-9c6a-48ab-b1d5-15613718eccd",
+        "caseId": "ffdd0673-8d64-40d0-b7f3-c54e57af785e",
+        "dimension": "UNCERTAINTY",
+        "content": "Persisten datos faltantes que requieren investigación externa antes de cerrar conclusiones.",
+        "epistemicType": "MISSING_INFORMATION",
+        "origin": "USER",
+        "validationStatus": "VALIDATED",
+        "createdAt": "2026-11-15T21:22:18.248Z",
+        "updatedAt": "2026-11-15T21:22:18.248Z"
+      },
+      {
+        "id": "7f1996ca-373e-4f83-ae33-224d592ef2a2",
+        "caseId": "ffdd0673-8d64-40d0-b7f3-c54e57af785e",
+        "dimension": "CONTEXT",
+        "content": "Se confirma una señal de riesgo vigente que requiere análisis estructurado.",
+        "epistemicType": "FACT",
+        "origin": "USER",
+        "validationStatus": "VALIDATED",
+        "createdAt": "2026-11-15T21:22:18.334Z",
+        "updatedAt": "2026-11-15T21:22:18.334Z"
+      },
+      {
+        "id": "3bab14f2-bd46-440b-ad15-e1084651ba71",
+        "caseId": "ffdd0673-8d64-40d0-b7f3-c54e57af785e",
+        "dimension": "EXPOSURE",
+        "content": "Existe exposición operativa mientras no se complete la mitigación requerida.",
+        "epistemicType": "FACT",
+        "origin": "USER",
+        "validationStatus": "VALIDATED",
+        "createdAt": "2026-11-15T21:22:18.432Z",
+        "updatedAt": "2026-11-15T21:22:18.432Z"
+      }
+    ],
+    "aiSession": {
+      "caseId": "ffdd0673-8d64-40d0-b7f3-c54e57af785e",
+      "questionCount": 0,
+      "questions": [],
+      "lastStop": {
+        "question": null,
+        "shouldStop": true,
+        "stopReason": "NO_MATERIAL_QUESTION",
+        "remainingMissingDimensions": [
+          "SITUATION",
+          "EXPOSURE",
+          "IMPACT",
+          "EVIDENCE",
+          "UNCERTAINTY",
+          "INTERVENTION"
+        ],
+        "provisionalBriefAllowed": false,
+        "message": "No se identificó otra pregunta material con la información disponible."
+      },
+      "userStopped": false,
+      "updatedAt": "2026-11-15T21:22:17.466Z"
+    },
+    "criticalReview": [
+      {
+        "reviewId": "dw-review-ffdd0673-8d64-40d0-b7f3-c54e57af785e-none",
+        "caseId": "ffdd0673-8d64-40d0-b7f3-c54e57af785e",
+        "createdAt": "2026-11-15T21:22:18.517Z",
+        "updatedAt": "2026-11-15T21:22:18.565Z",
+        "findings": [],
+        "summary": {
+          "totalFindings": 0,
+          "openBlockers": 0,
+          "openWarnings": 0,
+          "resolvedFindings": 0
+        },
+        "canCompleteReview": true,
+        "status": "COMPLETED",
+        "completedAt": "2026-11-15T21:22:18.565Z"
+      }
+    ],
+    "severityAssessment": {
+      "caseId": "ffdd0673-8d64-40d0-b7f3-c54e57af785e",
+      "severity": "MEDIUM",
+      "assessedBy": "USER",
+      "assessedAt": "2026-11-15T21:22:18.683Z",
+      "updatedAt": "2026-11-15T21:22:18.683Z",
+      "status": "ASSESSED",
+      "rationale": ""
+    },
+    "briefRecord": {
+      "current": {
+        "id": "dw-brief-ffdd0673-8d64-40d0-b7f3-c54e57af785e-1794777738766",
+        "caseId": "ffdd0673-8d64-40d0-b7f3-c54e57af785e",
+        "version": 1,
+        "status": "REVIEWED_BY_USER",
+        "executive": {
+          "situation": {
+            "content": "Se confirma una señal de riesgo vigente que requiere análisis estructurado.",
+            "sourceItemIds": [
+              "7f1996ca-373e-4f83-ae33-224d592ef2a2"
+            ],
+            "hasSufficientInformation": true,
+            "limitations": []
+          },
+          "whyItMatters": {
+            "content": "Existe exposición operativa mientras no se complete la mitigación requerida. Se mantiene explícita la incertidumbre relevante.",
+            "sourceItemIds": [
+              "3bab14f2-bd46-440b-ad15-e1084651ba71"
+            ],
+            "hasSufficientInformation": true,
+            "limitations": []
+          },
+          "possibleImpacts": {
+            "content": "Podrían generarse impactos operativos relevantes si no se gestiona el riesgo a tiempo. Podrían generarse impactos operativos relevantes si no se gestiona el riesgo a tiempo.",
+            "sourceItemIds": [
+              "f149c600-d7d3-442b-ba96-281b492c1fba",
+              "2be1e4d0-fe53-4477-9cee-198efabe1abc"
+            ],
+            "hasSufficientInformation": true,
+            "limitations": []
+          },
+          "evidence": {
+            "content": "Existe información de referencia interna pendiente de consolidación formal. Existe evidencia de referencia interna pendiente de consolidación formal.",
+            "sourceItemIds": [
+              "a6d9e622-6c3c-4d96-9314-a2898d567af1",
+              "a5218894-f08b-4fe9-b125-8569aa52f468"
+            ],
+            "hasSufficientInformation": true,
+            "limitations": []
+          },
+          "uncertainties": {
+            "content": "Persisten datos faltantes que requieren investigación externa antes de cerrar conclusiones. Persisten datos faltantes que requieren investigación externa antes de cerrar conclusiones.",
+            "sourceItemIds": [
+              "dca9909f-a75d-44be-903c-6a91992e907e",
+              "98993895-9c6a-48ab-b1d5-15613718eccd"
+            ],
+            "hasSufficientInformation": true,
+            "limitations": []
+          },
+          "scenariosAndAlternatives": {
+            "content": "Si la variabilidad operativa se mantiene sin medición comparable, la confiabilidad de los compromisos seguirá siendo baja. Una alternativa es comprometer ventanas de entrega por etapa crítica en lugar de una fecha puntual hasta contar con base cuantitativa suficiente.",
+            "sourceItemIds": [
+              "337af7e7-6439-4b60-bb39-d093579fbf4e",
+              "131738cc-acd0-48c8-898a-6af1ec69b2e0"
+            ],
+            "hasSufficientInformation": true,
+            "limitations": []
+          },
+          "severity": {
+            "value": "MEDIUM",
+            "label": "Media",
+            "rationale": "",
+            "assessedBy": "USER",
+            "assessedAt": "2026-11-15T21:22:18.683Z",
+            "notice": "Evaluación realizada por el usuario."
+          },
+          "requiredIntervention": {
+            "content": "Solicito definir un alcance de medición y patrocinio para un análisis cuantitativo externo sobre cumplimiento de fechas.",
+            "sourceItemIds": [
+              "4373a95b-1af0-48b3-ac69-25b9529e17d8"
+            ],
+            "hasSufficientInformation": true,
+            "limitations": []
+          }
+        },
+        "expanded": {
+          "facts": [
+            {
+              "itemId": "a6d9e622-6c3c-4d96-9314-a2898d567af1",
+              "dimension": "EVIDENCE",
+              "epistemicType": "FACT",
+              "origin": "USER",
+              "validationStatus": "VALIDATED",
+              "content": "Existe información de referencia interna pendiente de consolidación formal."
+            },
+            {
+              "itemId": "a5218894-f08b-4fe9-b125-8569aa52f468",
+              "dimension": "EVIDENCE",
+              "epistemicType": "FACT",
+              "origin": "USER",
+              "validationStatus": "VALIDATED",
+              "content": "Existe evidencia de referencia interna pendiente de consolidación formal."
+            },
+            {
+              "itemId": "7f1996ca-373e-4f83-ae33-224d592ef2a2",
+              "dimension": "CONTEXT",
+              "epistemicType": "FACT",
+              "origin": "USER",
+              "validationStatus": "VALIDATED",
+              "content": "Se confirma una señal de riesgo vigente que requiere análisis estructurado."
+            },
+            {
+              "itemId": "3bab14f2-bd46-440b-ad15-e1084651ba71",
+              "dimension": "EXPOSURE",
+              "epistemicType": "FACT",
+              "origin": "USER",
+              "validationStatus": "VALIDATED",
+              "content": "Existe exposición operativa mientras no se complete la mitigación requerida."
+            }
+          ],
+          "inferences": [
+            {
+              "itemId": "f149c600-d7d3-442b-ba96-281b492c1fba",
+              "dimension": "IMPACT",
+              "epistemicType": "INFERENCE",
+              "origin": "USER",
+              "validationStatus": "VALIDATED",
+              "content": "Podrían generarse impactos operativos relevantes si no se gestiona el riesgo a tiempo."
+            },
+            {
+              "itemId": "337af7e7-6439-4b60-bb39-d093579fbf4e",
+              "dimension": "SCENARIO",
+              "epistemicType": "INFERENCE",
+              "origin": "USER",
+              "validationStatus": "VALIDATED",
+              "content": "Es posible que Si la variabilidad operativa se mantiene sin medición comparable, la confiabilidad de los compromisos seguirá siendo baja."
+            },
+            {
+              "itemId": "2be1e4d0-fe53-4477-9cee-198efabe1abc",
+              "dimension": "IMPACT",
+              "epistemicType": "INFERENCE",
+              "origin": "USER",
+              "validationStatus": "VALIDATED",
+              "content": "Podrían generarse impactos operativos relevantes si no se gestiona el riesgo a tiempo."
+            }
+          ],
+          "assumptions": [
+            {
+              "itemId": "131738cc-acd0-48c8-898a-6af1ec69b2e0",
+              "dimension": "ALTERNATIVE",
+              "epistemicType": "ASSUMPTION",
+              "origin": "USER",
+              "validationStatus": "VALIDATED",
+              "content": "Una alternativa es comprometer ventanas de entrega por etapa crítica en lugar de una fecha puntual hasta contar con base cuantitativa suficiente."
+            }
+          ],
+          "missingInformation": [
+            {
+              "itemId": "dca9909f-a75d-44be-903c-6a91992e907e",
+              "dimension": "UNCERTAINTY",
+              "epistemicType": "MISSING_INFORMATION",
+              "origin": "USER",
+              "validationStatus": "VALIDATED",
+              "content": "Persisten datos faltantes que requieren investigación externa antes de cerrar conclusiones."
+            },
+            {
+              "itemId": "98993895-9c6a-48ab-b1d5-15613718eccd",
+              "dimension": "UNCERTAINTY",
+              "epistemicType": "MISSING_INFORMATION",
+              "origin": "USER",
+              "validationStatus": "VALIDATED",
+              "content": "Persisten datos faltantes que requieren investigación externa antes de cerrar conclusiones."
+            }
+          ],
+          "humanEvaluations": [
+            {
+              "itemId": "4373a95b-1af0-48b3-ac69-25b9529e17d8",
+              "dimension": "INTERVENTION",
+              "epistemicType": "HUMAN_EVALUATION",
+              "origin": "USER",
+              "validationStatus": "VALIDATED",
+              "content": "Solicito definir un alcance de medición y patrocinio para un análisis cuantitativo externo sobre cumplimiento de fechas."
+            }
+          ],
+          "evidenceItems": [
+            {
+              "itemId": "a6d9e622-6c3c-4d96-9314-a2898d567af1",
+              "dimension": "EVIDENCE",
+              "epistemicType": "FACT",
+              "origin": "USER",
+              "validationStatus": "VALIDATED",
+              "content": "Existe información de referencia interna pendiente de consolidación formal."
+            },
+            {
+              "itemId": "a5218894-f08b-4fe9-b125-8569aa52f468",
+              "dimension": "EVIDENCE",
+              "epistemicType": "FACT",
+              "origin": "USER",
+              "validationStatus": "VALIDATED",
+              "content": "Existe evidencia de referencia interna pendiente de consolidación formal."
+            }
+          ],
+          "openWarnings": [],
+          "resolvedFindings": [],
+          "sources": [
+            "Existe información de referencia interna pendiente de consolidación formal.",
+            "Existe evidencia de referencia interna pendiente de consolidación formal."
+          ],
+          "generationLimitations": [
+            "La IA solo consolidó contenido validado o editado por el usuario.",
+            "Persisten datos faltantes que requieren validación humana."
+          ]
+        },
+        "traceability": {
+          "sectionSources": {
+            "situation": [
+              "7f1996ca-373e-4f83-ae33-224d592ef2a2"
+            ],
+            "whyItMatters": [
+              "3bab14f2-bd46-440b-ad15-e1084651ba71"
+            ],
+            "possibleImpacts": [
+              "f149c600-d7d3-442b-ba96-281b492c1fba",
+              "2be1e4d0-fe53-4477-9cee-198efabe1abc"
+            ],
+            "evidence": [
+              "a6d9e622-6c3c-4d96-9314-a2898d567af1",
+              "a5218894-f08b-4fe9-b125-8569aa52f468"
+            ],
+            "uncertainties": [
+              "dca9909f-a75d-44be-903c-6a91992e907e",
+              "98993895-9c6a-48ab-b1d5-15613718eccd"
+            ],
+            "scenariosAndAlternatives": [
+              "337af7e7-6439-4b60-bb39-d093579fbf4e",
+              "131738cc-acd0-48c8-898a-6af1ec69b2e0"
+            ],
+            "requiredIntervention": [
+              "4373a95b-1af0-48b3-ac69-25b9529e17d8"
+            ]
+          },
+          "severityAssessmentRef": "ffdd0673-8d64-40d0-b7f3-c54e57af785e:2026-11-15T21:22:18.683Z",
+          "criticalReviewId": "dw-review-ffdd0673-8d64-40d0-b7f3-c54e57af785e-none",
+          "generatedFromCanvasUpdatedAt": "2026-11-15T21:22:18.432Z",
+          "generationProvider": "MockAIProvider",
+          "generationTimestamp": "2026-11-15T21:22:18.767Z",
+          "editedSections": [
+            "whyItMatters"
+          ],
+          "userReviewTimestamp": "2026-11-15T21:22:18.902Z"
+        },
+        "generatedBy": "AI",
+        "reviewedByUser": true,
+        "createdAt": "2026-11-15T21:22:18.766Z",
+        "updatedAt": "2026-11-15T21:22:18.902Z",
+        "reviewedAt": "2026-11-15T21:22:18.902Z"
+      },
+      "history": [],
+      "stale": false
+    },
+    "approvalRecord": {
+      "caseId": "ffdd0673-8d64-40d0-b7f3-c54e57af785e",
+      "briefId": "dw-brief-ffdd0673-8d64-40d0-b7f3-c54e57af785e-1794777738766",
+      "briefVersion": 1,
+      "status": "APPROVED",
+      "approvedBy": "USER",
+      "approvedAt": "2026-11-15T21:22:18.982Z",
+      "confirmedBriefVersion": 1,
+      "checklistSnapshot": {
+        "ready": true,
+        "checks": [
+          {
+            "id": "A",
+            "label": "Situación definida",
+            "passed": true,
+            "reason": "Completá la situación antes de aprobar."
+          },
+          {
+            "id": "B",
+            "label": "Exposición definida",
+            "passed": true,
+            "reason": "Completá la exposición antes de aprobar."
+          },
+          {
+            "id": "C",
+            "label": "Impacto identificado",
+            "passed": true,
+            "reason": "Agregá al menos un impacto plausible."
+          },
+          {
+            "id": "D",
+            "label": "Evidencia disponible",
+            "passed": true,
+            "reason": "Agregá evidencia disponible para sostener el análisis."
+          },
+          {
+            "id": "E",
+            "label": "Incertidumbres visibles",
+            "passed": true,
+            "reason": "Explicitá incertidumbres o registrá su ausencia relevante."
+          },
+          {
+            "id": "F",
+            "label": "Intervención requerida",
+            "passed": true,
+            "reason": "Definí la intervención requerida antes de aprobar."
+          },
+          {
+            "id": "G",
+            "label": "Cobertura mínima",
+            "passed": true,
+            "reason": "La cobertura mínima ya no está completa."
+          },
+          {
+            "id": "H",
+            "label": "Revisión crítica completada",
+            "passed": true,
+            "reason": "Completá la revisión crítica antes de aprobar."
+          },
+          {
+            "id": "I",
+            "label": "Sin bloqueos críticos",
+            "passed": true,
+            "reason": "Existen bloqueos críticos abiertos."
+          },
+          {
+            "id": "J",
+            "label": "Gravedad evaluada",
+            "passed": true,
+            "reason": "La gravedad todavía no fue evaluada por el usuario."
+          },
+          {
+            "id": "K",
+            "label": "Evaluación realizada por el usuario",
+            "passed": true,
+            "reason": "La gravedad debe haber sido evaluada por el usuario."
+          },
+          {
+            "id": "L",
+            "label": "Brief generado",
+            "passed": true,
+            "reason": "Generá el brief antes de aprobar."
+          },
+          {
+            "id": "M",
+            "label": "Versión actual del brief",
+            "passed": true,
+            "reason": "No hay una versión actual de brief para aprobar."
+          },
+          {
+            "id": "N",
+            "label": "Brief actualizado",
+            "passed": true,
+            "reason": "El análisis cambió después de generar este brief."
+          },
+          {
+            "id": "O",
+            "label": "Brief revisado por el usuario",
+            "passed": true,
+            "reason": "Revisá el brief antes de aprobarlo."
+          },
+          {
+            "id": "P",
+            "label": "Estado del brief revisado",
+            "passed": true,
+            "reason": "El brief debe estar en estado REVIEWED_BY_USER."
+          },
+          {
+            "id": "Q",
+            "label": "Estado del caso Brief borrador",
+            "passed": true,
+            "reason": "El caso debe estar en estado Brief borrador."
+          }
+        ],
+        "blockers": [],
+        "evaluatedAt": "2026-11-15T21:22:18.982Z"
+      },
+      "createdAt": "2026-11-15T21:22:18.982Z",
+      "updatedAt": "2026-11-15T21:22:18.982Z"
+    }
+  }
+}

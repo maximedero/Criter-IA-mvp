@@ -10,7 +10,7 @@ import type {
   SuggestNextQuestionInput,
   SuggestNextQuestionResult
 } from "./AIProvider";
-import type { CanvasItem, EpistemicType } from "../../domain/models/CanvasItem";
+import type { CanvasDimension, CanvasItem, EpistemicType } from "../../domain/models/CanvasItem";
 import type { ReviewFinding } from "../../domain/models/CriticalReview";
 import { HUMAN_SEVERITY_LABELS } from "../../domain/models/HumanSeverityAssessment";
 import {
@@ -28,6 +28,12 @@ const DYNAMICS_NARRATIVE =
   "El contrato con el proveedor venció el 31/10/2026. Actualmente continúa trabajando hasta finalizar el proyecto en curso, pero no podemos iniciar nuevos proyectos ni tareas.";
 const DYNAMICS_NARRATIVE_SLICE9 =
   "El contrato con el proveedor venció el 31/10/2026. El proveedor continúa únicamente hasta finalizar el proyecto actual. Actualmente no pueden iniciarse nuevos proyectos ni tareas.";
+const PHASE8_DYNAMICS_NARRATIVE =
+  "El contrato con el proveedor de Dynamics 365 venció el 31/10/2026. Actualmente el proveedor continúa trabajando únicamente hasta finalizar el proyecto en curso, pero no podemos iniciar nuevos proyectos ni tareas. El proceso de Compras puede demorar aproximadamente entre 1 y 6 meses. La situación podría afectar la capacidad futura para atender mantenimiento correctivo y evolutivo de distintas soluciones.";
+const PHASE8_SHAREPOINT_NARRATIVE =
+  "Microsoft informó que en julio de 2026 dejaría de dar soporte a los workflows de SharePoint sobre los que tenemos montadas distintas soluciones que utilizan Nintex Workflow. En 2023 advertimos esta situación y comenzamos una modernización de las soluciones, primero hacia SharePoint Subscription Edition y luego hacia SharePoint Online, porque inicialmente no estaba claro cuál sería el destino tecnológico definitivo. El proyecto de migración hacia SharePoint Subscription Edition se demoró y actualmente todavía existen soluciones en SharePoint 2016 sobre un motor de workflow sin soporte. Sabemos que estamos expuestos, pero no resulta sencillo dimensionar el impacto si alguno de esos workflows deja de funcionar.";
+const PHASE8_PRODUCCION_NARRATIVE =
+  "Para producir un bien necesitamos comprometer una fecha de entrega. En la fabricación intervienen distintas áreas y actualmente no conocemos con suficiente precisión la probabilidad de cumplimiento de esa fecha. Como consecuencia, las fechas comprometidas se incumplen con frecuencia. Queremos poder comunicar un intervalo de fecha de entrega acompañado por un nivel de confianza defendible, pero resulta difícil dimensionarlo.";
 
 const DYNAMICS_SUGGESTIONS: AnalyzeNarrativeResult = {
   suggestions: [
@@ -119,8 +125,297 @@ const DYNAMICS_QUESTIONS: Record<string, DynamicQuestion> = {
   }
 };
 
+const SHAREPOINT_SUGGESTIONS: AnalyzeNarrativeResult = {
+  suggestions: [
+    {
+      id: "dw-ai-sharepoint-1",
+      dimension: "CONTEXT",
+      epistemicType: "FACT",
+      content:
+        "Microsoft informó que en julio de 2026 dejaría de dar soporte a los workflows de SharePoint utilizados por soluciones con Nintex Workflow.",
+      source: "INITIAL_NARRATIVE",
+      rationale: "El relato indica explícitamente el hito de fin de soporte anunciado por Microsoft."
+    },
+    {
+      id: "dw-ai-sharepoint-2",
+      dimension: "CONTEXT",
+      epistemicType: "FACT",
+      content:
+        "La modernización comenzó en 2023 y transitó entre alternativas tecnológicas antes de definir un destino final.",
+      source: "INITIAL_NARRATIVE",
+      rationale: "El relato detalla una secuencia temporal de decisiones de modernización."
+    },
+    {
+      id: "dw-ai-sharepoint-3",
+      dimension: "EXPOSURE",
+      epistemicType: "FACT",
+      content:
+        "Persisten soluciones en SharePoint 2016 con un motor de workflow sin soporte debido a demoras del proyecto de migración.",
+      source: "INITIAL_NARRATIVE",
+      rationale: "El relato confirma exposición vigente por coexistencia de tecnología sin soporte."
+    }
+  ]
+};
+
+const SHAREPOINT_QUESTIONS: Record<string, DynamicQuestion> = {
+  CONTEXT: {
+    id: "dw-q-sp-context",
+    targetDimension: "CONTEXT",
+    question: "¿Qué evento concreto vuelve urgente revisar el riesgo de continuidad en este momento?",
+    reason: "Permite precisar el disparador actual del análisis.",
+    priority: "HIGH",
+    suggestedEpistemicType: "FACT",
+    answerOptions: ["ANSWER", "DONT_KNOW", "SKIP_FOR_NOW"]
+  },
+  EXPOSURE: {
+    id: "dw-q-sp-exposure",
+    targetDimension: "EXPOSURE",
+    question: "¿Qué soluciones continúan dependiendo de workflows de SharePoint con Nintex?",
+    reason: "Ayuda a delimitar el alcance real de la exposición.",
+    priority: "HIGH",
+    suggestedEpistemicType: "INFERENCE",
+    answerOptions: ["ANSWER", "DONT_KNOW", "SKIP_FOR_NOW"]
+  },
+  IMPACT: {
+    id: "dw-q-sp-impact",
+    targetDimension: "IMPACT",
+    question: "¿Qué procesos de negocio podrían interrumpirse si un workflow deja de funcionar?",
+    reason: "Permite dimensionar el impacto potencial sin inventar magnitudes.",
+    priority: "HIGH",
+    suggestedEpistemicType: "INFERENCE",
+    answerOptions: ["ANSWER", "DONT_KNOW", "SKIP_FOR_NOW"]
+  },
+  EVIDENCE: {
+    id: "dw-q-sp-evidence",
+    targetDimension: "EVIDENCE",
+    question: "¿Qué evidencia disponible respalda el estado actual de migración y las dependencias remanentes?",
+    reason: "Distingue percepción general de evidencia verificable.",
+    priority: "HIGH",
+    suggestedEpistemicType: "FACT",
+    answerOptions: ["ANSWER", "DONT_KNOW", "SKIP_FOR_NOW"]
+  },
+  UNCERTAINTY: {
+    id: "dw-q-sp-uncertainty",
+    targetDimension: "UNCERTAINTY",
+    question: "¿Qué información clave todavía falta para estimar la exposición de continuidad?",
+    reason: "Hace visibles los vacíos de información crítica.",
+    priority: "HIGH",
+    suggestedEpistemicType: "MISSING_INFORMATION",
+    answerOptions: ["ANSWER", "DONT_KNOW", "SKIP_FOR_NOW"]
+  },
+  INTERVENTION: {
+    id: "dw-q-sp-intervention",
+    targetDimension: "INTERVENTION",
+    question: "¿Qué intervención concreta necesitás del nivel superior para reducir este riesgo?",
+    reason: "Transforma el análisis en una solicitud accionable.",
+    priority: "HIGH",
+    suggestedEpistemicType: "HUMAN_EVALUATION",
+    answerOptions: ["ANSWER", "DONT_KNOW", "SKIP_FOR_NOW"]
+  }
+};
+
+const PRODUCCION_SUGGESTIONS: AnalyzeNarrativeResult = {
+  suggestions: [
+    {
+      id: "dw-ai-prod-1",
+      dimension: "CONTEXT",
+      epistemicType: "FACT",
+      content:
+        "La fabricación requiere comprometer una fecha de entrega, pero hoy no se conoce con precisión la probabilidad de cumplimiento.",
+      source: "INITIAL_NARRATIVE",
+      rationale: "El relato explicita la tensión entre compromiso de fecha e incertidumbre de cumplimiento."
+    },
+    {
+      id: "dw-ai-prod-2",
+      dimension: "EXPOSURE",
+      epistemicType: "FACT",
+      content: "Las fechas comprometidas se incumplen con frecuencia, afectando la coordinación operativa.",
+      source: "INITIAL_NARRATIVE",
+      rationale: "El relato declara incumplimientos frecuentes como condición actual."
+    },
+    {
+      id: "dw-ai-prod-3",
+      dimension: "INTERVENTION",
+      epistemicType: "HUMAN_EVALUATION",
+      content:
+        "Se requiere definir cómo comunicar intervalos de entrega con un nivel de confianza defendible sin inventar probabilidades.",
+      source: "INITIAL_NARRATIVE",
+      rationale: "El relato explicita una necesidad de intervención sobre la forma de comunicar compromisos."
+    }
+  ]
+};
+
+const PRODUCCION_QUESTIONS: Record<string, DynamicQuestion> = {
+  CONTEXT: {
+    id: "dw-q-prod-context",
+    targetDimension: "CONTEXT",
+    question: "¿Qué parte del proceso de fabricación está generando hoy la mayor incertidumbre sobre fechas?",
+    reason: "Permite ubicar el foco operativo del problema.",
+    priority: "HIGH",
+    suggestedEpistemicType: "FACT",
+    answerOptions: ["ANSWER", "DONT_KNOW", "SKIP_FOR_NOW"]
+  },
+  EXPOSURE: {
+    id: "dw-q-prod-exposure",
+    targetDimension: "EXPOSURE",
+    question: "¿Qué compromisos o áreas quedan más expuestos cuando se incumple una fecha comprometida?",
+    reason: "Ayuda a delimitar la exposición de negocio y coordinación.",
+    priority: "HIGH",
+    suggestedEpistemicType: "INFERENCE",
+    answerOptions: ["ANSWER", "DONT_KNOW", "SKIP_FOR_NOW"]
+  },
+  IMPACT: {
+    id: "dw-q-prod-impact",
+    targetDimension: "IMPACT",
+    question: "¿Qué consecuencias operativas concretas se observan cuando no se cumple la fecha comprometida?",
+    reason: "Permite describir impacto sin cuantificar probabilidades no sustentadas.",
+    priority: "HIGH",
+    suggestedEpistemicType: "INFERENCE",
+    answerOptions: ["ANSWER", "DONT_KNOW", "SKIP_FOR_NOW"]
+  },
+  EVIDENCE: {
+    id: "dw-q-prod-evidence",
+    targetDimension: "EVIDENCE",
+    question: "¿Qué información histórica o registros internos hoy existen sobre cumplimiento de fechas?",
+    reason: "Identifica evidencia disponible para un análisis defendible.",
+    priority: "HIGH",
+    suggestedEpistemicType: "FACT",
+    answerOptions: ["ANSWER", "DONT_KNOW", "SKIP_FOR_NOW"]
+  },
+  UNCERTAINTY: {
+    id: "dw-q-prod-uncertainty",
+    targetDimension: "UNCERTAINTY",
+    question: "¿Qué datos cuantitativos faltan para estimar un nivel de confianza de entrega?",
+    reason: "Explicita límites del análisis actual y evita inventar probabilidad.",
+    priority: "HIGH",
+    suggestedEpistemicType: "MISSING_INFORMATION",
+    answerOptions: ["ANSWER", "DONT_KNOW", "SKIP_FOR_NOW"]
+  },
+  INTERVENTION: {
+    id: "dw-q-prod-intervention",
+    targetDimension: "INTERVENTION",
+    question: "¿Qué decisión o priorización necesitás del nivel superior para encarar este análisis de cumplimiento?",
+    reason: "Convierte el análisis en pedido accionable hacia arriba.",
+    priority: "HIGH",
+    suggestedEpistemicType: "HUMAN_EVALUATION",
+    answerOptions: ["ANSWER", "DONT_KNOW", "SKIP_FOR_NOW"]
+  }
+};
+
+type FixtureType = "DYNAMICS" | "SHAREPOINT" | "PRODUCCION" | "NONE";
+
+type FixtureConfig = {
+  fixtureType: FixtureType;
+  suggestions: AnalyzeNarrativeResult;
+  questions: Record<string, DynamicQuestion>;
+};
+
 function normalizeNarrative(value: string): string {
   return value.trim().replace(/\s+/g, " ");
+}
+
+function detectFixtureType(initialNarrative: string): FixtureType {
+  const normalized = normalizeNarrative(initialNarrative);
+  const lowered = normalized.toLocaleLowerCase("es");
+
+  if (normalized === DYNAMICS_NARRATIVE || normalized === DYNAMICS_NARRATIVE_SLICE9 || normalized === PHASE8_DYNAMICS_NARRATIVE) {
+    return "DYNAMICS";
+  }
+
+  if (normalized === PHASE8_SHAREPOINT_NARRATIVE) {
+    return "SHAREPOINT";
+  }
+
+  if (normalized === PHASE8_PRODUCCION_NARRATIVE) {
+    return "PRODUCCION";
+  }
+
+  if (lowered.includes("dynamics 365") && lowered.includes("proveedor") && lowered.includes("compras")) {
+    return "DYNAMICS";
+  }
+
+  if (lowered.includes("sharepoint") && lowered.includes("nintex") && lowered.includes("workflow")) {
+    return "SHAREPOINT";
+  }
+
+  if (lowered.includes("producir un bien") && lowered.includes("fecha de entrega") && lowered.includes("probabilidad")) {
+    return "PRODUCCION";
+  }
+
+  return "NONE";
+}
+
+function getFixtureConfig(initialNarrative: string): FixtureConfig {
+  const fixtureType = detectFixtureType(initialNarrative);
+
+  if (fixtureType === "DYNAMICS") {
+    return {
+      fixtureType,
+      suggestions: DYNAMICS_SUGGESTIONS,
+      questions: DYNAMICS_QUESTIONS
+    };
+  }
+
+  if (fixtureType === "SHAREPOINT") {
+    return {
+      fixtureType,
+      suggestions: SHAREPOINT_SUGGESTIONS,
+      questions: SHAREPOINT_QUESTIONS
+    };
+  }
+
+  if (fixtureType === "PRODUCCION") {
+    return {
+      fixtureType,
+      suggestions: PRODUCCION_SUGGESTIONS,
+      questions: PRODUCCION_QUESTIONS
+    };
+  }
+
+  return {
+    fixtureType: "NONE",
+    suggestions: { suggestions: [] },
+    questions: {}
+  };
+}
+
+function getValidatedOrEditedDimensions(items: CanvasItem[]): Set<CanvasDimension> {
+  return new Set<CanvasDimension>(
+    items
+      .filter((item) => item.validationStatus === "VALIDATED" || item.validationStatus === "EDITED")
+      .map((item) => item.dimension)
+  );
+}
+
+function getAskedDimensions(
+  previousQuestions: SuggestNextQuestionInput["previousQuestions"]
+): Set<CanvasDimension> {
+  return new Set<CanvasDimension>(
+    previousQuestions
+      .filter((question) => ["ANSWERED", "DONT_KNOW", "SKIPPED", "NOT_APPLICABLE"].includes(question.status))
+      .map((question) => question.targetDimension)
+  );
+}
+
+function pickNextFixtureQuestion(
+  questions: Record<string, DynamicQuestion>,
+  covered: Set<CanvasDimension>,
+  asked: Set<CanvasDimension>
+): DynamicQuestion | null {
+  const ordered: CanvasDimension[] = ["CONTEXT", "EXPOSURE", "IMPACT", "EVIDENCE", "UNCERTAINTY", "INTERVENTION"];
+
+  for (const dimension of ordered) {
+    if (covered.has(dimension) || asked.has(dimension)) {
+      continue;
+    }
+
+    const next = questions[dimension];
+    if (next) {
+      return next;
+    }
+  }
+
+  return null;
 }
 
 type AIObservationCounters = {
@@ -166,8 +461,8 @@ function trackAIInvocation(method: keyof AIObservationCounters): void {
 }
 
 function isDynamicsReviewFixture(input: ReviewCaseInput): boolean {
-  const normalized = normalizeNarrative(input.initialNarrative);
-  if (normalized !== DYNAMICS_NARRATIVE) {
+  const fixtureType = detectFixtureType(input.initialNarrative);
+  if (fixtureType !== "DYNAMICS") {
     return false;
   }
 
@@ -674,13 +969,13 @@ export class MockAIProvider implements AIProvider {
   async analyzeNarrative(input: AnalyzeNarrativeInput): Promise<AnalyzeNarrativeResult> {
     trackAIInvocation("analyzeNarrative");
     const parsedInput = parseAnalyzeNarrativeInput(input);
-    const normalized = normalizeNarrative(parsedInput.initialNarrative);
+    const fixture = getFixtureConfig(parsedInput.initialNarrative);
 
-    if (normalized !== DYNAMICS_NARRATIVE) {
+    if (fixture.fixtureType === "NONE") {
       return parseAnalyzeNarrativeResult({ suggestions: [] });
     }
 
-    return parseAnalyzeNarrativeResult(DYNAMICS_SUGGESTIONS);
+    return parseAnalyzeNarrativeResult(fixture.suggestions);
   }
 
   async suggestNextQuestion(input: SuggestNextQuestionInput): Promise<SuggestNextQuestionResult> {
@@ -721,8 +1016,8 @@ export class MockAIProvider implements AIProvider {
       });
     }
 
-    const normalized = normalizeNarrative(parsed.initialNarrative);
-    if (normalized !== DYNAMICS_NARRATIVE) {
+    const fixture = getFixtureConfig(parsed.initialNarrative);
+    if (fixture.fixtureType === "NONE") {
       return parseSuggestNextQuestionResult({
         question: null,
         shouldStop: true,
@@ -733,17 +1028,8 @@ export class MockAIProvider implements AIProvider {
       });
     }
 
-    const covered = new Set<(keyof typeof DYNAMICS_QUESTIONS)>(
-      parsed.currentItems
-        .filter((item) => item.validationStatus === "VALIDATED" || item.validationStatus === "EDITED")
-        .map((item) => item.dimension as keyof typeof DYNAMICS_QUESTIONS)
-    );
-
-    const asked = new Set<(keyof typeof DYNAMICS_QUESTIONS)>(
-      parsed.previousQuestions
-        .filter((question) => ["ANSWERED", "DONT_KNOW", "SKIPPED", "NOT_APPLICABLE"].includes(question.status))
-        .map((question) => question.targetDimension as keyof typeof DYNAMICS_QUESTIONS)
-    );
+    const covered = getValidatedOrEditedDimensions(parsed.currentItems);
+    const asked = getAskedDimensions(parsed.previousQuestions);
 
     if (!covered.has("EVIDENCE") && asked.has("EVIDENCE")) {
       return parseSuggestNextQuestionResult({
@@ -757,32 +1043,16 @@ export class MockAIProvider implements AIProvider {
       });
     }
 
-    const pick = (dimension: keyof typeof DYNAMICS_QUESTIONS): DynamicQuestion | null => {
-      if (covered.has(dimension)) {
-        return null;
-      }
-
-      if (asked.has(dimension)) {
-        return null;
-      }
-
-      return DYNAMICS_QUESTIONS[dimension];
-    };
-
-    const ordered: (keyof typeof DYNAMICS_QUESTIONS)[] = ["CONTEXT", "EXPOSURE", "IMPACT", "EVIDENCE", "UNCERTAINTY", "INTERVENTION"];
-
-    for (const dimension of ordered) {
-      const next = pick(dimension);
-      if (next) {
-        return parseSuggestNextQuestionResult({
-          question: next,
-          shouldStop: false,
-          stopReason: null,
-          remainingMissingDimensions: parsed.coverageResult.missingDimensions,
-          provisionalBriefAllowed: false,
-          message: null
-        });
-      }
+    const next = pickNextFixtureQuestion(fixture.questions, covered, asked);
+    if (next) {
+      return parseSuggestNextQuestionResult({
+        question: next,
+        shouldStop: false,
+        stopReason: null,
+        remainingMissingDimensions: parsed.coverageResult.missingDimensions,
+        provisionalBriefAllowed: false,
+        message: null
+      });
     }
 
     return parseSuggestNextQuestionResult({

@@ -121,7 +121,7 @@ test("blocks brief actions when a generation precondition is revoked", async ({ 
   await expect(page.getByText(/5 de 6 dimensiones mínimas cubiertas\.?/)).toBeVisible();
   await expect(interventionSection.getByRole("heading", { name: "Intervención requerida" })).toBeVisible();
 
-  await expect(page.getByText("La cobertura mínima ya no está completa.")).toBeVisible();
+  await expect(page.locator('p[role="alert"]', { hasText: "La cobertura mínima ya no está completa." })).toBeVisible();
 
   const regenerateButton = page.getByRole("button", { name: "Regenerar borrador" });
   const generateButton = page.getByRole("button", { name: "Generar borrador de brief" });
@@ -139,7 +139,7 @@ test("blocks brief actions when a generation precondition is revoked", async ({ 
     await expect(generateButton).toBeDisabled();
   }
 
-  await expect(page.getByText("La cobertura mínima ya no está completa.")).toBeVisible();
+  await expect(page.locator('p[role="alert"]', { hasText: "La cobertura mínima ya no está completa." })).toBeVisible();
   await expect(page.getByRole("button", { name: "Marcar brief como revisado" })).toBeDisabled();
 
   const afterBlockedAttempt = await page.evaluate(() => {
@@ -172,7 +172,7 @@ test("blocks brief actions when a generation precondition is revoked", async ({ 
   await page.getByRole("button", { name: "Abrir" }).click();
 
   await expect(page.getByText(/5 de 6 dimensiones mínimas cubiertas\.?/)).toBeVisible();
-  await expect(page.getByText("La cobertura mínima ya no está completa.")).toBeVisible();
+  await expect(page.locator('p[role="alert"]', { hasText: "La cobertura mínima ya no está completa." })).toBeVisible();
 
   const afterReload = await page.evaluate(() => {
     const cases = JSON.parse(localStorage.getItem("dw.cases") ?? "[]") as Array<{ id: string }>;

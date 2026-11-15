@@ -8,6 +8,7 @@ import { canTransition } from "../../domain/workflow/caseStateMachine";
 import { canAdvanceToBriefDraft } from "../../domain/workflow/humanSeverityWorkflow";
 import type { AIProvider } from "../../providers/ai";
 import { MockAIProvider } from "../../providers/ai";
+import { getBriefRecord } from "../../providers/storage/briefStorage";
 import { listCanvasItemsByCase } from "../../providers/storage/canvasStorage";
 import {
   createDecisionCase,
@@ -17,6 +18,7 @@ import {
 } from "../../providers/storage/casesStorage";
 import { getCriticalReview, isCriticalReviewComplete } from "../../providers/storage/criticalReviewStorage";
 import { getHumanSeverityAssessment } from "../../providers/storage/humanSeverityStorage";
+import { getHumanBriefApproval } from "../../providers/storage/humanApprovalStorage";
 import { HumanSeverityPanel, mapMissingCoverageLabels } from "../canvas/HumanSeverityPanel";
 import { CanvasPage } from "../canvas/canvas-page";
 import { BriefWorkspace } from "../brief/BriefWorkspace";
@@ -90,7 +92,7 @@ export function InboxPage({ aiProvider }: Props) {
       (selectedCase.status === "CRITICAL_REVIEW" && criticalReviewComplete) ||
       selectedCase.status === "BRIEF_DRAFT";
 
-    const shouldRenderBriefWorkspace = selectedCase.status === "BRIEF_DRAFT";
+    const shouldRenderBriefWorkspace = selectedCase.status === "BRIEF_DRAFT" || selectedCase.status === "READY_TO_ESCALATE";
 
     return (
       <section>
@@ -201,6 +203,26 @@ export function InboxPage({ aiProvider }: Props) {
             }}
             onError={(message) => {
               setBriefError(message);
+            }}
+            onReadyToEscalate={() => {
+              const currentApproval = getHumanBriefApproval(selectedCase.id);
+              const transition = canTransition("BRIEF_DRAFT", "READY_TO_ESCALATE", {
+                hasUserValidatedOrEditedItem: true,
+                hasMinimumCoverage: coverage.hasMinimumCoverage,
+                startCriticalReviewRequested: true,
+                criticalReviewComplete,
+                criticalBlockers: openBlockers,
+                humanSeverity: severityAssessment.severity,
+                briefExists: true,
+                briefReviewed: getBriefRecord(selectedCase.id).current?.reviewedByUser ?? false,
+                humanApproved: Boolean(currentApproval?.status === "APPROVED")
+              });
+
+              if (transition.allowed) {
+                handleStatusChange("READY_TO_ESCALATE");
+              } else {
+                setBriefError("No se pudo completar la transición a Listo para elevar.");
+              }
             }}
           />
         ) : null}

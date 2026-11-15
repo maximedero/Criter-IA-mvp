@@ -66,6 +66,17 @@ export function CaseStatusControl({
     );
   }
 
+  if (status === "READY_TO_ESCALATE") {
+    return (
+      <section>
+        <p>
+          <strong>Estado:</strong> {CASE_STATUS_LABELS[status]}
+        </p>
+        <p>El brief fue revisado y aprobado por el usuario.</p>
+      </section>
+    );
+  }
+
   if (status !== "IN_ANALYSIS") {
     return (
       <section>

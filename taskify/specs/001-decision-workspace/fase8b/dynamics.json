@@ -1,0 +1,52 @@
+{
+  "caso": "dynamics",
+  "relato": "El contrato con el proveedor de Dynamics 365 venció el 31/10/2026. Actualmente el proveedor continúa trabajando únicamente hasta finalizar el proyecto en curso, pero no podemos iniciar nuevos proyectos ni tareas. El proceso de Compras puede demorar aproximadamente entre 1 y 6 meses. La situación podría afectar la capacidad futura para atender mantenimiento correctivo y evolutivo de distintas soluciones.",
+  "sugerencias": {
+    "totales": 3,
+    "aceptadas": 1,
+    "editadas": 1,
+    "rechazadas": 1,
+    "detalle": [
+      {
+        "dimension": "CONTEXT",
+        "tipoEpistemologico": "FACT",
+        "contenido": "El contrato con el proveedor venció el 31/10/2026."
+      },
+      {
+        "dimension": "CONTEXT",
+        "tipoEpistemologico": "FACT",
+        "contenido": "El proveedor continúa trabajando hasta finalizar el proyecto actualmente en curso."
+      },
+      {
+        "dimension": "EXPOSURE",
+        "tipoEpistemologico": "FACT",
+        "contenido": "Actualmente no pueden iniciarse nuevos proyectos ni tareas."
+      }
+    ]
+  },
+  "coberturaInicial": "0/6",
+  "coberturaDespuesSugerencias": "1/6",
+  "preguntas": {
+    "totales": 5,
+    "respuestasNormales": 5,
+    "noLoSe": 0,
+    "omitidas": 0,
+    "detenciones": 0,
+    "detalle": [
+      "¿Qué sistemas, procesos, proyectos, áreas, personas o resultados podrían verse afectados?",
+      "¿Qué trabajos concretos quedarían sin capacidad de ejecución si finaliza el proyecto actual?",
+      "¿Qué información respalda actualmente que la continuidad del proveedor es necesaria para atender esas soluciones?",
+      "¿Qué información relevante todavía no conocés para evaluar este riesgo?",
+      "¿Qué necesitás concretamente que tu superior comprenda, consulte, priorice, autorice, decida o escale?"
+    ]
+  },
+  "coberturaFinal": "6/6",
+  "datosFaltantesDescubiertos": 1,
+  "guardrails": {
+    "hechosInventados": 0,
+    "cifrasInventadas": 0,
+    "fechasInventadas": 0,
+    "fuentesInventadas": 0
+  },
+  "sinTransicionAutomatica": true
+}

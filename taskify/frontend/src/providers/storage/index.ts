@@ -12,3 +12,4 @@ export * from "./aiSessionStorage";
 export * from "./criticalReviewStorage";
 export * from "./humanSeverityStorage";
 export * from "./briefStorage";
+export * from "./humanApprovalStorage";

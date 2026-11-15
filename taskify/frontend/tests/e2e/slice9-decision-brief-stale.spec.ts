@@ -127,7 +127,7 @@ test("marks a generated brief stale and requires explicit regeneration", async (
 
   expect(updatedCanvasImpact).toBe(updatedImpactText);
 
-  await expect(page.getByText("El análisis cambió después de generar este brief.")).toBeVisible();
+  await expect(page.locator('p[role="alert"]', { hasText: "El análisis cambió después de generar este brief." })).toBeVisible();
   await expect(page.getByRole("button", { name: "Regenerar borrador" })).toBeVisible();
   await expect(page.getByText(editedExecutiveText)).toBeVisible();
   await expect(page.getByText(/Estado:\s*Brief borrador/).first()).toBeVisible();

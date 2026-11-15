@@ -5,12 +5,14 @@ import { createCanvasItem, deleteCanvasItem, listCanvasItemsByCase, updateCanvas
 import { CoveragePanel } from "./CoveragePanel";
 import { StatementCard } from "./statement-card";
 import { StatementEditor } from "./StatementEditor";
-export function CanvasPage({ caseId }) {
+export function CanvasPage({ caseId, onItemsChange }) {
     const [items, setItems] = useState([]);
     const [addingDimension, setAddingDimension] = useState(null);
     const [editingId, setEditingId] = useState(null);
     const refresh = () => {
-        setItems(listCanvasItemsByCase(caseId));
+        const listed = listCanvasItemsByCase(caseId);
+        setItems(listed);
+        onItemsChange?.(listed);
     };
     useEffect(() => {
         refresh();

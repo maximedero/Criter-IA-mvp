@@ -1,8 +1,12 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useEffect, useMemo, useState } from "react";
-import { createDecisionCase, getDecisionCaseById, listDecisionCases } from "../../providers/storage/casesStorage";
+import { CASE_STATUS_LABELS } from "../../domain/models/CaseStatus";
+import { canTransition } from "../../domain/workflow/caseStateMachine";
+import { listCanvasItemsByCase } from "../../providers/storage/canvasStorage";
+import { createDecisionCase, getDecisionCaseById, listDecisionCases, updateDecisionCaseStatus } from "../../providers/storage/casesStorage";
 import { CanvasPage } from "../canvas/canvas-page";
 import { CaseForm } from "./CaseForm";
+import { CaseStatusControl } from "./CaseStatusControl";
 function formatUpdatedAt(value) {
     return new Date(value).toLocaleString("es-AR", {
         year: "numeric",
@@ -16,9 +20,14 @@ export function InboxPage() {
     const [items, setItems] = useState([]);
     const [showCreateForm, setShowCreateForm] = useState(false);
     const [selectedCaseId, setSelectedCaseId] = useState(null);
+    const [selectedCaseItems, setSelectedCaseItems] = useState([]);
     const [viewMode, setViewMode] = useState("inbox");
     const refresh = () => {
-        setItems(listDecisionCases());
+        const listed = listDecisionCases();
+        setItems(listed);
+        if (selectedCaseId) {
+            setSelectedCaseItems(listCanvasItemsByCase(selectedCaseId));
+        }
     };
     useEffect(() => {
         refresh();
@@ -30,7 +39,30 @@ export function InboxPage() {
         return getDecisionCaseById(selectedCaseId);
     }, [selectedCaseId, items]);
     if (viewMode === "detail" && selectedCase) {
-        return (_jsxs("section", { children: [_jsx("h2", { children: "Detalle de caso" }), _jsxs("p", { children: [_jsx("strong", { children: "T\u00EDtulo:" }), " ", selectedCase.title] }), _jsxs("p", { children: [_jsx("strong", { children: "Estado:" }), " ", selectedCase.status] }), _jsxs("p", { children: [_jsx("strong", { children: "Relato inicial:" }), " ", selectedCase.initialNarrative] }), _jsx(CanvasPage, { caseId: selectedCase.id }), _jsx("button", { type: "button", onClick: () => {
+        return (_jsxs("section", { children: [_jsx("h2", { children: "Detalle de caso" }), _jsxs("p", { children: [_jsx("strong", { children: "T\u00EDtulo:" }), " ", selectedCase.title] }), _jsxs("p", { children: [_jsx("strong", { children: "Estado:" }), " ", CASE_STATUS_LABELS[selectedCase.status]] }), _jsxs("p", { children: [_jsx("strong", { children: "Relato inicial:" }), " ", selectedCase.initialNarrative] }), _jsx(CaseStatusControl, { status: selectedCase.status, items: selectedCaseItems, onStatusChange: (status) => {
+                        updateDecisionCaseStatus(selectedCase.id, status);
+                        refresh();
+                    } }), _jsx(CanvasPage, { caseId: selectedCase.id, onItemsChange: (nextItems) => {
+                        setSelectedCaseItems(nextItems);
+                        if (selectedCase.status === "DRAFT") {
+                            const hasUserValidatedOrEditedItem = nextItems.some((item) => item.origin === "USER" && (item.validationStatus === "VALIDATED" || item.validationStatus === "EDITED"));
+                            const transition = canTransition("DRAFT", "IN_ANALYSIS", {
+                                hasUserValidatedOrEditedItem,
+                                hasMinimumCoverage: false,
+                                startCriticalReviewRequested: false,
+                                criticalReviewComplete: false,
+                                criticalBlockers: 0,
+                                humanSeverity: "UNASSESSED",
+                                briefExists: false,
+                                briefReviewed: false,
+                                humanApproved: false
+                            });
+                            if (transition.allowed) {
+                                updateDecisionCaseStatus(selectedCase.id, "IN_ANALYSIS");
+                                refresh();
+                            }
+                        }
+                    } }), _jsx("button", { type: "button", onClick: () => {
                         setViewMode("inbox");
                         refresh();
                     }, children: "Volver al Inbox" })] }));
@@ -39,8 +71,9 @@ export function InboxPage() {
                     createDecisionCase(payload);
                     setShowCreateForm(false);
                     refresh();
-                } })) : (_jsx("button", { type: "button", onClick: () => setShowCreateForm(true), children: "Nuevo caso" })), items.length === 0 ? _jsx("p", { children: "No hay casos cargados." }) : null, items.length > 0 ? (_jsxs("table", { children: [_jsx("thead", { children: _jsxs("tr", { children: [_jsx("th", { children: "T\u00EDtulo" }), _jsx("th", { children: "Estado" }), _jsx("th", { children: "Actualizado" }), _jsx("th", { children: "Acci\u00F3n" })] }) }), _jsx("tbody", { children: items.map((item) => (_jsxs("tr", { children: [_jsx("td", { children: item.title }), _jsx("td", { children: item.status }), _jsx("td", { children: formatUpdatedAt(item.updatedAt) }), _jsx("td", { children: _jsx("button", { type: "button", onClick: () => {
+                } })) : (_jsx("button", { type: "button", onClick: () => setShowCreateForm(true), children: "Nuevo caso" })), items.length === 0 ? _jsx("p", { children: "No hay casos cargados." }) : null, items.length > 0 ? (_jsxs("table", { children: [_jsx("thead", { children: _jsxs("tr", { children: [_jsx("th", { children: "T\u00EDtulo" }), _jsx("th", { children: "Estado" }), _jsx("th", { children: "Actualizado" }), _jsx("th", { children: "Acci\u00F3n" })] }) }), _jsx("tbody", { children: items.map((item) => (_jsxs("tr", { children: [_jsx("td", { children: item.title }), _jsx("td", { children: CASE_STATUS_LABELS[item.status] }), _jsx("td", { children: formatUpdatedAt(item.updatedAt) }), _jsx("td", { children: _jsx("button", { type: "button", onClick: () => {
                                             setSelectedCaseId(item.id);
+                                            setSelectedCaseItems(listCanvasItemsByCase(item.id));
                                             setViewMode("detail");
                                         }, children: "Abrir" }) })] }, item.id))) })] })) : null] }));
 }

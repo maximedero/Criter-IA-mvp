@@ -1,4 +1,6 @@
-export type DecisionCaseStatus = "BORRADOR";
+import type { CaseStatus } from "./CaseStatus";
+
+export type DecisionCaseStatus = CaseStatus;
 
 export type DecisionCase = {
   id: string;

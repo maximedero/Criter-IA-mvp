@@ -13,12 +13,12 @@ test("slice1 dynamics inbox flow", async ({ page }) => {
   await page.getByRole("button", { name: "Crear caso" }).click();
 
   await expect(page.getByText(TITLE)).toBeVisible();
-  await expect(page.getByText("BORRADOR")).toBeVisible();
+  await expect(page.getByText("Borrador")).toBeVisible();
 
   await page.reload();
 
   await expect(page.getByText(TITLE)).toBeVisible();
-  await expect(page.getByText("BORRADOR")).toBeVisible();
+  await expect(page.getByText("Borrador")).toBeVisible();
 
   await page.getByRole("button", { name: "Abrir" }).click();
   await expect(page.getByText("Detalle de caso")).toBeVisible();

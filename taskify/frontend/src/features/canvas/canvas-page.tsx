@@ -17,15 +17,18 @@ import { StatementEditor } from "./StatementEditor";
 
 type Props = {
   caseId: string;
+  onItemsChange?: (items: CanvasItem[]) => void;
 };
 
-export function CanvasPage({ caseId }: Props) {
+export function CanvasPage({ caseId, onItemsChange }: Props) {
   const [items, setItems] = useState<CanvasItem[]>([]);
   const [addingDimension, setAddingDimension] = useState<CanvasDimension | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
 
   const refresh = () => {
-    setItems(listCanvasItemsByCase(caseId));
+    const listed = listCanvasItemsByCase(caseId);
+    setItems(listed);
+    onItemsChange?.(listed);
   };
 
   useEffect(() => {

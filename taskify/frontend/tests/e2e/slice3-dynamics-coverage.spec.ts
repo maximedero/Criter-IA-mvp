@@ -58,13 +58,13 @@ test("slice3 dynamics coverage engine flow", async ({ page }) => {
   await page.locator("form").last().getByRole("button", { name: "Agregar", exact: true }).click();
 
   await expect(page.getByText("6 de 6 dimensiones mínimas cubiertas.")).toBeVisible();
-  await expect(page.getByText("Cobertura mínima alcanzada.")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Iniciar revisión" })).toBeVisible();
   await expect(page.getByText("Listo para elevar")).toHaveCount(0);
 
   await page.reload();
   await page.getByRole("button", { name: "Abrir" }).click();
 
   await expect(page.getByText("6 de 6 dimensiones mínimas cubiertas.")).toBeVisible();
-  await expect(page.getByText("Cobertura mínima alcanzada.")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Iniciar revisión" })).toBeVisible();
   await expect(page.getByText("Listo para elevar")).toHaveCount(0);
 });

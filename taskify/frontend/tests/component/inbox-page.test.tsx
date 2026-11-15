@@ -29,7 +29,7 @@ describe("InboxPage", () => {
     fireEvent.click(screen.getByRole("button", { name: "Crear caso" }));
 
     expect(screen.getByText("Contrato Dynamics 365")).toBeInTheDocument();
-    expect(screen.getByText("BORRADOR")).toBeInTheDocument();
+    expect(screen.getByText("Borrador")).toBeInTheDocument();
   });
 
   it("validates form", () => {

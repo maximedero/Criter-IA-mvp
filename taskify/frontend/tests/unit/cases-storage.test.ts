@@ -20,7 +20,7 @@ describe("casesStorage", () => {
     });
 
     expect(item.id).toBeTruthy();
-    expect(item.status).toBe("BORRADOR");
+    expect(item.status).toBe("DRAFT");
   });
 
   it("lists cases", () => {

@@ -1,8 +1,18 @@
 import { useEffect, useMemo, useState } from "react";
+import type { CanvasItem } from "../../domain/models/CanvasItem";
+import { CASE_STATUS_LABELS } from "../../domain/models/CaseStatus";
 import type { DecisionCase } from "../../domain/models/DecisionCase";
-import { createDecisionCase, getDecisionCaseById, listDecisionCases } from "../../providers/storage/casesStorage";
+import { canTransition } from "../../domain/workflow/caseStateMachine";
+import { listCanvasItemsByCase } from "../../providers/storage/canvasStorage";
+import {
+  createDecisionCase,
+  getDecisionCaseById,
+  listDecisionCases,
+  updateDecisionCaseStatus
+} from "../../providers/storage/casesStorage";
 import { CanvasPage } from "../canvas/canvas-page";
 import { CaseForm } from "./CaseForm";
+import { CaseStatusControl } from "./CaseStatusControl";
 
 type ViewMode = "inbox" | "detail";
 
@@ -20,10 +30,16 @@ export function InboxPage() {
   const [items, setItems] = useState<DecisionCase[]>([]);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [selectedCaseId, setSelectedCaseId] = useState<string | null>(null);
+  const [selectedCaseItems, setSelectedCaseItems] = useState<CanvasItem[]>([]);
   const [viewMode, setViewMode] = useState<ViewMode>("inbox");
 
   const refresh = () => {
-    setItems(listDecisionCases());
+    const listed = listDecisionCases();
+    setItems(listed);
+
+    if (selectedCaseId) {
+      setSelectedCaseItems(listCanvasItemsByCase(selectedCaseId));
+    }
   };
 
   useEffect(() => {
@@ -46,13 +62,50 @@ export function InboxPage() {
           <strong>Título:</strong> {selectedCase.title}
         </p>
         <p>
-          <strong>Estado:</strong> {selectedCase.status}
+          <strong>Estado:</strong> {CASE_STATUS_LABELS[selectedCase.status]}
         </p>
         <p>
           <strong>Relato inicial:</strong> {selectedCase.initialNarrative}
         </p>
 
-        <CanvasPage caseId={selectedCase.id} />
+        <CaseStatusControl
+          status={selectedCase.status}
+          items={selectedCaseItems}
+          onStatusChange={(status) => {
+            updateDecisionCaseStatus(selectedCase.id, status);
+            refresh();
+          }}
+        />
+
+        <CanvasPage
+          caseId={selectedCase.id}
+          onItemsChange={(nextItems) => {
+            setSelectedCaseItems(nextItems);
+
+            if (selectedCase.status === "DRAFT") {
+              const hasUserValidatedOrEditedItem = nextItems.some(
+                (item) => item.origin === "USER" && (item.validationStatus === "VALIDATED" || item.validationStatus === "EDITED")
+              );
+
+              const transition = canTransition("DRAFT", "IN_ANALYSIS", {
+                hasUserValidatedOrEditedItem,
+                hasMinimumCoverage: false,
+                startCriticalReviewRequested: false,
+                criticalReviewComplete: false,
+                criticalBlockers: 0,
+                humanSeverity: "UNASSESSED",
+                briefExists: false,
+                briefReviewed: false,
+                humanApproved: false
+              });
+
+              if (transition.allowed) {
+                updateDecisionCaseStatus(selectedCase.id, "IN_ANALYSIS");
+                refresh();
+              }
+            }
+          }}
+        />
 
         <button
           type="button"
@@ -102,13 +155,14 @@ export function InboxPage() {
             {items.map((item) => (
               <tr key={item.id}>
                 <td>{item.title}</td>
-                <td>{item.status}</td>
+                <td>{CASE_STATUS_LABELS[item.status]}</td>
                 <td>{formatUpdatedAt(item.updatedAt)}</td>
                 <td>
                   <button
                     type="button"
                     onClick={() => {
                       setSelectedCaseId(item.id);
+                      setSelectedCaseItems(listCanvasItemsByCase(item.id));
                       setViewMode("detail");
                     }}
                   >

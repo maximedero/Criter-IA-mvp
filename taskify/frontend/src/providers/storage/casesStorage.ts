@@ -1,3 +1,4 @@
+import type { CaseStatus } from "../../domain/models/CaseStatus";
 import type { CreateDecisionCaseInput, DecisionCase } from "../../domain/models/DecisionCase";
 import { purgeExpiredDecisionCases, RETENTION_MS } from "../../domain/rules/retentionRules";
 
@@ -71,7 +72,7 @@ export function createDecisionCase(input: CreateDecisionCaseInput): DecisionCase
     id: nextId(),
     title: safe.title,
     initialNarrative: safe.initialNarrative,
-    status: "BORRADOR",
+    status: "DRAFT",
     createdAt: now.toISOString(),
     updatedAt: now.toISOString(),
     expiresAt: new Date(now.getTime() + RETENTION_MS).toISOString()
@@ -81,6 +82,28 @@ export function createDecisionCase(input: CreateDecisionCaseInput): DecisionCase
   writeCases([item, ...items]);
 
   return item;
+}
+
+export function updateDecisionCaseStatus(id: string, status: CaseStatus): DecisionCase {
+  const items = loadCases();
+  const index = items.findIndex((item) => item.id === id);
+
+  if (index < 0) {
+    throw new Error("case not found");
+  }
+
+  const current = items[index];
+  const updated: DecisionCase = {
+    ...current,
+    status,
+    updatedAt: new Date().toISOString()
+  };
+
+  const nextItems = [...items];
+  nextItems[index] = updated;
+  writeCases(nextItems);
+
+  return updated;
 }
 
 export function clearDecisionCasesForTests(): void {

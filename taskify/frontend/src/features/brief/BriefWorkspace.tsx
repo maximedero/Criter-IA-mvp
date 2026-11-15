@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { CanvasItem } from "../../domain/models/CanvasItem";
 import { EPISTEMIC_TYPE_LABELS } from "../../domain/models/CanvasItem";
 import type { CaseStatus } from "../../domain/models/CaseStatus";
@@ -33,6 +33,8 @@ import {
   reevaluateAndCreateApproval
 } from "../../domain/workflow/humanApprovalWorkflow";
 import type { DecisionBrief, ExecutiveSectionKey } from "../../domain/models/DecisionBrief";
+import { Button } from "../../app/ui/Button";
+import "./brief-workspace.css";
 
 type Props = {
   decisionCase: DecisionCase;
@@ -86,6 +88,8 @@ export function BriefWorkspace({
   const [record, setRecord] = useState(() => getBriefRecord(decisionCase.id));
   const [approval, setApproval] = useState(() => getHumanBriefApproval(decisionCase.id));
   const [showApproveDialog, setShowApproveDialog] = useState(false);
+  const approveTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const dialogCancelRef = useRef<HTMLButtonElement | null>(null);
 
   const activeItems = useMemo(() => items.filter((item) => item.validationStatus !== "REJECTED"), [items]);
 
@@ -120,6 +124,33 @@ export function BriefWorkspace({
       setHasViewedExecutive(true);
     }
   }, [view]);
+
+  useEffect(() => {
+    if (!showApproveDialog) {
+      return;
+    }
+
+    const previousActive = document.activeElement as HTMLElement | null;
+    dialogCancelRef.current?.focus();
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        cancelApproval();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      if (approveTriggerRef.current) {
+        approveTriggerRef.current.focus();
+      } else {
+        previousActive?.focus();
+      }
+    };
+  }, [showApproveDialog]);
 
   const gate = evaluateBriefGenerationGate({
     caseStatus: decisionCase.status,
@@ -355,19 +386,23 @@ export function BriefWorkspace({
   };
 
   return (
-    <section aria-label="Preparación del brief">
+    <section aria-label="Preparación del brief" className="dw-brief-workspace">
       <h4>PREPARACIÓN DEL BRIEF</h4>
       <p>
         La IA puede preparar un borrador utilizando únicamente información validada o editada por el usuario. El resultado debe ser
         revisado antes de elevarlo.
       </p>
 
-      {!gate.allowed && decisionCase.status === "BRIEF_DRAFT" ? <p role="alert">{gate.reasons[0]}</p> : null}
+      {!gate.allowed && decisionCase.status === "BRIEF_DRAFT" ? (
+        <p className="dw-brief-alert" role="alert">
+          {gate.reasons[0]}
+        </p>
+      ) : null}
 
       {decisionCase.status === "BRIEF_DRAFT" ? (
-        <button type="button" disabled={loading || !gate.allowed} onClick={() => generate(false)}>
+        <Button type="button" disabled={loading || !gate.allowed} onClick={() => generate(false)}>
           Generar borrador de brief
-        </button>
+        </Button>
       ) : null}
 
       {loading ? <p>Generando borrador...</p> : null}
@@ -376,15 +411,15 @@ export function BriefWorkspace({
         <>
           {decisionCase.status === "BRIEF_DRAFT" && record.stale ? (
             <>
-              <p role="alert">El análisis cambió después de generar este brief.</p>
-              <button type="button" disabled={loading || !gate.allowed || isReadyToEscalate} onClick={() => generate(true)}>
+              <p className="dw-brief-alert" role="alert">El análisis cambió después de generar este brief.</p>
+              <Button type="button" disabled={loading || !gate.allowed || isReadyToEscalate} onClick={() => generate(true)}>
                 Regenerar borrador
-              </button>
+              </Button>
             </>
           ) : null}
 
           {isReadyToEscalate && approvalMatchesCurrentBrief && approval ? (
-            <section aria-label="Aprobación confirmada">
+            <section aria-label="Aprobación confirmada" className="dw-approval-ready-panel">
               <h5>LISTO PARA ELEVAR</h5>
               <p>El brief fue revisado y aprobado por el usuario.</p>
               <p>Versión aprobada: v{approval.confirmedBriefVersion}</p>
@@ -397,10 +432,13 @@ export function BriefWorkspace({
               </p>
               <details>
                 <summary>Checklist al momento de aprobar</summary>
-                <ul>
+                <ul className="dw-approval-checklist">
                   {approval.checklistSnapshot.checks.map((check) => (
-                    <li key={check.id}>
-                      {check.label}: {check.passed ? "Cumplido" : "Pendiente"}
+                    <li key={check.id} className="dw-approval-checklist__item">
+                      <span>{check.label}</span>
+                      <span className={check.passed ? "dw-approval-badge dw-approval-badge--passed" : "dw-approval-badge dw-approval-badge--pending"}>
+                        {check.passed ? "Cumplido" : "Pendiente"}
+                      </span>
                     </li>
                   ))}
                 </ul>
@@ -408,13 +446,25 @@ export function BriefWorkspace({
             </section>
           ) : null}
 
-          <div role="tablist" aria-label="Vistas del brief">
-            <button type="button" role="tab" aria-selected={view === "executive"} onClick={() => setView("executive")}>
+          <div role="tablist" aria-label="Vistas del brief" className="dw-brief-tabs">
+            <Button
+              type="button"
+              role="tab"
+              aria-selected={view === "executive"}
+              variant={view === "executive" ? "primary" : "ghost"}
+              onClick={() => setView("executive")}
+            >
               Brief ejecutivo
-            </button>
-            <button type="button" role="tab" aria-selected={view === "expanded"} onClick={() => setView("expanded")}>
+            </Button>
+            <Button
+              type="button"
+              role="tab"
+              aria-selected={view === "expanded"}
+              variant={view === "expanded" ? "primary" : "ghost"}
+              onClick={() => setView("expanded")}
+            >
               Vista expandida
-            </button>
+            </Button>
           </div>
 
           {view === "executive" ? (
@@ -432,18 +482,21 @@ export function BriefWorkspace({
                           {label}
                           <textarea value={editingValue} onChange={(event) => setEditingValue(event.target.value)} />
                         </label>
-                        <button type="button" onClick={saveEdit} disabled={isReadyToEscalate}>
-                          Guardar edición
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setEditingSection(null);
-                            setEditingValue("");
-                          }}
-                        >
-                          Cancelar
-                        </button>
+                        <div className="dw-brief-inline-actions">
+                          <Button type="button" onClick={saveEdit} disabled={isReadyToEscalate}>
+                            Guardar edición
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            onClick={() => {
+                              setEditingSection(null);
+                              setEditingValue("");
+                            }}
+                          >
+                            Cancelar
+                          </Button>
+                        </div>
                       </>
                     ) : (
                       <>
@@ -455,8 +508,9 @@ export function BriefWorkspace({
                             ))}
                           </ul>
                         ) : null}
-                        <button
+                        <Button
                           type="button"
+                          variant="ghost"
                           aria-label={`Editar ${label}`}
                           disabled={isReadyToEscalate}
                           onClick={() => {
@@ -465,7 +519,7 @@ export function BriefWorkspace({
                           }}
                         >
                           Editar
-                        </button>
+                        </Button>
                       </>
                     )}
 
@@ -491,9 +545,9 @@ export function BriefWorkspace({
 
               <p>Estado del brief: {brief.status}</p>
 
-              <button type="button" onClick={markReviewed} disabled={!reviewGate.allowed || record.stale || isReadyToEscalate}>
+              <Button type="button" onClick={markReviewed} disabled={!reviewGate.allowed || record.stale || isReadyToEscalate}>
                 Marcar brief como revisado
-              </button>
+              </Button>
 
               {brief.reviewedByUser ? <p>Brief revisado por el usuario.</p> : null}
               {isReadyToEscalate ? <p>Este brief corresponde a una versión aprobada.</p> : null}
@@ -581,48 +635,72 @@ export function BriefWorkspace({
           )}
 
           {decisionCase.status === "BRIEF_DRAFT" ? (
-            <section aria-label="Aprobación humana">
+            <section aria-label="Aprobación humana" className="dw-approval-panel">
               <h5>APROBACIÓN HUMANA</h5>
               <p>El sistema verifica las condiciones necesarias, pero la aprobación final debe realizarla una persona.</p>
               <h6>CHECKLIST FINAL</h6>
-              <ul>
+              <ul className="dw-approval-checklist">
                 {readiness.checks.map((check) => (
-                  <li key={check.id}>
-                    {check.passed ? "✓" : "○"} {check.label}
-                    <p>{check.passed ? "Cumplido" : "Pendiente"}</p>
+                  <li key={check.id} className="dw-approval-checklist__item">
+                    <span>{check.passed ? "✓" : "○"} {check.label}</span>
+                    <span className={check.passed ? "dw-approval-badge dw-approval-badge--passed" : "dw-approval-badge dw-approval-badge--pending"}>
+                      {check.passed ? "Cumplido" : "Pendiente"}
+                    </span>
                     {!check.passed ? <p>Explicación: {check.reason}</p> : null}
                   </li>
                 ))}
               </ul>
 
-              <p>
+              <p className={readiness.ready ? "dw-approval-status dw-approval-status--ready" : "dw-approval-status dw-approval-status--blocked"}>
                 {readiness.ready
                   ? "Se cumplen las condiciones para aprobar el brief."
                   : "Todavía no se cumplen las condiciones para aprobar el brief."}
               </p>
 
-              <button type="button" onClick={openApproveDialog} disabled={!canApproveBrief || isReadyToEscalate}>
+              <Button
+                type="button"
+                onClick={openApproveDialog}
+                disabled={!canApproveBrief || isReadyToEscalate}
+                ref={approveTriggerRef}
+              >
                 Aprobar brief
-              </button>
+              </Button>
 
               {showApproveDialog ? (
-                <div role="dialog" aria-modal="true" aria-label="Confirmar aprobación">
-                  <h5>Confirmar aprobación</h5>
-                  <p>Estás por marcar este caso como LISTO PARA ELEVAR.</p>
-                  <p>
-                    Esta acción confirma que revisaste el brief actual y que considerás que está en condiciones de ser presentado
-                    al nivel superior correspondiente.
-                  </p>
-                  <p>Caso: {decisionCase.title}</p>
-                  <p>Versión del brief: v{brief.version}</p>
-                  <p>Gravedad: {brief.executive.severity.label}</p>
-                  <p>Evaluación de gravedad realizada por el usuario.</p>
-                  <button type="button" onClick={cancelApproval}>
-                    Cancelar
-                  </button>
-                  <button type="button" onClick={confirmApproval}>
-                    Confirmar aprobación
-                  </button>
+                <div className="dw-approve-dialog__overlay">
+                  <div role="dialog" aria-modal="true" aria-label="Confirmar aprobación" className="dw-approve-dialog">
+                    <h5>Confirmar aprobación</h5>
+                    <p>Estás por marcar este caso como LISTO PARA ELEVAR.</p>
+                    <p>
+                      Esta acción confirma que revisaste el brief actual y que considerás que está en condiciones de ser presentado
+                      al nivel superior correspondiente.
+                    </p>
+                    <dl className="dw-approve-dialog__meta">
+                      <div>
+                        <dt>Caso</dt>
+                        <dd>{decisionCase.title}</dd>
+                      </div>
+                      <div>
+                        <dt>Versión del brief</dt>
+                        <dd>v{brief.version}</dd>
+                      </div>
+                      <div>
+                        <dt>Gravedad</dt>
+                        <dd>{brief.executive.severity.label}</dd>
+                      </div>
+                    </dl>
+                    <p>Versión del brief: v{brief.version}</p>
+                    <p>Gravedad: {brief.executive.severity.label}</p>
+                    <p>Evaluación de gravedad realizada por el usuario.</p>
+                    <div className="dw-approve-dialog__actions">
+                      <Button type="button" variant="ghost" onClick={cancelApproval} ref={dialogCancelRef}>
+                        Cancelar
+                      </Button>
+                      <Button type="button" onClick={confirmApproval}>
+                        Confirmar aprobación
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               ) : null}
             </section>

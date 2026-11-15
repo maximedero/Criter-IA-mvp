@@ -8,6 +8,8 @@ import { CoveragePanel } from "./CoveragePanel";
 import { QuestionPanel } from "./QuestionPanel";
 import { StatementCard } from "./statement-card";
 import { StatementEditor } from "./StatementEditor";
+import { Button } from "../../app/ui/Button";
+import "./canvas-page.css";
 export function CanvasPage({ caseId, initialNarrative, caseStatus, aiProvider, onItemsChange }) {
     const [items, setItems] = useState([]);
     const [addingDimension, setAddingDimension] = useState(null);
@@ -27,7 +29,7 @@ export function CanvasPage({ caseId, initialNarrative, caseStatus, aiProvider, o
         setAnalysisEmptyMessage(null);
     }, [caseId]);
     const editingItem = editingId ? items.find((item) => item.id === editingId) ?? null : null;
-    return (_jsxs("section", { children: [_jsx("h3", { children: "Decision Canvas" }), _jsxs("div", { children: [_jsx("button", { type: "button", onClick: async () => {
+    return (_jsxs("section", { className: "dw-canvas-page", children: [_jsx("h3", { children: "Decision Canvas" }), _jsxs("div", { className: "dw-canvas-page__actions", children: [_jsx(Button, { type: "button", onClick: async () => {
                             setAnalyzingNarrative(true);
                             setAnalysisError(null);
                             setAnalysisEmptyMessage(null);
@@ -52,10 +54,10 @@ export function CanvasPage({ caseId, initialNarrative, caseStatus, aiProvider, o
                             finally {
                                 setAnalyzingNarrative(false);
                             }
-                        }, children: "Analizar relato" }), analyzingNarrative ? _jsx("p", { children: "Analizando relato..." }) : null, analysisError ? _jsx("p", { role: "alert", children: analysisError }) : null, analysisEmptyMessage ? _jsx("p", { children: analysisEmptyMessage }) : null] }), _jsx(CoveragePanel, { items: items }), _jsx(QuestionPanel, { caseId: caseId, initialNarrative: initialNarrative, caseStatus: caseStatus, items: items, provider: provider, onItemsUpdated: refresh }), _jsx("div", { style: { display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 12 }, children: CANVAS_DIMENSIONS.map((dimension) => {
+                        }, children: "Analizar relato" }), analyzingNarrative ? _jsx("p", { children: "Analizando relato..." }) : null, analysisError ? (_jsx("p", { className: "dw-canvas-page__alert", role: "alert", children: analysisError })) : null, analysisEmptyMessage ? _jsx("p", { children: analysisEmptyMessage }) : null] }), _jsx(CoveragePanel, { items: items }), _jsx(QuestionPanel, { caseId: caseId, initialNarrative: initialNarrative, caseStatus: caseStatus, items: items, provider: provider, onItemsUpdated: refresh }), _jsx("div", { className: "dw-canvas-page__grid", children: CANVAS_DIMENSIONS.map((dimension) => {
                     const dimensionItems = items.filter((item) => item.dimension === dimension);
                     const isAdding = addingDimension === dimension;
-                    return (_jsxs("section", { children: [_jsx("h4", { children: CANVAS_DIMENSION_LABELS[dimension] }), dimensionItems.length === 0 ? _jsx("p", { children: "Sin contenido" }) : null, dimensionItems.map((item) => editingItem && editingItem.id === item.id ? (_jsx(StatementEditor, { submitLabel: "Guardar", initialContent: item.content, initialEpistemicType: item.epistemicType, onCancel: () => setEditingId(null), onSubmit: ({ content, epistemicType }) => {
+                    return (_jsxs("section", { className: "dw-canvas-dimension", children: [_jsx("h4", { children: CANVAS_DIMENSION_LABELS[dimension] }), dimensionItems.length === 0 ? _jsx("p", { className: "dw-canvas-dimension__empty", children: "Sin contenido" }) : null, dimensionItems.map((item) => editingItem && editingItem.id === item.id ? (_jsx(StatementEditor, { submitLabel: "Guardar", initialContent: item.content, initialEpistemicType: item.epistemicType, onCancel: () => setEditingId(null), onSubmit: ({ content, epistemicType }) => {
                                     updateCanvasItem(caseId, item.id, { content, epistemicType });
                                     setEditingId(null);
                                     refresh();
@@ -80,6 +82,6 @@ export function CanvasPage({ caseId, initialNarrative, caseStatus, aiProvider, o
                                     });
                                     setAddingDimension(null);
                                     refresh();
-                                } })) : (_jsx("button", { type: "button", onClick: () => setAddingDimension(dimension), children: "+ Agregar" }))] }, dimension));
+                                } })) : (_jsx(Button, { type: "button", variant: "ghost", onClick: () => setAddingDimension(dimension), children: "+ Agregar" }))] }, dimension));
                 }) })] }));
 }

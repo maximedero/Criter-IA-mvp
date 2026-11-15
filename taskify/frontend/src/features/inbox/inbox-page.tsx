@@ -23,8 +23,10 @@ import { HumanSeverityPanel, mapMissingCoverageLabels } from "../canvas/HumanSev
 import { CanvasPage } from "../canvas/canvas-page";
 import { BriefWorkspace } from "../brief/BriefWorkspace";
 import { CriticalReviewPanel } from "../review/CriticalReviewPanel";
+import { Button } from "../../app/ui/Button";
 import { CaseForm } from "./CaseForm";
 import { CaseStatusControl } from "./CaseStatusControl";
+import "./inbox-page.css";
 
 type ViewMode = "inbox" | "detail";
 
@@ -95,17 +97,19 @@ export function InboxPage({ aiProvider }: Props) {
     const shouldRenderBriefWorkspace = selectedCase.status === "BRIEF_DRAFT" || selectedCase.status === "READY_TO_ESCALATE";
 
     return (
-      <section>
+      <section className="dw-case-detail">
         <h2>Detalle de caso</h2>
-        <p>
-          <strong>Título:</strong> {selectedCase.title}
-        </p>
-        <p>
-          <strong>Estado:</strong> {CASE_STATUS_LABELS[selectedCase.status]}
-        </p>
-        <p>
-          <strong>Relato inicial:</strong> {selectedCase.initialNarrative}
-        </p>
+        <div className="dw-case-detail__summary">
+          <p>
+            <strong>Título:</strong> {selectedCase.title}
+          </p>
+          <p>
+            <strong>Estado:</strong> {CASE_STATUS_LABELS[selectedCase.status]}
+          </p>
+          <p>
+            <strong>Relato inicial:</strong> {selectedCase.initialNarrative}
+          </p>
+        </div>
 
         <CaseStatusControl
           status={selectedCase.status}
@@ -227,24 +231,37 @@ export function InboxPage({ aiProvider }: Props) {
           />
         ) : null}
 
-        {briefError ? <p role="alert">{briefError}</p> : null}
+        {briefError ? (
+          <p className="dw-inbox__alert" role="alert">
+            {briefError}
+          </p>
+        ) : null}
 
-        <button
+        <Button
           type="button"
+          variant="ghost"
           onClick={() => {
             setViewMode("inbox");
             refresh();
           }}
         >
           Volver al Inbox
-        </button>
+        </Button>
       </section>
     );
   }
 
   return (
-    <section>
-      <h2>Inbox</h2>
+    <section className="dw-inbox">
+      <div className="dw-inbox__header">
+        <h2>Inbox</h2>
+
+        {!showCreateForm ? (
+          <Button type="button" onClick={() => setShowCreateForm(true)}>
+            Nuevo caso
+          </Button>
+        ) : null}
+      </div>
 
       {showCreateForm ? (
         <CaseForm
@@ -255,16 +272,12 @@ export function InboxPage({ aiProvider }: Props) {
             refresh();
           }}
         />
-      ) : (
-        <button type="button" onClick={() => setShowCreateForm(true)}>
-          Nuevo caso
-        </button>
-      )}
+      ) : null}
 
-      {items.length === 0 ? <p>No hay casos cargados.</p> : null}
+      {items.length === 0 ? <p className="dw-inbox__empty">No hay casos cargados.</p> : null}
 
       {items.length > 0 ? (
-        <table>
+        <table className="dw-inbox__table">
           <thead>
             <tr>
               <th>Título</th>
@@ -280,8 +293,9 @@ export function InboxPage({ aiProvider }: Props) {
                 <td>{CASE_STATUS_LABELS[item.status]}</td>
                 <td>{formatUpdatedAt(item.updatedAt)}</td>
                 <td>
-                  <button
+                  <Button
                     type="button"
+                    variant="ghost"
                     onClick={() => {
                       setSelectedCaseId(item.id);
                       setSelectedCaseItems(listCanvasItemsByCase(item.id));
@@ -289,7 +303,7 @@ export function InboxPage({ aiProvider }: Props) {
                     }}
                   >
                     Abrir
-                  </button>
+                  </Button>
                 </td>
               </tr>
             ))}

@@ -1,5 +1,6 @@
 import { FormEvent, useState } from "react";
 import { type EpistemicType } from "../../domain/models/CanvasItem";
+import { Button } from "../../app/ui/Button";
 import { EpistemicTypeSelector } from "./EpistemicTypeSelector";
 
 type Props = {
@@ -36,20 +37,29 @@ export function StatementEditor({
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="dw-statement-editor">
       <label>
         Contenido
-        <textarea value={content} onChange={(event) => setContent(event.target.value)} />
+        <textarea
+          value={content}
+          onChange={(event) => setContent(event.target.value)}
+          aria-invalid={contentError ? "true" : "false"}
+          aria-describedby={contentError ? "statement-editor-content-error" : undefined}
+        />
       </label>
-      {contentError ? <p>{contentError}</p> : null}
+      {contentError ? (
+        <p id="statement-editor-content-error" className="dw-canvas-alert" role="alert">
+          {contentError}
+        </p>
+      ) : null}
 
       <EpistemicTypeSelector value={epistemicType} onChange={setEpistemicType} />
 
-      <div>
-        <button type="button" onClick={onCancel}>
+      <div className="dw-statement-editor__actions">
+        <Button type="button" variant="ghost" onClick={onCancel}>
           Cancelar
-        </button>
-        <button type="submit">{submitLabel}</button>
+        </Button>
+        <Button type="submit">{submitLabel}</Button>
       </div>
     </form>
   );

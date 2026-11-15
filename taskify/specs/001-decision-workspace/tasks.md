@@ -401,3 +401,151 @@
 2. Slice 3 (Coverage Engine) bloquea Slice 9 y Slice 10.
 3. Slice 4 + Slice 7 + Slice 8 bloquean transición final de aprobación.
 4. Slice 10 bloquea validación E2E completa de Slice 11.
+
+---
+
+## UI Refresh MVP — Ejecución incremental del contrato `DESIGN.md`
+
+**Objetivo**: Alinear la UI del MVP al contrato de diseño sin modificar reglas de dominio, máquina de estados ni comportamiento funcional del workflow.
+
+**Regla de alcance**:
+- permitido: tokens, estilos, componentes visuales, estados de interacción, accesibilidad mínima;
+- prohibido: cambios funcionales de negocio, nuevas capacidades, alteraciones de transiciones de estado.
+
+### T-UI-010
+- **ID**: T-UI-010
+- **Slice**: UI Refresh MVP
+- **Objetivo observable**: Centralizar tokens de diseño globales y dejar disponible el tema unificado para toda la app.
+- **Archivos estimados**: `frontend/src/app/styles/*`, `frontend/src/main.tsx` (o equivalente de import global)
+- **Dependencias**: Ninguna
+- **Criterio de aceptación**:
+  - tokens de color/tipografía/spacing/radius/motion/z-index disponibles globalmente;
+  - no hay valores hardcodeados nuevos para estilos base.
+- **Test requerido**: Smoke visual básico (render sin ruptura)
+- **Paralelo**: No
+
+### T-UI-011
+- **ID**: T-UI-011
+- **Slice**: UI Refresh MVP
+- **Objetivo observable**: Unificar componente de botón (primario/ghost) y estados interactivos según contrato.
+- **Archivos estimados**: `frontend/src/features/**`, `frontend/src/app/styles/**` o componente común de UI
+- **Dependencias**: T-UI-010
+- **Criterio de aceptación**:
+  - estados `default/hover/focus-visible/active/disabled/loading` implementados;
+  - foco visible y tamaño mínimo de target aplicados.
+- **Test requerido**: Component tests de variantes y estados
+- **Paralelo**: Sí
+
+### T-UI-012
+- **ID**: T-UI-012
+- **Slice**: UI Refresh MVP
+- **Objetivo observable**: Unificar inputs/select/textarea y mensajes de error/ayuda.
+- **Archivos estimados**: formularios de Inbox/Canvas/Review/Brief/Approval
+- **Dependencias**: T-UI-010
+- **Criterio de aceptación**:
+  - estilos consistentes en estados `default/focus/error/disabled`;
+  - contraste y legibilidad de textos de ayuda/error.
+- **Test requerido**: Component tests de formularios críticos
+- **Paralelo**: Sí
+
+### T-UI-013
+- **ID**: T-UI-013
+- **Slice**: UI Refresh MVP
+- **Objetivo observable**: Homogeneizar modal/alert/banner (capas, overlays, foco).
+- **Archivos estimados**: componentes de diálogo y alertas transversales
+- **Dependencias**: T-UI-010
+- **Criterio de aceptación**:
+  - jerarquía de capas consistente (`dropdown/banner/toast/modal/tooltip`);
+  - foco atrapado en modal y retorno al trigger al cerrar.
+- **Test requerido**: Component tests + E2E de confirmación crítica
+- **Paralelo**: Parcial
+
+### T-UI-014
+- **ID**: T-UI-014
+- **Slice**: UI Refresh MVP
+- **Objetivo observable**: Migrar visualmente **Inbox** al contrato sin cambio funcional.
+- **Archivos estimados**: `frontend/src/features/inbox/**`
+- **Dependencias**: T-UI-011, T-UI-012
+- **Criterio de aceptación**:
+  - tabla/listado, acciones de fila, filtros y estado vacío alineados a tokens;
+  - flujo de creación/apertura se mantiene sin regresiones.
+- **Test requerido**: Component + E2E slice relacionado
+- **Paralelo**: No
+
+### T-UI-015
+- **ID**: T-UI-015
+- **Slice**: UI Refresh MVP
+- **Objetivo observable**: Migrar visualmente **Canvas** al contrato sin cambio funcional.
+- **Archivos estimados**: `frontend/src/features/canvas/**`
+- **Dependencias**: T-UI-011, T-UI-012, T-UI-014
+- **Criterio de aceptación**:
+  - tarjetas de dimensión, editor y panel de cobertura consistentes;
+  - legibilidad y espaciado homogéneos.
+- **Test requerido**: Component + E2E slice relacionado
+- **Paralelo**: No
+
+### T-UI-016
+- **ID**: T-UI-016
+- **Slice**: UI Refresh MVP
+- **Objetivo observable**: Migrar visualmente **Review** al contrato sin cambio funcional.
+- **Archivos estimados**: `frontend/src/features/review/**`
+- **Dependencias**: T-UI-013, T-UI-015
+- **Criterio de aceptación**:
+  - badges de bloqueo/advertencia y acciones de resolución unificadas;
+  - estados visuales semánticos consistentes.
+- **Test requerido**: Component + E2E slice relacionado
+- **Paralelo**: No
+
+### T-UI-017
+- **ID**: T-UI-017
+- **Slice**: UI Refresh MVP
+- **Objetivo observable**: Migrar visualmente **Brief** al contrato sin cambio funcional.
+- **Archivos estimados**: `frontend/src/features/brief/**`
+- **Dependencias**: T-UI-013, T-UI-016
+- **Criterio de aceptación**:
+  - vista ejecutiva/expandida y controles de edición homogéneos;
+  - estados de revisión visualmente consistentes.
+- **Test requerido**: Component + E2E slice relacionado
+- **Paralelo**: No
+
+### T-UI-018
+- **ID**: T-UI-018
+- **Slice**: UI Refresh MVP
+- **Objetivo observable**: Migrar visualmente **Approval** al contrato sin cambio funcional.
+- **Archivos estimados**: `frontend/src/features/brief/**`, `frontend/src/features/inbox/**`
+- **Dependencias**: T-UI-013, T-UI-017
+- **Criterio de aceptación**:
+  - checklist, diálogo de confirmación y panel READY consistentes;
+  - sin automatismos nuevos ni alteración de gates.
+- **Test requerido**: Component + E2E slice10
+- **Paralelo**: No
+
+### T-UI-019
+- **ID**: T-UI-019
+- **Slice**: UI Refresh MVP
+- **Objetivo observable**: Ajustar responsive y accesibilidad mínima transversal.
+- **Archivos estimados**: estilos globales + pantallas principales
+- **Dependencias**: T-UI-014..T-UI-018
+- **Criterio de aceptación**:
+  - breakpoints aplicados de forma consistente;
+  - foco visible, targets mínimos, contraste objetivo.
+- **Test requerido**: Component tests + E2E básicos de navegación teclado
+- **Paralelo**: Parcial
+
+### T-UI-020
+- **ID**: T-UI-020
+- **Slice**: UI Refresh MVP
+- **Objetivo observable**: Cierre de regresión funcional + validación de homogeneidad UI.
+- **Dependencias**: T-UI-014..T-UI-019
+- **Criterio de aceptación**:
+  - unit/component/E2E críticos en verde;
+  - checklist de `DESIGN.md` completo;
+  - sin excepciones de diseño abiertas no aprobadas.
+- **Test requerido**:
+  - `test:unit`
+  - `test:component`
+  - slices E2E críticos del flujo principal
+  - `build`
+- **Paralelo**: No
+
+---

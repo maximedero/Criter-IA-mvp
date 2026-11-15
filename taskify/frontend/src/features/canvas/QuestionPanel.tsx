@@ -20,6 +20,7 @@ import {
 import { parseSuggestNextQuestionResult, type AIProvider } from "../../providers/ai";
 import { QuestionResponseActions } from "./QuestionResponseActions";
 import type { CaseStatus } from "../../domain/models/CaseStatus";
+import { Button } from "../../app/ui/Button";
 
 type Props = {
   caseId: string;
@@ -60,7 +61,7 @@ export function QuestionPanel({ caseId, initialNarrative, caseStatus, items, pro
     <section aria-label="Asistencia contextual">
       <h4>ASISTENCIA CONTEXTUAL</h4>
 
-      <button
+      <Button
         type="button"
         onClick={async () => {
           setError(null);
@@ -106,11 +107,15 @@ export function QuestionPanel({ caseId, initialNarrative, caseStatus, items, pro
         disabled={requesting}
       >
         Obtener siguiente pregunta
-      </button>
+      </Button>
 
       {session.lastStop?.message ? <p>{session.lastStop.message}</p> : null}
       {localMessage ? <p>{localMessage}</p> : null}
-      {error ? <p role="alert">{error}</p> : null}
+      {error ? (
+        <p className="dw-canvas-alert" role="alert">
+          {error}
+        </p>
+      ) : null}
 
       {activeQuestion ? (
         <section>
@@ -171,8 +176,9 @@ export function QuestionPanel({ caseId, initialNarrative, caseStatus, items, pro
       ) : null}
 
       {!activeQuestion && session.questions.length > 0 ? (
-        <button
+        <Button
           type="button"
+          variant="ghost"
           onClick={async () => {
             setError(null);
             setLocalMessage(null);
@@ -209,7 +215,7 @@ export function QuestionPanel({ caseId, initialNarrative, caseStatus, items, pro
           disabled={requesting || coverage.hasMinimumCoverage}
         >
           Siguiente pregunta
-        </button>
+        </Button>
       ) : null}
 
       <p>

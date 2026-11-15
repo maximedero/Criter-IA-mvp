@@ -5,3 +5,6 @@ export type StorageProvider = {
 export const foundationStorageProviderContract: StorageProvider = {
   providerName: "storage-provider-contract"
 };
+
+export * from "./casesStorage";
+export * from "./canvasStorage";

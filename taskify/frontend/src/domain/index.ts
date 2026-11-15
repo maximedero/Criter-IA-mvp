@@ -5,3 +5,6 @@ export type FoundationDomain = {
 export const foundationDomain: FoundationDomain = {
   name: "domain"
 };
+
+export * from "./models/CanvasItem";
+export * from "./models/DecisionCase";

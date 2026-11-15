@@ -1,6 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useEffect, useMemo, useState } from "react";
 import { createDecisionCase, getDecisionCaseById, listDecisionCases } from "../../providers/storage/casesStorage";
+import { CanvasPage } from "../canvas/canvas-page";
 import { CaseForm } from "./CaseForm";
 function formatUpdatedAt(value) {
     return new Date(value).toLocaleString("es-AR", {
@@ -29,7 +30,7 @@ export function InboxPage() {
         return getDecisionCaseById(selectedCaseId);
     }, [selectedCaseId, items]);
     if (viewMode === "detail" && selectedCase) {
-        return (_jsxs("section", { children: [_jsx("h2", { children: "Detalle de caso" }), _jsxs("p", { children: [_jsx("strong", { children: "T\u00EDtulo:" }), " ", selectedCase.title] }), _jsxs("p", { children: [_jsx("strong", { children: "Estado:" }), " ", selectedCase.status] }), _jsxs("p", { children: [_jsx("strong", { children: "Relato inicial:" }), " ", selectedCase.initialNarrative] }), _jsx("button", { type: "button", onClick: () => {
+        return (_jsxs("section", { children: [_jsx("h2", { children: "Detalle de caso" }), _jsxs("p", { children: [_jsx("strong", { children: "T\u00EDtulo:" }), " ", selectedCase.title] }), _jsxs("p", { children: [_jsx("strong", { children: "Estado:" }), " ", selectedCase.status] }), _jsxs("p", { children: [_jsx("strong", { children: "Relato inicial:" }), " ", selectedCase.initialNarrative] }), _jsx(CanvasPage, { caseId: selectedCase.id }), _jsx("button", { type: "button", onClick: () => {
                         setViewMode("inbox");
                         refresh();
                     }, children: "Volver al Inbox" })] }));

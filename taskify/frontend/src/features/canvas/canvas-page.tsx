@@ -1,60 +1,103 @@
 import { useEffect, useState } from "react";
-import { createStatement, listStatements, Statement } from "../../services/api-client";
+import {
+  CANVAS_DIMENSIONS,
+  CANVAS_DIMENSION_LABELS,
+  type CanvasDimension,
+  type CanvasItem
+} from "../../domain/models/CanvasItem";
+import {
+  createCanvasItem,
+  deleteCanvasItem,
+  listCanvasItemsByCase,
+  updateCanvasItem
+} from "../../providers/storage/canvasStorage";
 import { StatementCard } from "./statement-card";
-import { QuestionPanel } from "./question-panel";
-
-const dimensions = [
-  "contexto_senal",
-  "exposicion",
-  "evidencia",
-  "impactos",
-  "incertidumbres",
-  "escenarios",
-  "alternativas",
-  "intervencion_requerida"
-] as const;
+import { StatementEditor } from "./StatementEditor";
 
 type Props = {
   caseId: string;
 };
 
 export function CanvasPage({ caseId }: Props) {
-  const [statements, setStatements] = useState<Statement[]>([]);
+  const [items, setItems] = useState<CanvasItem[]>([]);
+  const [addingDimension, setAddingDimension] = useState<CanvasDimension | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
 
-  const refresh = async () => {
-    const data = await listStatements(caseId);
-    setStatements(data);
+  const refresh = () => {
+    setItems(listCanvasItemsByCase(caseId));
   };
 
   useEffect(() => {
     refresh();
   }, [caseId]);
 
-  const addDraftStatement = async (dimensionType: string) => {
-    await createStatement(caseId, {
-      dimensionType,
-      content: `Pendiente en ${dimensionType}`,
-      epistemicType: "dato_faltante"
-    });
-    await refresh();
-  };
+  const editingItem = editingId ? items.find((item) => item.id === editingId) ?? null : null;
 
   return (
-    <main>
-      <h1>Decision Canvas</h1>
-      <QuestionPanel caseId={caseId} />
+    <section>
+      <h3>Decision Canvas</h3>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 12 }}>
-        {dimensions.map((dimension) => {
-          const first = statements.find((s) => s.dimensionType === dimension);
+        {CANVAS_DIMENSIONS.map((dimension) => {
+          const dimensionItems = items.filter((item) => item.dimension === dimension);
+          const isAdding = addingDimension === dimension;
+
           return (
             <section key={dimension}>
-              <h2>{dimension}</h2>
-              <StatementCard statement={first} />
-              <button onClick={() => addDraftStatement(dimension)}>Agregar elemento</button>
+              <h4>{CANVAS_DIMENSION_LABELS[dimension]}</h4>
+
+              {dimensionItems.length === 0 ? <p>Sin contenido</p> : null}
+
+              {dimensionItems.map((item) =>
+                editingItem && editingItem.id === item.id ? (
+                  <StatementEditor
+                    key={item.id}
+                    submitLabel="Guardar"
+                    initialContent={item.content}
+                    initialEpistemicType={item.epistemicType}
+                    onCancel={() => setEditingId(null)}
+                    onSubmit={({ content, epistemicType }) => {
+                      updateCanvasItem(caseId, item.id, { content, epistemicType });
+                      setEditingId(null);
+                      refresh();
+                    }}
+                  />
+                ) : (
+                  <StatementCard
+                    key={item.id}
+                    statement={item}
+                    onEdit={() => setEditingId(item.id)}
+                    onDelete={() => {
+                      deleteCanvasItem(caseId, item.id);
+                      refresh();
+                    }}
+                  />
+                )
+              )}
+
+              {isAdding ? (
+                <StatementEditor
+                  submitLabel="Agregar"
+                  onCancel={() => setAddingDimension(null)}
+                  onSubmit={({ content, epistemicType }) => {
+                    createCanvasItem({
+                      caseId,
+                      dimension,
+                      content,
+                      epistemicType
+                    });
+                    setAddingDimension(null);
+                    refresh();
+                  }}
+                />
+              ) : (
+                <button type="button" onClick={() => setAddingDimension(dimension)}>
+                  + Agregar
+                </button>
+              )}
             </section>
           );
         })}
       </div>
-    </main>
+    </section>
   );
 }

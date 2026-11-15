@@ -1,19 +1,27 @@
-import { Statement } from "../../services/api-client";
+import {
+  EPISTEMIC_TYPE_LABELS,
+  type CanvasItem
+} from "../../domain/models/CanvasItem";
 
 type Props = {
-  statement?: Statement;
+  statement: CanvasItem;
+  onEdit: () => void;
+  onDelete: () => void;
 };
 
-export function StatementCard({ statement }: Props) {
-  if (!statement) {
-    return <div>Sin contenido</div>;
-  }
-
+export function StatementCard({ statement, onEdit, onDelete }: Props) {
   return (
     <article>
       <p>{statement.content}</p>
-      <small>{statement.epistemicType}</small>
-      <small>{statement.validationState}</small>
+      <small>{EPISTEMIC_TYPE_LABELS[statement.epistemicType]}</small>
+      <div>
+        <button type="button" onClick={onEdit}>
+          Editar
+        </button>
+        <button type="button" onClick={onDelete}>
+          Eliminar
+        </button>
+      </div>
     </article>
   );
 }

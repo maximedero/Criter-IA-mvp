@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { DecisionCase } from "../../domain/models/DecisionCase";
 import { createDecisionCase, getDecisionCaseById, listDecisionCases } from "../../providers/storage/casesStorage";
+import { CanvasPage } from "../canvas/canvas-page";
 import { CaseForm } from "./CaseForm";
 
 type ViewMode = "inbox" | "detail";
@@ -50,6 +51,9 @@ export function InboxPage() {
         <p>
           <strong>Relato inicial:</strong> {selectedCase.initialNarrative}
         </p>
+
+        <CanvasPage caseId={selectedCase.id} />
+
         <button
           type="button"
           onClick={() => {

@@ -10,7 +10,8 @@
     "test:unit": "vitest run tests/unit",
     "test:component": "vitest run tests/component",
     "test:e2e": "playwright test tests/e2e/foundation.smoke.spec.ts",
-    "test:e2e:slice1": "playwright test tests/e2e/slice1-dynamics-inbox.spec.ts"
+    "test:e2e:slice1": "playwright test tests/e2e/slice1-dynamics-inbox.spec.ts",
+    "test:e2e:slice2": "playwright test tests/e2e/slice2-dynamics-canvas.spec.ts"
   },
   "dependencies": {
     "react": "^18.3.1",

@@ -1,47 +1,47 @@
 # Implementation Plan: Decision Workspace MVP
 
-**Branch**: `001-decision-workspace` | **Date**: 2026-11-13 | **Spec**: [`spec.md`](./spec.md)
+**Branch**: `001-decision-workspace` | **Date**: 2026-11-14 | **Spec**: [`spec.md`](./spec.md)
 
 **Input**: Feature specification from `/specs/001-decision-workspace/spec.md`
 
 ## Summary
 
-Construir un MVP web de Criter-IA que permita crear casos, completar un Decision Canvas de 8 dimensiones, recibir asistencia de IA con validación humana, ejecutar revisión crítica y generar un brief ejecutivo listo para elevar bajo reglas explícitas (retención 90 días, máximo 5 preguntas IA por caso, y controles de estado definidos).
+Construir un vertical slice inicial de Decision Workspace orientado exclusivamente a validar la hipótesis de producto: que el brief generado con el workflow del canvas permite al superior comprender mejor el riesgo y definir con mayor claridad el próximo paso. La primera versión se ejecuta completa en cliente (frontend), con reglas de dominio determinísticas, almacenamiento local con retención y asistencia IA desacoplada mediante `AIProvider`.
 
 ## Technical Context
 
-**Language/Version**: TypeScript 5.x (frontend + backend)
+**Language/Version**: TypeScript 5.x
 
-**Primary Dependencies**: React 18, Vite, Node.js 22 LTS, Fastify, Zod, OpenAI-compatible SDK (adaptador desacoplado)
+**Primary Dependencies**: React 18, Vite, Zod, AIProvider desacoplado (`MockAIProvider` + `RealAIProvider`)
 
-**Storage**: SQLite local (metadatos y estado de casos) + archivos locales para fixtures de demostración
+**Storage**: `localStorage` (casos, estado del workflow, fixtures, createdAt, expiresAt, limpieza por retención)
 
-**Testing**: Vitest (unit), Playwright (E2E), Supertest (API integration)
+**Testing**: Vitest, React Testing Library, Playwright
 
-**Target Platform**: Desktop browser moderno (Chrome/Edge) + ejecución local en Windows/macOS/Linux
+**Target Platform**: Navegador desktop moderno (Chrome/Edge) con ejecución local
 
-**Project Type**: Web application (frontend + backend API)
+**Project Type**: Frontend web application (sin backend obligatorio en MVP inicial)
 
-**Performance Goals**: Navegación local <100ms p95; generación de sugerencias IA <6s p95 en entorno demo
+**Performance Goals**: Navegación y acciones locales sin demoras perceptibles; flujo completo de caso en entorno local de demostración
 
-**Constraints**: Sin integraciones corporativas; sin acciones autónomas; sin secretos en repositorio; retención máxima 90 días
+**Constraints**: Sin integraciones corporativas; sin agentes autónomos; sin acciones externas automáticas; retención máxima 90 días
 
-**Scale/Scope**: MVP single-tenant para pruebas guiadas (1 usuario activo por sesión, decenas de casos demo)
+**Scale/Scope**: MVP single-user orientado a decenas de casos y fixtures de demostración
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-- Juicio humano obligatorio: PASS (gravedad y aprobación del brief solo manuales; FR-013 y FR-024)
-- Evidencia antes que elocuencia: PASS (clasificación epistemológica + trazabilidad de fuentes)
-- Abstención con información insuficiente: PASS (detección explícita de faltantes y restricciones de IA)
-- Razonamiento visible y auditable: PASS (canvas persistente con estados de validación)
-- Estructura fija, preguntas dinámicas: PASS (8 bloques + límite de 5 preguntas por caso)
-- Asistencia contextual (no chat principal): PASS (interacciones ligadas a bloques del canvas)
-- Autonomía proporcional al riesgo: PASS (sin ejecución automática externa)
-- Privacidad y minimización de datos: PASS (sin conectores automáticos, retención 90 días)
-- Brief como artefacto de decisión: PASS (estado “Listo para elevar” con gate explícito)
-- Validación antes que expansión: PASS (comparación control vs IA y métricas de éxito definidas)
+- Juicio humano obligatorio: PASS (gravedad y aprobación del brief exclusivamente humanas)
+- Evidencia antes que elocuencia: PASS (clasificación epistemológica explícita + trazabilidad)
+- Abstención con información insuficiente: PASS (datos faltantes visibles y brief provisional explícito)
+- Razonamiento visible y auditable: PASS (Decision Canvas como interfaz principal)
+- Estructura fija, preguntas dinámicas: PASS (8 dimensiones + selección contextual)
+- Asistencia contextual (no chat principal): PASS (IA dentro del workflow, no gobernándolo)
+- Autonomía proporcional al riesgo: PASS (sin ejecución autónoma ni escalamiento automático)
+- Privacidad y minimización de datos: PASS (datos locales y casos simulados/anonimizados)
+- Brief como artefacto de decisión: PASS (aprobación explícita del usuario antes de listo para elevar)
+- Validación antes que expansión: PASS (foco en hipótesis de valor del brief)
 
 ## Project Structure
 
@@ -53,42 +53,38 @@ specs/001-decision-workspace/
 ├── research.md
 ├── data-model.md
 ├── quickstart.md
-├── contracts/
-│   └── decision-workspace.openapi.yaml
 └── tasks.md
 ```
 
 ### Source Code (repository root)
 
 ```text
-backend/
-├── src/
-│   ├── api/
-│   ├── domain/
-│   ├── services/
-│   ├── providers/
-│   └── validation/
-└── tests/
-    ├── contract/
-    ├── integration/
-    └── unit/
-
 frontend/
 ├── src/
 │   ├── app/
+│   ├── domain/
+│   │   ├── rules/
+│   │   ├── workflow/
+│   │   └── models/
+│   ├── providers/
+│   │   ├── ai/
+│   │   │   ├── AIProvider.ts
+│   │   │   ├── MockAIProvider.ts
+│   │   │   └── RealAIProvider.ts
+│   │   └── storage/
 │   ├── features/
 │   │   ├── inbox/
 │   │   ├── canvas/
 │   │   ├── review/
 │   │   └── brief/
-│   ├── components/
-│   └── services/
+│   └── validation/
 └── tests/
-    ├── e2e/
-    └── unit/
+    ├── unit/
+    ├── component/
+    └── e2e/
 ```
 
-**Structure Decision**: Se adopta estructura web frontend/backend para aislar dominio de negocio, proveedor de IA y experiencia de usuario, manteniendo reemplazabilidad del proveedor y pruebas por capa.
+**Structure Decision**: Simplificar a arquitectura frontend-only para el MVP inicial, manteniendo separación estricta entre UI, dominio determinístico, proveedor de IA y persistencia local.
 
 ## Complexity Tracking
 

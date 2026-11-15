@@ -1,380 +1,403 @@
-# Tasks: Decision Workspace MVP
+# Tasks: Decision Workspace MVP (Frontend-Only Vertical Slices)
 
-**Input**: Design documents from `/specs/001-decision-workspace/`
-
-**Prerequisites**: plan.md, spec.md, research.md, data-model.md, contracts/
-
-**Tests**: Included. Contract, integration, unit, E2E, and AI behavior
-evaluation tests are required by the specification and success criteria.
-
-**Organization**: Tasks are grouped by user story for independent
-implementation and validation.
-
-## Format: `[ID] [P?] [Story] Description`
-
-- **[P]**: Can run in parallel (different files, no dependencies)
-- **[Story]**: User story mapping (US1..US8)
+**Input**: Constitution + Specification + Plan approved for `001-decision-workspace`  
+**Goal**: Build demonstrable vertical slices to validate product hypothesis.  
+**Scope guard**: No backend, no SQLite, no Supertest, no RAG, no Graph, no auth, no agents, no corporate integrations, no production deployment.
 
 ---
 
-## Phase 1: Setup (Shared Infrastructure)
+## SLICE 0 ó Foundation
 
-**Purpose**: Initialize repo structure and toolchain.
+### T001
+- **ID**: T001
+- **Slice**: SLICE 0 ó Foundation
+- **Objetivo observable**: La app React+TS+Vite inicia localmente con estructura de carpetas objetivo.
+- **Archivos estimados**: `frontend/package.json`, `frontend/tsconfig.json`, `frontend/vite.config.ts`, `frontend/src/main.tsx`, `frontend/src/app/App.tsx`
+- **Requisito / User Story**: Base transversal para US1-US8
+- **Dependencias**: Ninguna
+- **Criterio de aceptaciÛn**: `npm run dev:frontend` levanta la app sin errores.
+- **Test requerido**: Smoke test de arranque (unit b·sico)
+- **Paralelo**: No
 
-- [x] T001 Create base folders `backend/src`, `backend/tests`,
-      `frontend/src`, `frontend/tests`
-- [x] T002 Initialize backend Node/Fastify project in
-      `backend/package.json`
-- [x] T003 [P] Initialize frontend React/Vite project in
-      `frontend/package.json`
-- [x] T004 [P] Configure TypeScript in `backend/tsconfig.json` and
-      `frontend/tsconfig.json`
-- [x] T005 [P] Configure lint/format scripts in `backend/package.json`
-      and `frontend/package.json`
-- [x] T006 Add root workspace scripts in `package.json` for
-      dev/test/build
+### T002
+- **ID**: T002
+- **Slice**: SLICE 0 ó Foundation
+- **Objetivo observable**: Queda habilitada la estrategia de testing (Vitest + RTL + Playwright).
+- **Archivos estimados**: `frontend/vitest.config.ts`, `frontend/tests/setup.ts`, `frontend/playwright.config.ts`, `frontend/package.json`
+- **Requisito / User Story**: Calidad transversal
+- **Dependencias**: T001
+- **Criterio de aceptaciÛn**: comandos de test definidos y ejecutables.
+- **Test requerido**: Test de ejemplo unit/component/e2e pasa.
+- **Paralelo**: SÌ
 
----
-
-## Phase 2: Foundational (Blocking Prerequisites)
-
-**Purpose**: Core domain and platform capabilities required by all stories.
-
-**‚ö†Ô∏è CRITICAL**: No user story work starts before this phase is complete.
-
-- [x] T007 Implement domain enums and shared types in
-      `backend/src/domain/types.ts`
-- [x] T008 Implement SQLite connection and migration bootstrap in
-      `backend/src/services/db.ts`
-- [x] T009 [P] Create base schema validation with Zod in
-      `backend/src/validation/schemas.ts`
-- [x] T010 [P] Implement API server bootstrap and error middleware in
-      `backend/src/api/server.ts`
-- [x] T011 Implement `AiProvider` interface + mock adapter in
-      `backend/src/providers/ai-provider.ts`
-- [x] T012 [P] Implement audit event writer in
-      `backend/src/services/audit-service.ts`
-- [x] T013 Implement retention cleanup job (90 days) in
-      `backend/src/services/retention-service.ts`
-- [x] T014 [P] Create frontend app shell and global routing in
-      `frontend/src/app/router.tsx`
-- [x] T015 Implement shared API client in
-      `frontend/src/services/api-client.ts`
-
-**Checkpoint**: Foundation ready.
+### T003
+- **ID**: T003
+- **Slice**: SLICE 0 ó Foundation
+- **Objetivo observable**: Estructura de dominio, storage y AIProvider creada para implementaciÛn incremental.
+- **Archivos estimados**: `frontend/src/domain/**`, `frontend/src/providers/ai/**`, `frontend/src/providers/storage/**`, `frontend/src/validation/**`
+- **Requisito / User Story**: FR-021..FR-033 (bases)
+- **Dependencias**: T001
+- **Criterio de aceptaciÛn**: imports/resoluciÛn de mÛdulos correctos.
+- **Test requerido**: Unit test de carga de mÛdulos.
+- **Paralelo**: SÌ
 
 ---
 
-## Phase 3: User Story 1 - Crear un caso desde una se√±al informal
-**Priority: P1** üéØ MVP
+## SLICE 1 ó Case Inbox
 
-**Goal**: Crear casos con t√≠tulo/relato y estado inicial `borrador`.
+### T004
+- **ID**: T004
+- **Slice**: SLICE 1 ó Case Inbox
+- **Objetivo observable**: Crear casos desde Inbox con `title`, `informalDescription`, `createdAt`, `expiresAt`.
+- **Archivos estimados**: `frontend/src/features/inbox/InboxPage.tsx`, `frontend/src/domain/models/DecisionCase.ts`, `frontend/src/providers/storage/casesStorage.ts`
+- **Requisito / User Story**: US1, FR-001, FR-003
+- **Dependencias**: T003
+- **Criterio de aceptaciÛn**: Nuevo caso aparece en listado inmediatamente.
+- **Test requerido**: Component test de creaciÛn de caso.
+- **Paralelo**: No
 
-**Independent Test**: Crear caso desde Inbox con t√≠tulo + descripci√≥n;
-verificar persistencia y estado inicial.
+### T005
+- **ID**: T005
+- **Slice**: SLICE 1 ó Case Inbox
+- **Objetivo observable**: Listar y abrir casos persistidos en localStorage.
+- **Archivos estimados**: `frontend/src/features/inbox/InboxList.tsx`, `frontend/src/app/router.tsx`, `frontend/src/providers/storage/casesStorage.ts`
+- **Requisito / User Story**: US1, FR-001
+- **Dependencias**: T004
+- **Criterio de aceptaciÛn**: Recarga de p·gina conserva casos y permite reabrir.
+- **Test requerido**: Unit test de persistencia + e2e de reload.
+- **Paralelo**: No
 
-- [x] T016 [P] [US1] Contract test `POST /cases` in
-      `backend/tests/contract/cases-create.contract.test.ts`
-- [x] T017 [P] [US1] Integration test create/list cases in
-      `backend/tests/integration/cases-create.integration.test.ts`
-- [x] T018 [P] [US1] E2E Inbox create-case flow in
-      `frontend/tests/e2e/us1-create-case.spec.ts`
-- [x] T019 [US1] Implement case repository + create/list use cases in
-      `backend/src/services/case-service.ts`
-- [x] T020 [US1] Implement `POST /cases` and `GET /cases` in
-      `backend/src/api/cases-routes.ts`
-- [x] T021 [US1] Implement Inbox case creation UI in
-      `frontend/src/features/inbox/inbox-page.tsx`
-
-**Checkpoint**: A user can capture an informal decision signal as a
-persistent case.
-
----
-
-## Phase 4: User Story 2 - Organizar el relato en el Decision Canvas
-**Priority: P1** üéØ MVP
-
-**Goal**: Mostrar 8 bloques y sugerencias IA con estado de validaci√≥n.
-
-**Independent Test**: Abrir caso y ver 8 dimensiones;
-aceptar/editar/rechazar sugerencias en un bloque.
-
-- [x] T022 [P] [US2] Contract test statements endpoint in
-      `backend/tests/contract/canvas-statements.contract.test.ts`
-- [x] T023 [P] [US2] Integration test for statement lifecycle in
-      `backend/tests/integration/canvas-statements.integration.test.ts`
-- [x] T024 [P] [US2] E2E canvas rendering and suggestion states in
-      `frontend/tests/e2e/us2-canvas.spec.ts`
-- [x] T025 [US2] Implement canvas dimensions + statements storage in
-      `backend/src/services/canvas-service.ts`
-- [x] T026 [US2] Implement statement routes in
-      `backend/src/api/canvas-routes.ts`
-- [x] T027 [US2] Implement Decision Canvas UI with 8 blocks in
-      `frontend/src/features/canvas/canvas-page.tsx`
-- [x] T028 [US2] Implement suggestion state badges/actions in
-      `frontend/src/features/canvas/statement-card.tsx`
-
-**Checkpoint**: The informal narrative is transformed into a structured
-canvas while preserving explicit human validation of AI suggestions.
+### T006
+- **ID**: T006
+- **Slice**: SLICE 1 ó Case Inbox
+- **Objetivo observable**: PolÌtica de retenciÛn elimina casos expirados al iniciar/listar.
+- **Archivos estimados**: `frontend/src/domain/rules/retentionRules.ts`, `frontend/src/providers/storage/casesStorage.ts`
+- **Requisito / User Story**: NFR-013
+- **Dependencias**: T005
+- **Criterio de aceptaciÛn**: Casos vencidos no aparecen tras bootstrap.
+- **Test requerido**: Unit tests de retenciÛn (`createdAt`/`expiresAt`).
+- **Paralelo**: SÌ
 
 ---
 
-## Phase 5: User Story 3 - Responder preguntas din√°micas
-**Priority: P1** üéØ MVP
+## SLICE 2 ó Manual Decision Canvas
 
-**Goal**: Ofrecer una pregunta relevante por vez, con m√°ximo 5 por caso.
+### T007
+- **ID**: T007
+- **Slice**: SLICE 2 ó Manual Decision Canvas
+- **Objetivo observable**: Renderizar 8 dimensiones del canvas por caso.
+- **Archivos estimados**: `frontend/src/features/canvas/CanvasPage.tsx`, `frontend/src/domain/models/CanvasDimension.ts`
+- **Requisito / User Story**: US2, FR-002
+- **Dependencias**: T005
+- **Criterio de aceptaciÛn**: Las 8 dimensiones son visibles y navegables.
+- **Test requerido**: Component test de render de dimensiones.
+- **Paralelo**: No
 
-**Independent Test**: Solicitar preguntas hasta l√≠mite;
-registrar respuestas/omisiones/no-lo-s√© y actualizar canvas.
+### T008
+- **ID**: T008
+- **Slice**: SLICE 2 ó Manual Decision Canvas
+- **Objetivo observable**: Crear/editar/rechazar elementos manuales por dimensiÛn.
+- **Archivos estimados**: `frontend/src/features/canvas/StatementEditor.tsx`, `frontend/src/providers/storage/canvasStorage.ts`, `frontend/src/domain/workflow/canvasActions.ts`
+- **Requisito / User Story**: US2, FR-006, FR-008
+- **Dependencias**: T007
+- **Criterio de aceptaciÛn**: Cambios persisten y estados se actualizan.
+- **Test requerido**: Component + unit tests de acciones.
+- **Paralelo**: No
 
-- [x] T029 [P] [US3] Contract test
-      `POST /cases/{id}/ai/questions/next` in
-      `backend/tests/contract/ai-questions.contract.test.ts`
-- [x] T030 [P] [US3] Integration test question count and cap in
-      `backend/tests/integration/ai-questions.integration.test.ts`
-- [x] T031 [P] [US3] E2E dynamic questioning flow in
-      `frontend/tests/e2e/us3-dynamic-questions.spec.ts`
-- [x] T032 [US3] Implement question session logic and max=5 rule in
-      `backend/src/services/question-service.ts`
-- [x] T033 [US3] Integrate AI provider for contextual prompts in
-      `backend/src/services/ai-assist-service.ts`
-- [x] T034 [US3] Implement question panel UI and response actions in
-      `frontend/src/features/canvas/question-panel.tsx`
-
-**Checkpoint**: AI can reduce ambiguity through bounded contextual
-questioning without making the decision for the user.
-
----
-
-## Phase 6: User Story 4 - Diferenciar evidencia de interpretaci√≥n
-**Priority: P1** üéØ MVP
-
-**Goal**: Clasificar afirmaciones por tipo epistemol√≥gico y fuente.
-
-**Independent Test**: Cambiar clasificaci√≥n y validar regla de hechos
-con fuente/confirmaci√≥n humana.
-
-- [x] T035 [P] [US4] Unit tests for epistemic validation in
-      `backend/tests/unit/epistemic-rules.unit.test.ts`
-- [x] T036 [P] [US4] Integration test source-link rules in
-      `backend/tests/integration/evidence-classification.integration.test.ts`
-- [x] T037 [US4] Implement epistemic rule engine in
-      `backend/src/domain/epistemic-rules.ts`
-- [x] T038 [US4] Extend statement update endpoint with classification
-      rules in `backend/src/api/canvas-routes.ts`
-- [x] T039 [US4] Implement classification editor UI in
-      `frontend/src/features/canvas/classification-editor.tsx`
-
-**Checkpoint**: The system explicitly distinguishes evidence,
-interpretation, assumption, and missing information before downstream
-generation.
+### T009
+- **ID**: T009
+- **Slice**: SLICE 2 ó Manual Decision Canvas
+- **Objetivo observable**: Soportar tipos epistemolÛgicos HECHO/INFERENCIA/SUPUESTO/DATO FALTANTE/EVALUACI”N HUMANA.
+- **Archivos estimados**: `frontend/src/domain/models/Statement.ts`, `frontend/src/features/canvas/EpistemicTypeSelector.tsx`
+- **Requisito / User Story**: US4, FR-009
+- **Dependencias**: T008
+- **Criterio de aceptaciÛn**: Cada elemento permite tipificaciÛn y visualizaciÛn.
+- **Test requerido**: Unit tests de enums/validaciÛn + component test selector.
+- **Paralelo**: SÌ
 
 ---
 
-## Phase 7: User Story 5 - Ejecutar una revisi√≥n cr√≠tica
-**Priority: P1**
+## SLICE 3 ó Coverage Engine (sin IA)
 
-**Goal**: Detectar contradicciones, faltantes y debilidades antes del brief.
+### T010
+- **ID**: T010
+- **Slice**: SLICE 3 ó Coverage Engine
+- **Objetivo observable**: Motor determinÌstico calcula cobertura mÌnima de brief.
+- **Archivos estimados**: `frontend/src/domain/rules/coverageRules.ts`, `frontend/src/domain/models/CoverageResult.ts`
+- **Requisito / User Story**: FR-024..FR-027, US7
+- **Dependencias**: T009
+- **Criterio de aceptaciÛn**: Resultado de cobertura explica quÈ falta y por quÈ.
+- **Test requerido**: Unit tests de reglas.
+- **Paralelo**: No
 
-**Independent Test**: Ejecutar revisi√≥n y recibir findings clasificados
-(bloqueo/advertencia/mejora).
+### T011
+- **ID**: T011
+- **Slice**: SLICE 3 ó Coverage Engine
+- **Objetivo observable**: Integrar coverage status en UI del canvas.
+- **Archivos estimados**: `frontend/src/features/canvas/CoveragePanel.tsx`, `frontend/src/features/canvas/CanvasPage.tsx`
+- **Requisito / User Story**: US7, FR-021
+- **Dependencias**: T010
+- **Criterio de aceptaciÛn**: Usuario ve cobertura satisfecha/no satisfecha en tiempo real.
+- **Test requerido**: Component tests de panel.
+- **Paralelo**: SÌ
 
-- [x] T040 [P] [US5] Unit tests for review heuristics in
-      `backend/tests/unit/review-rules.unit.test.ts`
-- [x] T041 [P] [US5] Integration test review findings in
-      `backend/tests/integration/review-analysis.integration.test.ts`
-- [x] T042 [US5] Implement critical review service in
-      `backend/src/services/review-service.ts`
-- [x] T043 [US5] Add review endpoint `POST /cases/{id}/review` in
-      `backend/src/api/review-routes.ts`
-- [x] T044 [US5] Implement review results UI in
-      `frontend/src/features/review/review-panel.tsx`
-
-**Checkpoint**: The system can surface contradictions, missing evidence,
-weak reasoning, and improvement opportunities without automatically
-resolving them.
-
----
-
-## Phase 8: User Story 6 - Asignar gravedad mediante juicio humano
-**Priority: P1** üéØ MVP
-
-**Goal**: Permitir evaluaci√≥n manual de gravedad sin recomendaci√≥n autom√°tica.
-
-**Independent Test**: Actualizar gravedad manualmente con justificaci√≥n
-opcional y trazabilidad de actor humano.
-
-- [x] T045 [P] [US6] Unit tests for severity manual-only policy in
-      `backend/tests/unit/severity-policy.unit.test.ts`
-- [x] T046 [P] [US6] Integration test severity updates in
-      `backend/tests/integration/severity.integration.test.ts`
-- [x] T047 [US6] Implement severity update use case in
-      `backend/src/services/severity-service.ts`
-- [x] T048 [US6] Add severity endpoint in
-      `backend/src/api/cases-routes.ts`
-- [x] T049 [US6] Implement severity selector UI with human-control
-      messaging in
-      `frontend/src/features/canvas/severity-selector.tsx`
-
-**Checkpoint**: Severity remains an explicitly human-owned judgment.
-AI must not infer, recommend, or automatically modify severity.
+### T012
+- **ID**: T012
+- **Slice**: SLICE 3 ó Coverage Engine
+- **Objetivo observable**: Validar reglas solicitadas en baterÌa dedicada.
+- **Archivos estimados**: `frontend/tests/unit/coverageRules.test.ts`
+- **Requisito / User Story**: Reglas explÌcitas de C1/C2
+- **Dependencias**: T010
+- **Criterio de aceptaciÛn**: Incluye tests para: validado, editado, pendiente IA, rechazado, incertidumbre explÌcita y No aplica.
+- **Test requerido**: Unit tests obligatorios
+- **Paralelo**: SÌ
 
 ---
 
-## Phase 9: User Story 7 - Generar un brief ejecutivo
-**Priority: P1** üéØ MVP
+## SLICE 4 ó Case Workflow (sin IA para estados)
 
-**Goal**: Generar brief estructurado desde contenido validado y gate
-de elevaci√≥n.
+### T013
+- **ID**: T013
+- **Slice**: SLICE 4 ó Case Workflow
+- **Objetivo observable**: State machine del caso implementada con transiciones v·lidas/inv·lidas.
+- **Archivos estimados**: `frontend/src/domain/workflow/caseStateMachine.ts`, `frontend/src/domain/models/CaseStatus.ts`
+- **Requisito / User Story**: FR-026, secciÛn 7.1/7.5
+- **Dependencias**: T010
+- **Criterio de aceptaciÛn**: Transiciones inv·lidas devuelven error de dominio.
+- **Test requerido**: Unit tests de state machine.
+- **Paralelo**: No
 
-**Independent Test**: Generar, editar y aprobar brief;
-validar gate para `listo_para_elevar`.
-
-**Entry Gate**:
-
-Before generating a final brief, the case must have:
-
-- structured canvas information from US2;
-- epistemic classification from US4;
-- human severity assessment from US6;
-- all blocking validation rules satisfied.
-
-- [x] T050 [P] [US7] Contract test brief endpoints in
-      `backend/tests/contract/brief.contract.test.ts`
-- [x] T051 [P] [US7] Integration test brief generation + readiness
-      gate in `backend/tests/integration/brief.integration.test.ts`
-- [x] T052 [P] [US7] E2E brief generation/edit/copy flow in
-      `frontend/tests/e2e/us7-brief.spec.ts`
-- [x] T053 [US7] Implement brief generation service in
-      `backend/src/services/brief-service.ts`
-- [x] T054 [US7] Implement brief routes including approve in
-      `backend/src/api/brief-routes.ts`
-- [x] T055 [US7] Implement state transition gate service in
-      `backend/src/services/status-transition-service.ts`
-- [x] T056 [US7] Implement brief editor UI in
-      `frontend/src/features/brief/brief-editor.tsx`
-
-**Checkpoint**: AI produces a structured executive brief only from
-validated decision content. Human approval remains mandatory before
-the case becomes `listo_para_elevar`.
+### T014
+- **ID**: T014
+- **Slice**: SLICE 4 ó Case Workflow
+- **Objetivo observable**: UI de estado permite sÛlo transiciones permitidas.
+- **Archivos estimados**: `frontend/src/features/inbox/CaseStatusControl.tsx`, `frontend/src/features/inbox/InboxPage.tsx`
+- **Requisito / User Story**: US1, FR-026
+- **Dependencias**: T013
+- **Criterio de aceptaciÛn**: Usuario no puede forzar estados inv·lidos.
+- **Test requerido**: Component test de control de estados.
+- **Paralelo**: SÌ
 
 ---
 
-## Phase 10: User Story 8 - Comparar comunicaci√≥n original y aumentada
-**Priority: P1** üéØ MVP Validation
+## SLICE 5 ó MockAIProvider
 
-**Goal**: Permitir evaluaci√≥n ciega control vs IA y guardar puntuaciones.
+### T015
+- **ID**: T015
+- **Slice**: SLICE 5 ó MockAIProvider
+- **Objetivo observable**: Interfaz `AIProvider` definida con mÈtodos requeridos.
+- **Archivos estimados**: `frontend/src/providers/ai/AIProvider.ts`
+- **Requisito / User Story**: DecisiÛn de arquitectura AIProvider
+- **Dependencias**: T003
+- **Criterio de aceptaciÛn**: API incluye `analyzeNarrative`, `suggestNextQuestion`, `reviewCase`, `generateBrief`.
+- **Test requerido**: Unit test de contrato de interfaz.
+- **Paralelo**: SÌ
 
-**Independent Test**: Completar evaluaci√≥n con 8 criterios,
-guardar resultados y mostrar diferencias.
+### T016
+- **ID**: T016
+- **Slice**: SLICE 5 ó MockAIProvider
+- **Objetivo observable**: `MockAIProvider` retorna salidas estructuradas y determinÌsticas para demo.
+- **Archivos estimados**: `frontend/src/providers/ai/MockAIProvider.ts`
+- **Requisito / User Story**: US3/US5/US7
+- **Dependencias**: T015
+- **Criterio de aceptaciÛn**: Respuestas reproducibles por fixture/caso.
+- **Test requerido**: Unit tests de outputs por mÈtodo.
+- **Paralelo**: No
 
-- [x] T057 [P] [US8] Contract test evaluation endpoints in
-      `backend/tests/contract/evaluation.contract.test.ts`
-- [x] T058 [P] [US8] Integration test score persistence in
-      `backend/tests/integration/evaluation.integration.test.ts`
-- [x] T059 [P] [US8] E2E blind comparison flow in
-      `frontend/tests/e2e/us8-comparison.spec.ts`
-- [x] T060 [US8] Implement evaluation service and storage in
-      `backend/src/services/evaluation-service.ts`
-- [x] T061 [US8] Add evaluation routes in
-      `backend/src/api/evaluation-routes.ts`
-- [x] T062 [US8] Implement comparison/evaluation UI in
-      `frontend/src/features/brief/comparison-page.tsx`
-
-**Checkpoint**: The value of AI augmentation can be measured by
-comparing original communication with the augmented output instead of
-assuming that AI-generated content is better.
-
----
-
-## Phase 11: Polish, AI Evaluation & Cross-Cutting Concerns
-
-**Purpose**: Hardening, AI behavior evaluation, documentation,
-auditability, and full validation.
-
-### Platform and quality
-
-- [x] T063 [P] Add structured logging across routes in
-      `backend/src/api/server.ts`
-- [x] T064 [P] Add OpenAPI validation tests in
-      `backend/tests/contract/openapi-validation.contract.test.ts`
-- [x] T065 [P] Add accessibility checks for canvas states in
-      `frontend/tests/e2e/accessibility.spec.ts`
-- [x] T066 Verify retention cleanup + audit events in
-      `backend/tests/integration/retention.integration.test.ts`
-- [x] T067 Run full quickstart validation and update notes in
-      `specs/001-decision-workspace/quickstart.md`
-
-### AI Behavior Evaluation
-
-**Purpose**: Validate AI behavior as a probabilistic component rather
-than validating only deterministic application logic.
-
-- [x] T068 [P] Add AI output evaluation dataset with representative
-      decision cases in
-      `backend/tests/fixtures/ai-evaluation-cases.json`
-
-      Dataset MUST include at minimum:
-      - complete and well-supported case;
-      - incomplete-information case;
-      - ambiguous case;
-      - contradictory-evidence case;
-      - unsupported-claim trap;
-      - case requiring explicit abstention.
-
-- [x] T069 [P] Add AI evaluation tests for hallucination,
-      unsupported claims, epistemic classification, contradiction
-      detection and abstention in
-      `backend/tests/evaluation/ai-output.evaluation.test.ts`
-
-      Evaluation MUST verify that:
-      - unsupported content is not represented as fact;
-      - evidence and interpretation remain distinguishable;
-      - missing evidence is surfaced;
-      - contradictory evidence is surfaced rather than silently resolved;
-      - the model can abstain when evidence is insufficient;
-      - generated briefs remain grounded in validated case content.
-
-- [x] T070 Verify human-only decision boundaries in
-      `backend/tests/evaluation/human-control.evaluation.test.ts`
-
-      Tests MUST verify that AI output cannot:
-      - assign severity;
-      - modify human severity;
-      - approve a brief;
-      - transition a case to `listo_para_elevar`;
-      - bypass blocking readiness requirements.
-
-**Checkpoint**: The application behaves correctly both as software and
-as an AI-augmented decision-support system.
+### T017
+- **ID**: T017
+- **Slice**: SLICE 5 ó MockAIProvider
+- **Objetivo observable**: Todas las salidas IA validadas con Zod antes de uso.
+- **Archivos estimados**: `frontend/src/validation/aiSchemas.ts`, `frontend/src/providers/ai/aiParsing.ts`
+- **Requisito / User Story**: Regla de salidas IA estructuradas
+- **Dependencias**: T016
+- **Criterio de aceptaciÛn**: Salida inv·lida no impacta canvas ni brief.
+- **Test requerido**: Unit tests de validaciÛn Zod.
+- **Paralelo**: SÌ
 
 ---
 
-# Dependencies & Execution Order
+## SLICE 6 ó Contextual Assistance
 
-## Phase Dependencies
+### T018
+- **ID**: T018
+- **Slice**: SLICE 6 ó Contextual Assistance
+- **Objetivo observable**: Flujo de una pregunta din·mica por vez integrado al canvas.
+- **Archivos estimados**: `frontend/src/features/canvas/QuestionPanel.tsx`, `frontend/src/domain/workflow/questionLoop.ts`
+- **Requisito / User Story**: US3, FR-010, FR-014
+- **Dependencias**: T017, T011
+- **Criterio de aceptaciÛn**: Nunca hay dos preguntas activas simult·neamente.
+- **Test requerido**: Component + unit tests de loop.
+- **Paralelo**: No
 
-```text
-Phase 1: Setup
-      ‚Üì
-Phase 2: Foundation
-      ‚Üì
-US1: Capture case
-      ‚Üì
-US2: Structure Decision Canvas
-      ‚Üì
-US3: Dynamic questioning
-      ‚Üì
- ‚îå‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îê
- ‚Üì               ‚Üì
-US4             US6
-Evidence        Human severity
-classification judgment
- ‚Üì               ‚Üì
- ‚îî‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚î¨‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îò
-         ‚Üì
-US7: Executive brief
-         ‚Üì
-US8: Blind comparison / value validation
-         ‚Üì
-Phase 11: Polish + AI evaluation
+### T019
+- **ID**: T019
+- **Slice**: SLICE 6 ó Contextual Assistance
+- **Objetivo observable**: Soportar respuestas normal, No lo sÈ, No aplica, Omitir por ahora.
+- **Archivos estimados**: `frontend/src/features/canvas/QuestionResponseActions.tsx`, `frontend/src/domain/workflow/questionResponses.ts`
+- **Requisito / User Story**: FR-011, FR-012, FR-013
+- **Dependencias**: T018
+- **Criterio de aceptaciÛn**: Cada opciÛn actualiza estado esperado sin autogeneraciÛn de contenido.
+- **Test requerido**: Unit tests de respuestas + component tests.
+- **Paralelo**: SÌ
+
+### T020
+- **ID**: T020
+- **Slice**: SLICE 6 ó Contextual Assistance
+- **Objetivo observable**: ActualizaciÛn del canvas como sugerencia pendiente de validaciÛn.
+- **Archivos estimados**: `frontend/src/domain/workflow/suggestionPipeline.ts`, `frontend/src/features/canvas/SuggestionCard.tsx`
+- **Requisito / User Story**: FR-005, FR-008
+- **Dependencias**: T019
+- **Criterio de aceptaciÛn**: Sugerencias no cuentan para cobertura hasta validar/editar.
+- **Test requerido**: Unit tests de pipeline + component test de estados.
+- **Paralelo**: SÌ
+
+---
+
+## SLICE 7 ó Critical Review
+
+### T021
+- **ID**: T021
+- **Slice**: SLICE 7 ó Critical Review
+- **Objetivo observable**: Engine de revisiÛn clasifica bloqueo crÌtico y advertencia.
+- **Archivos estimados**: `frontend/src/domain/rules/reviewRules.ts`, `frontend/src/domain/models/ReviewFinding.ts`
+- **Requisito / User Story**: US5, FR-016..FR-020
+- **Dependencias**: T010, T020
+- **Criterio de aceptaciÛn**: Hallazgos incluyen tipo, nivel y causa verificable.
+- **Test requerido**: Unit tests de hallazgos.
+- **Paralelo**: No
+
+### T022
+- **ID**: T022
+- **Slice**: SLICE 7 ó Critical Review
+- **Objetivo observable**: ContradicciÛn potencial exige aclaraciÛn humana antes de resoluciÛn.
+- **Archivos estimados**: `frontend/src/domain/workflow/contradictionResolution.ts`, `frontend/src/features/review/ContradictionPrompt.tsx`
+- **Requisito / User Story**: FR-017, FR-018
+- **Dependencias**: T021
+- **Criterio de aceptaciÛn**: El sistema no selecciona por sÌ solo un hecho contradictorio.
+- **Test requerido**: Unit tests de flujo de aclaraciÛn.
+- **Paralelo**: SÌ
+
+---
+
+## SLICE 8 ó Human Severity
+
+### T023
+- **ID**: T023
+- **Slice**: SLICE 8 ó Human Severity
+- **Objetivo observable**: Selector de gravedad con Sin evaluar/Baja/Media/Alta/CrÌtica.
+- **Archivos estimados**: `frontend/src/features/canvas/SeveritySelector.tsx`, `frontend/src/domain/models/Severity.ts`
+- **Requisito / User Story**: US6, FR-022, FR-023
+- **Dependencias**: T014
+- **Criterio de aceptaciÛn**: Solo usuario cambia gravedad; IA no sugiere ni preselecciona.
+- **Test requerido**: Component + unit tests.
+- **Paralelo**: SÌ
+
+---
+
+## SLICE 9 ó Decision Brief
+
+### T024
+- **ID**: T024
+- **Slice**: SLICE 9 ó Decision Brief
+- **Objetivo observable**: Generar brief ejecutivo y vista expandida auditable.
+- **Archivos estimados**: `frontend/src/domain/workflow/briefBuilder.ts`, `frontend/src/features/brief/BriefView.tsx`
+- **Requisito / User Story**: US7, FR-024..FR-025
+- **Dependencias**: T010, T021, T023
+- **Criterio de aceptaciÛn**: Brief muestra incertidumbres, fuentes y tipos epistemolÛgicos.
+- **Test requerido**: Unit tests builder + component tests.
+- **Paralelo**: No
+
+### T025
+- **ID**: T025
+- **Slice**: SLICE 9 ó Decision Brief
+- **Objetivo observable**: Bloquear generaciÛn cuando no cumple cobertura mÌnima.
+- **Archivos estimados**: `frontend/src/features/brief/BriefGatePanel.tsx`, `frontend/src/domain/rules/coverageRules.ts`
+- **Requisito / User Story**: FR-024, FR-026, FR-027
+- **Dependencias**: T024
+- **Criterio de aceptaciÛn**: Usuario ve faltantes; no se produce brief final hasta cumplir gate.
+- **Test requerido**: Unit + component tests de bloqueo.
+- **Paralelo**: SÌ
+
+---
+
+## SLICE 10 ó Human Approval
+
+### T026
+- **ID**: T026
+- **Slice**: SLICE 10 ó Human Approval
+- **Objetivo observable**: Checklist visible de condiciones de Listo para elevar.
+- **Archivos estimados**: `frontend/src/features/brief/ReadyChecklist.tsx`, `frontend/src/domain/rules/readyToElevateRules.ts`
+- **Requisito / User Story**: FR-028, FR-029
+- **Dependencias**: T024, T025, T021, T023
+- **Criterio de aceptaciÛn**: Checklist refleja condiciones reales del caso.
+- **Test requerido**: Unit + component tests.
+- **Paralelo**: No
+
+### T027
+- **ID**: T027
+- **Slice**: SLICE 10 ó Human Approval
+- **Objetivo observable**: AprobaciÛn explÌcita + confirmaciÛn final + transiciÛn a LISTO PARA ELEVAR.
+- **Archivos estimados**: `frontend/src/features/brief/ApproveBriefFlow.tsx`, `frontend/src/domain/workflow/caseStateMachine.ts`
+- **Requisito / User Story**: FR-029, FR-030
+- **Dependencias**: T026
+- **Criterio de aceptaciÛn**: Sin confirmaciÛn final no hay transiciÛn; IA no puede ejecutar/confirmar.
+- **Test requerido**: Component + unit tests de transiciÛn.
+- **Paralelo**: No
+
+---
+
+## SLICE 11 ó Fixtures + E2E
+
+### T028
+- **ID**: T028
+- **Slice**: SLICE 11 ó Fixtures + E2E
+- **Objetivo observable**: Fixtures funcionales para Dynamics, SharePoint/Nintex y ProducciÛn en localStorage.
+- **Archivos estimados**: `frontend/src/fixtures/dynamics.ts`, `frontend/src/fixtures/sharepoint-nintex.ts`, `frontend/src/fixtures/produccion.ts`, `frontend/src/providers/storage/seedFixtures.ts`
+- **Requisito / User Story**: FR-032
+- **Dependencias**: T005
+- **Criterio de aceptaciÛn**: Cada fixture crea caso navegable de punta a punta.
+- **Test requerido**: Unit test de seed/load fixtures.
+- **Paralelo**: SÌ
+
+### T029
+- **ID**: T029
+- **Slice**: SLICE 11 ó Fixtures + E2E
+- **Objetivo observable**: Playwright recorre workflow completo para Dynamics.
+- **Archivos estimados**: `frontend/tests/e2e/dynamics-workflow.spec.ts`
+- **Requisito / User Story**: US1-US8
+- **Dependencias**: T027, T028
+- **Criterio de aceptaciÛn**: Caso llega a LISTO PARA ELEVAR cumpliendo gates.
+- **Test requerido**: E2E obligatorio
+- **Paralelo**: SÌ
+
+### T030
+- **ID**: T030
+- **Slice**: SLICE 11 ó Fixtures + E2E
+- **Objetivo observable**: Playwright recorre workflow completo para SharePoint/Nintex.
+- **Archivos estimados**: `frontend/tests/e2e/sharepoint-nintex-workflow.spec.ts`
+- **Requisito / User Story**: US1-US8
+- **Dependencias**: T027, T028
+- **Criterio de aceptaciÛn**: Caso llega a estado final correcto con incertidumbres visibles.
+- **Test requerido**: E2E obligatorio
+- **Paralelo**: SÌ
+
+### T031
+- **ID**: T031
+- **Slice**: SLICE 11 ó Fixtures + E2E
+- **Objetivo observable**: Playwright recorre workflow completo para ProducciÛn.
+- **Archivos estimados**: `frontend/tests/e2e/produccion-workflow.spec.ts`
+- **Requisito / User Story**: US1-US8
+- **Dependencias**: T027, T028
+- **Criterio de aceptaciÛn**: Caso llega a estado final correcto sin violar control humano.
+- **Test requerido**: E2E obligatorio
+- **Paralelo**: SÌ
+
+---
+
+## Dependencias crÌticas
+
+1. Slice 0 bloquea todos los dem·s.
+2. Slice 3 (Coverage Engine) bloquea Slice 9 y Slice 10.
+3. Slice 4 + Slice 7 + Slice 8 bloquean transiciÛn final de aprobaciÛn.
+4. Slice 10 bloquea validaciÛn E2E completa de Slice 11.

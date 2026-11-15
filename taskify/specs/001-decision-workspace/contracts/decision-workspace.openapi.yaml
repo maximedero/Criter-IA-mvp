@@ -94,7 +94,7 @@ paths:
         - $ref: '#/components/parameters/CaseId'
       responses:
         '200':
-          description: Question generated or brief suggestion returned at max count
+          description: Question generated or guidance to stop/proceed returned according to coverage and context
           content:
             application/json:
               schema:
@@ -141,7 +141,7 @@ components:
   schemas:
     CaseStatus:
       type: string
-      enum: [borrador, recopilando_evidencia, en_analisis, listo_para_revision, listo_para_elevar, elevado, cerrado]
+      enum: [nuevo, borrador, en_analisis, revision_critica, evaluacion_humana, brief_borrador, listo_para_elevar]
     Severity:
       type: string
       enum: [sin_evaluar, baja, media, alta, critica]
@@ -202,10 +202,10 @@ components:
           enum: [documental, confirmado_por_persona, sin_fuente]
         validationState:
           type: string
-          enum: [sugerido_ia, pendiente_revision, validado, rechazado, editado]
+          enum: [pendiente, validado, editado, rechazado]
         authorType:
           type: string
-          enum: [humano, ia]
+          enum: [usuario, ia]
     CreateStatementRequest:
       type: object
       required: [dimensionType, content, epistemicType]
@@ -224,17 +224,23 @@ components:
           enum: [documental, confirmado_por_persona, sin_fuente]
     NextQuestionResponse:
       type: object
-      required: [questionCount, maxQuestionsReached]
+      required: [primaryRoundQuestionCount, shouldStop]
       properties:
         question:
           type: string
           nullable: true
-        questionCount:
+        primaryRoundQuestionCount:
           type: integer
           minimum: 0
-          maximum: 5
-        maxQuestionsReached:
+        guidanceMaxPrimaryRound:
+          type: integer
+          default: 8
+        shouldStop:
           type: boolean
+        stopReason:
+          type: string
+          nullable: true
+          enum: [cobertura_minima, solicitud_usuario, investigacion_externa, saturacion, sin_cambio_material]
         suggestion:
           type: string
           nullable: true
@@ -248,30 +254,20 @@ components:
         caseId:
           type: string
           format: uuid
-        situation:
+        executiveView:
           type: string
-        relevance:
-          type: string
-        possibleConsequences:
-          type: string
-        availableEvidence:
-          type: string
-        uncertainties:
-          type: string
-        scenarios:
-          type: string
-        alternativesTradeoffs:
+        expandedView:
           type: string
         assignedSeverity:
           $ref: '#/components/schemas/Severity'
         requiredIntervention:
           type: string
-        sources:
-          type: string
         approvedByHuman:
           type: boolean
         readyToElevate:
           type: boolean
+        readyChecklistSnapshot:
+          type: object
     CaseDetail:
       allOf:
         - $ref: '#/components/schemas/DecisionCase'

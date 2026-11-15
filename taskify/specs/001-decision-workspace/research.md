@@ -1,49 +1,52 @@
 # Research: Decision Workspace MVP
 
-## Decision 1: Arquitectura web con frontend y backend separados
-- Decision: Implementar una aplicación web con frontend React y backend API Fastify.
-- Rationale: Permite mantener separación entre interfaz, reglas de dominio y proveedor de IA, alineado con la constitución.
+## Decision 1: Arquitectura simplificada frontend-only para el vertical slice inicial
+- Decision: Implementar el MVP inicial sin backend obligatorio, con React + TypeScript + dominio determinístico en cliente.
+- Rationale: Reduce complejidad y acelera validación de la hipótesis de producto centrada en calidad del brief.
 - Alternatives considered:
-  - App monolítica frontend-only: descartada por dificultar reglas de negocio auditables y contratos claros.
-  - App desktop nativa: descartada por mayor costo de entrega para MVP.
+  - Frontend + backend desde inicio: descartado por sobrecosto para hipótesis actual.
+  - App desktop nativa: descartada por mayor costo de entrega.
 
-## Decision 2: Persistencia local con SQLite + limpieza automática
-- Decision: Usar SQLite local para casos, estados, afirmaciones y trazabilidad; ejecutar purga automática por retención de 90 días.
-- Rationale: Cumple requisito de retención y minimiza complejidad operativa en demo local.
+## Decision 2: Persistencia en localStorage con política de retención
+- Decision: Usar localStorage para casos, estados, trazabilidad mínima, fixtures y metadatos temporales (`createdAt`, `expiresAt`).
+- Rationale: Soporta decenas de casos en MVP y permite limpieza determinística por retención sin infraestructura adicional.
 - Alternatives considered:
-  - JSON en memoria: descartado por baja trazabilidad y riesgo de pérdida de estado.
-  - PostgreSQL remota: descartada por complejidad innecesaria para MVP.
+  - SQLite local: removido del MVP inicial por complejidad innecesaria.
+  - Persistencia sólo en memoria: descartada por pérdida de continuidad de casos.
 
-## Decision 3: Motor de reglas de estado explícitas
-- Decision: Modelar transición de estados con reglas determinísticas + acciones manuales (especialmente "Listo para revisión" y "Listo para elevar").
-- Rationale: Evita ambigüedad operativa y garantiza cumplimiento de gates definidos en la spec.
+## Decision 3: Dominio determinístico fuera del prompt
+- Decision: Implementar en lógica de dominio (no en prompts) las reglas de estados, cobertura mínima, bloqueos, aprobación, gravedad y `ReadyToEscalate`.
+- Rationale: Garantiza consistencia, testabilidad y cumplimiento de principios de control humano.
 - Alternatives considered:
-  - Cambio libre de estado: descartado por romper controles de calidad.
-  - Estado inferido por IA: descartado por conflicto con juicio humano obligatorio.
+  - Delegar reglas al modelo: descartado por baja confiabilidad y auditabilidad.
 
-## Decision 4: Contrato API tipado y validado con esquemas
-- Decision: Definir OpenAPI para operaciones de casos/canvas/brief y validar payloads con Zod.
-- Rationale: Asegura consistencia entre frontend y backend y facilita pruebas de contrato.
+## Decision 4: IA acotada al rol de asistencia
+- Decision: Limitar la IA a interpretación del relato, clasificación sugerida, detección de vacíos, pregunta dinámica, contradicciones potenciales, escenarios sugeridos y generación/revisión de brief.
+- Rationale: Mantiene human-in-the-loop y evita comportamiento de agente autónomo.
 - Alternatives considered:
-  - Tipado implícito sin contrato: descartado por riesgo de deriva y errores de integración.
+  - IA gobernando transiciones o aprobaciones: descartado por conflicto con Constitution.
 
-## Decision 5: Proveedor de IA desacoplado por adaptador
-- Decision: Implementar interfaz `AiProvider` con un adaptador OpenAI-compatible y modo mock para tests/demos.
-- Rationale: Cumple principio de intercambiabilidad y permite pruebas sin dependencia externa.
+## Decision 5: Estrategia de AIProvider desacoplado
+- Decision: Mantener interfaz `AIProvider` con `MockAIProvider` para MVP y `RealAIProvider` preparado para siguiente etapa.
+- Rationale: Permite validar producto con control de costos/riesgo y conservar extensibilidad.
 - Alternatives considered:
-  - SDK embebido directo en UI: descartado por acoplamiento y riesgo de secretos.
-  - Un único proveedor hardcoded en backend: descartado por baja portabilidad.
+  - Acoplar proveedor real desde inicio: descartado por dependencia prematura de credenciales y operación.
 
-## Decision 6: Estrategia de pruebas por riesgo
-- Decision: Cubrir reglas críticas con pruebas unitarias e integración; usar E2E para flujos principales del canvas y brief.
-- Rationale: Prioriza verificación de controles humanos, trazabilidad y transiciones de estado.
+## Decision 6: Validación estricta de salidas IA con Zod
+- Decision: Toda salida del AIProvider debe llegar estructurada y validarse con Zod antes de impactar el canvas o brief.
+- Rationale: Reduce deriva semántica y protege reglas funcionales críticas.
 - Alternatives considered:
-  - Solo E2E manual: descartado por baja repetibilidad.
-  - Solo unit tests: descartado por falta de validación de experiencia completa.
+  - Parseo libre de texto: descartado por baja robustez.
 
-## Decision 7: Observabilidad mínima para auditoría
-- Decision: Registrar eventos estructurados (aceptar/editar/rechazar sugerencias, cambios de estado, generación de brief).
-- Rationale: Necesario para explicar resultados y soportar evaluación control vs IA.
+## Decision 7: RealAIProvider con posible proxy posterior (fuera del vertical slice)
+- Decision: Dejar explícito que `RealAIProvider` puede requerir proxy server-side mínimo para proteger credenciales, pero ese proxy no integra el MVP inicial.
+- Rationale: Preserva seguridad futura sin bloquear el experimento actual.
 - Alternatives considered:
-  - Logs de texto no estructurados: descartados por baja auditabilidad.
-  - Telemetría avanzada distribuida: diferida por alcance MVP.
+  - Incluir proxy en MVP inicial: diferido por no ser necesario para la hipótesis principal.
+
+## Decision 8: Estrategia de testing enfocada en hipótesis
+- Decision: Usar Vitest + React Testing Library para dominio/UI y Playwright para flujos de los 3 casos definidos (Dynamics, SharePoint/Nintex, Producción).
+- Rationale: Cubre comportamiento funcional observable y validación del resultado de brief.
+- Alternatives considered:
+  - Supertest: removido mientras no exista backend.
+  - Sólo tests manuales: descartado por baja repetibilidad.

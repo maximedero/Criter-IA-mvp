@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -p tsconfig.json && vite build",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:unit": "vitest run tests/unit",
+    "test:component": "vitest run tests/component",
+    "test:e2e": "playwright test tests/e2e/foundation.smoke.spec.ts"
   },
   "dependencies": {
     "react": "^18.3.1",
@@ -14,9 +17,15 @@
     "react-router-dom": "^6.27.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^5.1.0",
     "eslint": "^10.15.0",
+    "jsdom": "^26.1.0",
     "typescript": "^5.6.3",
     "vite": "^5.4.10",
     "vitest": "^2.1.5"

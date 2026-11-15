@@ -10,47 +10,44 @@
 npm install
 ```
 
-## 2) Run backend API
-```bash
-npm run dev:backend
-```
-API expected at `http://localhost:4000`.
-
-## 3) Run frontend
+## 2) Run frontend
 ```bash
 npm run dev:frontend
 ```
 App expected at `http://localhost:5173`.
 
-## 4) Seed demo data
+## 3) Seed demo fixtures (localStorage)
 ```bash
 npm run seed:demo
 ```
-Loads initial demo cases (Dynamics 365, SharePoint/Nintex, Producción).
+Loads initial demo cases: Dynamics 365, SharePoint/Nintex, Producción.
 
-## 5) Execute tests
+## 4) Execute tests
 ```bash
 npm run test:unit
-npm run test:integration
+npm run test:component
 npm run test:e2e
 ```
 
-## 6) Validate key workflow
+## 5) Validate key workflow
 1. Create case with informal description.
 2. Confirm 8 canvas dimensions are visible.
 3. Accept/edit/reject IA suggestions.
-4. Reach "Listo para revisión" only when 8 dimensions have content.
-5. Generate brief and set "Listo para elevar" only with manual approval + required blocks.
+4. Verify cobertura mínima: sólo cuentan elementos validados/editados por usuario; pendientes/rechazados no cuentan.
+5. Verify preguntas dinámicas: una por vez, sin límite rígido, con máximo orientativo de 8 en primera ronda.
+6. Generate brief only when cobertura mínima is met (incluye incertidumbre explícita o declaración de ausencia).
+7. Set "Listo para elevar" only with checklist visible + "Aprobar brief" + confirmación final.
 
-## 7) Data retention check
-- Confirm cases older than 90 days are purged by cleanup job:
-```bash
-npm run retention:run
-```
-- Verify audit event is recorded for purge operation.
+## 6) Data retention check (localStorage)
+- Verify each case stores `createdAt` and `expiresAt`.
+- Verify expired cases are removed automatically at app startup/listing.
 
-## 8) Validation notes (Phase 11)
-- Backend build passes with `npm --prefix backend run build`.
-- Backend tests pass with `npm --prefix backend run test`.
-- Frontend production build passes with `npm --prefix frontend run build`.
-- Remaining E2E execution requires Playwright runtime installation in the environment.
+## 7) E2E mandatory coverage
+- Playwright must validate at least:
+  - caso Dynamics;
+  - caso SharePoint/Nintex;
+  - caso Producción.
+
+## 8) Notes
+- MVP inicial no requiere backend obligatorio.
+- `RealAIProvider` podrá requerir proxy server-side en etapa posterior para proteger credenciales.

@@ -1,0 +1,17 @@
+﻿{
+    "startedAt":  "2026-11-13T20:12:33.9389351-03:00",
+    "appDir":  "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify",
+    "mode":  "same-window",
+    "processes":  [
+                      {
+                          "Name":  "backend",
+                          "Pid":  16316,
+                          "Command":  "npm run dev:backend"
+                      },
+                      {
+                          "Name":  "frontend",
+                          "Pid":  6804,
+                          "Command":  "npm run dev:frontend"
+                      }
+                  ]
+}

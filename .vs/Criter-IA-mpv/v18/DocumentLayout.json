@@ -1,0 +1,435 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\specs\\001-decision-workspace\\quickstart.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:taskify\\specs\\001-decision-workspace\\quickstart.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\specs\\001-decision-workspace\\data-model.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:taskify\\specs\\001-decision-workspace\\data-model.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\specs\\001-decision-workspace\\research.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:taskify\\specs\\001-decision-workspace\\research.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\specs\\001-decision-workspace\\plan.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:taskify\\specs\\001-decision-workspace\\plan.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\.github\\copilot-instructions.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:.github\\copilot-instructions.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\.specify\\memory\\constitution.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:taskify\\.specify\\memory\\constitution.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\specs\\001-decision-workspace\\spec.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:taskify\\specs\\001-decision-workspace\\spec.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\specs\\001-decision-workspace\\contracts\\decision-workspace.openapi.yaml||{06C066C6-04A2-4E5D-8202-439FD4234EF1}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:taskify\\specs\\001-decision-workspace\\contracts\\decision-workspace.openapi.yaml||{06C066C6-04A2-4E5D-8202-439FD4234EF1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\specs\\001-decision-workspace\\tasks.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:taskify\\specs\\001-decision-workspace\\tasks.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\MMEDERO\\AppData\\Local\\Temp\\CopilotBaseline\\Deleted\\1452511601\\tasks.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\playwright.config.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:taskify\\frontend\\playwright.config.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\vite.config.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:taskify\\frontend\\vite.config.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\vitest.config.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:taskify\\frontend\\vitest.config.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\src\\app\\App.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:taskify\\frontend\\src\\app\\App.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\package.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:taskify\\frontend\\package.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\src\\main.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:taskify\\frontend\\src\\main.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\tests\\e2e\\foundation.smoke.spec.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:taskify\\frontend\\tests\\e2e\\foundation.smoke.spec.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\tests\\unit\\foundation.modules.test.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:taskify\\frontend\\tests\\unit\\foundation.modules.test.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\tests\\setup\\vitest.setup.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:taskify\\frontend\\tests\\setup\\vitest.setup.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\tests\\component\\app.smoke.test.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:taskify\\frontend\\tests\\component\\app.smoke.test.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\src\\validation\\index.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:taskify\\frontend\\src\\validation\\index.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\src\\providers\\storage\\index.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:taskify\\frontend\\src\\providers\\storage\\index.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\src\\domain\\index.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:taskify\\frontend\\src\\domain\\index.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\src\\providers\\ai\\index.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:taskify\\frontend\\src\\providers\\ai\\index.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 10,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "index.ts",
+              "DocumentMoniker": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\src\\validation\\index.ts",
+              "RelativeDocumentMoniker": "taskify\\frontend\\src\\validation\\index.ts",
+              "ToolTip": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\src\\validation\\index.ts",
+              "RelativeToolTip": "taskify\\frontend\\src\\validation\\index.ts",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2026-11-14T20:28:09.512Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "vitest.setup.ts",
+              "DocumentMoniker": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\tests\\setup\\vitest.setup.ts",
+              "RelativeDocumentMoniker": "taskify\\frontend\\tests\\setup\\vitest.setup.ts",
+              "ToolTip": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\tests\\setup\\vitest.setup.ts",
+              "RelativeToolTip": "taskify\\frontend\\tests\\setup\\vitest.setup.ts",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2026-11-14T20:28:04.673Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "main.tsx",
+              "DocumentMoniker": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\src\\main.tsx",
+              "RelativeDocumentMoniker": "taskify\\frontend\\src\\main.tsx",
+              "ToolTip": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\src\\main.tsx",
+              "RelativeToolTip": "taskify\\frontend\\src\\main.tsx",
+              "ViewState": "AgIAAAEAAAAAAAAAAIBJwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2026-11-14T20:27:57.922Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "package.json",
+              "DocumentMoniker": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\package.json",
+              "RelativeDocumentMoniker": "taskify\\frontend\\package.json",
+              "ToolTip": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\package.json",
+              "RelativeToolTip": "taskify\\frontend\\package.json",
+              "ViewState": "AgIAAAsAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-11-14T20:27:53.219Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "App.tsx",
+              "DocumentMoniker": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\src\\app\\App.tsx",
+              "RelativeDocumentMoniker": "taskify\\frontend\\src\\app\\App.tsx",
+              "ToolTip": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\src\\app\\App.tsx",
+              "RelativeToolTip": "taskify\\frontend\\src\\app\\App.tsx",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2026-11-14T20:27:23.334Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "vitest.config.ts",
+              "DocumentMoniker": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\vitest.config.ts",
+              "RelativeDocumentMoniker": "taskify\\frontend\\vitest.config.ts",
+              "ToolTip": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\vitest.config.ts",
+              "RelativeToolTip": "taskify\\frontend\\vitest.config.ts",
+              "ViewState": "AgIAAAYAAAAAAAAAAIBJwAoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2026-11-14T20:27:23.198Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "vite.config.ts",
+              "DocumentMoniker": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\vite.config.ts",
+              "RelativeDocumentMoniker": "taskify\\frontend\\vite.config.ts",
+              "ToolTip": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\vite.config.ts",
+              "RelativeToolTip": "taskify\\frontend\\vite.config.ts",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2026-11-14T20:27:23.083Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "playwright.config.ts",
+              "DocumentMoniker": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\playwright.config.ts",
+              "RelativeDocumentMoniker": "taskify\\frontend\\playwright.config.ts",
+              "ToolTip": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\playwright.config.ts",
+              "RelativeToolTip": "taskify\\frontend\\playwright.config.ts",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2026-11-14T20:27:21.645Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "tasks.md",
+              "DocumentMoniker": "C:\\Users\\MMEDERO\\AppData\\Local\\Temp\\CopilotBaseline\\Deleted\\1452511601\\tasks.md",
+              "RelativeDocumentMoniker": "..\\..\\..\\AppData\\Local\\Temp\\CopilotBaseline\\Deleted\\1452511601\\tasks.md",
+              "ToolTip": "C:\\Users\\MMEDERO\\AppData\\Local\\Temp\\CopilotBaseline\\Deleted\\1452511601\\tasks.md",
+              "RelativeToolTip": "..\\..\\..\\AppData\\Local\\Temp\\CopilotBaseline\\Deleted\\1452511601\\tasks.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-11-14T20:14:50.384Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "quickstart.md",
+              "DocumentMoniker": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\specs\\001-decision-workspace\\quickstart.md",
+              "RelativeDocumentMoniker": "taskify\\specs\\001-decision-workspace\\quickstart.md",
+              "ToolTip": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\specs\\001-decision-workspace\\quickstart.md",
+              "RelativeToolTip": "taskify\\specs\\001-decision-workspace\\quickstart.md",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-11-14T20:02:27.496Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "index.ts",
+              "DocumentMoniker": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\src\\providers\\ai\\index.ts",
+              "RelativeDocumentMoniker": "taskify\\frontend\\src\\providers\\ai\\index.ts",
+              "ToolTip": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\src\\providers\\ai\\index.ts",
+              "RelativeToolTip": "taskify\\frontend\\src\\providers\\ai\\index.ts",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2026-11-14T20:28:09.867Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "index.ts",
+              "DocumentMoniker": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\src\\domain\\index.ts",
+              "RelativeDocumentMoniker": "taskify\\frontend\\src\\domain\\index.ts",
+              "ToolTip": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\src\\domain\\index.ts",
+              "RelativeToolTip": "taskify\\frontend\\src\\domain\\index.ts",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2026-11-14T20:28:09.742Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "index.ts",
+              "DocumentMoniker": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\src\\providers\\storage\\index.ts",
+              "RelativeDocumentMoniker": "taskify\\frontend\\src\\providers\\storage\\index.ts",
+              "ToolTip": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\src\\providers\\storage\\index.ts",
+              "RelativeToolTip": "taskify\\frontend\\src\\providers\\storage\\index.ts",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2026-11-14T20:28:09.616Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "app.smoke.test.tsx",
+              "DocumentMoniker": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\tests\\component\\app.smoke.test.tsx",
+              "RelativeDocumentMoniker": "taskify\\frontend\\tests\\component\\app.smoke.test.tsx",
+              "ToolTip": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\tests\\component\\app.smoke.test.tsx",
+              "RelativeToolTip": "taskify\\frontend\\tests\\component\\app.smoke.test.tsx",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2026-11-14T20:28:04.786Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "tasks.md",
+              "DocumentMoniker": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\specs\\001-decision-workspace\\tasks.md",
+              "RelativeDocumentMoniker": "taskify\\specs\\001-decision-workspace\\tasks.md",
+              "ToolTip": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\specs\\001-decision-workspace\\tasks.md",
+              "RelativeToolTip": "taskify\\specs\\001-decision-workspace\\tasks.md",
+              "ViewState": "AgIAAJEBAAAAAAAAAABBwJMBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-11-14T20:14:50.221Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "foundation.modules.test.ts",
+              "DocumentMoniker": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\tests\\unit\\foundation.modules.test.ts",
+              "RelativeDocumentMoniker": "taskify\\frontend\\tests\\unit\\foundation.modules.test.ts",
+              "ToolTip": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\tests\\unit\\foundation.modules.test.ts",
+              "RelativeToolTip": "taskify\\frontend\\tests\\unit\\foundation.modules.test.ts",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2026-11-14T20:28:04.549Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "foundation.smoke.spec.ts",
+              "DocumentMoniker": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\tests\\e2e\\foundation.smoke.spec.ts",
+              "RelativeDocumentMoniker": "taskify\\frontend\\tests\\e2e\\foundation.smoke.spec.ts",
+              "ToolTip": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\frontend\\tests\\e2e\\foundation.smoke.spec.ts",
+              "RelativeToolTip": "taskify\\frontend\\tests\\e2e\\foundation.smoke.spec.ts",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2026-11-14T20:28:04.334Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "research.md",
+              "DocumentMoniker": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\specs\\001-decision-workspace\\research.md",
+              "RelativeDocumentMoniker": "taskify\\specs\\001-decision-workspace\\research.md",
+              "ToolTip": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\specs\\001-decision-workspace\\research.md",
+              "RelativeToolTip": "taskify\\specs\\001-decision-workspace\\research.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-11-14T20:03:04.635Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "copilot-instructions.md",
+              "DocumentMoniker": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\.github\\copilot-instructions.md",
+              "RelativeDocumentMoniker": ".github\\copilot-instructions.md",
+              "ToolTip": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\.github\\copilot-instructions.md",
+              "RelativeToolTip": ".github\\copilot-instructions.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAmAQAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-11-14T20:11:28.044Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "decision-workspace.openapi.yaml",
+              "DocumentMoniker": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\specs\\001-decision-workspace\\contracts\\decision-workspace.openapi.yaml",
+              "RelativeDocumentMoniker": "taskify\\specs\\001-decision-workspace\\contracts\\decision-workspace.openapi.yaml",
+              "ToolTip": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\specs\\001-decision-workspace\\contracts\\decision-workspace.openapi.yaml",
+              "RelativeToolTip": "taskify\\specs\\001-decision-workspace\\contracts\\decision-workspace.openapi.yaml",
+              "ViewState": "AgIAAE8AAAAAAAAAAAAqwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003775|",
+              "WhenOpened": "2026-11-14T20:02:49.425Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "data-model.md",
+              "DocumentMoniker": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\specs\\001-decision-workspace\\data-model.md",
+              "RelativeDocumentMoniker": "taskify\\specs\\001-decision-workspace\\data-model.md",
+              "ToolTip": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\specs\\001-decision-workspace\\data-model.md",
+              "RelativeToolTip": "taskify\\specs\\001-decision-workspace\\data-model.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-11-14T20:02:18.131Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "spec.md",
+              "DocumentMoniker": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\specs\\001-decision-workspace\\spec.md",
+              "RelativeDocumentMoniker": "taskify\\specs\\001-decision-workspace\\spec.md",
+              "ToolTip": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\specs\\001-decision-workspace\\spec.md",
+              "RelativeToolTip": "taskify\\specs\\001-decision-workspace\\spec.md",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAowNQBAAA8AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-11-14T19:45:09.936Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "plan.md",
+              "DocumentMoniker": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\specs\\001-decision-workspace\\plan.md",
+              "RelativeDocumentMoniker": "taskify\\specs\\001-decision-workspace\\plan.md",
+              "ToolTip": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\specs\\001-decision-workspace\\plan.md",
+              "RelativeToolTip": "taskify\\specs\\001-decision-workspace\\plan.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-11-14T19:34:35.374Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "constitution.md",
+              "DocumentMoniker": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\.specify\\memory\\constitution.md",
+              "RelativeDocumentMoniker": "taskify\\.specify\\memory\\constitution.md",
+              "ToolTip": "C:\\Users\\MMEDERO\\source\\repos\\Criter-IA-mpv\\taskify\\.specify\\memory\\constitution.md",
+              "RelativeToolTip": "taskify\\.specify\\memory\\constitution.md",
+              "ViewState": "AgIAABQBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-11-14T19:33:15.51Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

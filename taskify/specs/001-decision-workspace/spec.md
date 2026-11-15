@@ -24,7 +24,14 @@ riesgo y aprueba el brief final.
 - Q: What retention policy should Criter-IA apply to case data and generated briefs in the MVP? → A: 90 days retention
 - Q: ¿Qué condición mínima debe cumplirse para marcar un caso como “Listo para revisión”? → A: Solo completar 8 bloques
 - Q: ¿Qué regla debe habilitar el estado “Listo para elevar”? → A: Aprobación manual + bloques de evidencia, incertidumbres, alternativas e intervención con contenido
-- Q: ¿Cuántas preguntas máximas debe hacer la IA antes de sugerir generar el brief? → A: 5 preguntas
+- Q: ¿Cuántas preguntas máximas debe hacer la IA antes de sugerir generar el brief? → A: [REEMPLAZADA] Ver Session 2026-11-14: no hay límite rígido; máximo orientativo 8 en primera ronda con detención por cobertura/contexto.
+
+### Session 2026-11-14
+
+- Se reemplaza el límite rígido de 5 preguntas por máximo orientativo de 8 en primera ronda, con detención anticipada por cobertura y contexto.
+- Se fija el flujo funcional de estados: Nuevo → Borrador → En análisis → Revisión crítica → Evaluación humana → Brief borrador → Listo para elevar.
+- Se fija cobertura mínima obligatoria para ofrecer generación de brief (6 dimensiones mínimas).
+- Se fija regla de doble vista del brief (ejecutivo + expandida) como un único artefacto.
 
 ## 2. Problema
 
@@ -112,19 +119,26 @@ Muestra los casos existentes y permite:
 - identificar análisis incompletos;
 - retomar el trabajo.
 
-Estados permitidos:
+Flujo principal de estados del caso en MVP:
 
+- Nuevo;
 - Borrador;
-- Recopilando evidencia;
 - En análisis;
-- Listo para revisión;
-- Listo para elevar;
-- Elevado;
-- Cerrado.
+- Revisión crítica;
+- Evaluación humana;
+- Brief borrador;
+- Listo para elevar.
 
-En el MVP, cambiar el estado será una acción manual o dependerá de reglas
-determinísticas.
+Reglas de control sobre estados:
 
+- La IA no puede asignar automáticamente la gravedad.
+- La IA no puede aprobar un brief.
+- La IA no puede declarar unilateralmente que un caso está listo para elevar.
+- La IA no puede enviar o escalar un caso.
+- La IA no puede ejecutar acciones en sistemas externos.
+
+En el MVP, el avance de estado se produce por acciones de la persona usuaria y
+por validaciones determinísticas explícitas del workflow.
 ### 7.2 Decision Canvas
 
 Cada caso contiene ocho bloques:
@@ -159,7 +173,111 @@ La IA interviene dentro de cada bloque mediante:
 - escenarios alternativos;
 - solicitudes de evidencia.
 
+Regla de interacción para preguntas dinámicas:
+
+1. analizar el estado actual del canvas;
+2. identificar el vacío de información más relevante;
+3. formular una sola pregunta;
+4. explicar brevemente por qué esa información importa cuando no sea evidente;
+5. esperar la respuesta del usuario;
+6. usar la respuesta para proponer actualización del canvas;
+7. reevaluar la cobertura mínima para brief.
+
+Respuestas permitidas ante una pregunta:
+
+- Responder normalmente;
+- "No lo sé" (se registra/actualiza como dato faltante);
+- "No aplica" (se registra como no aplicable al caso);
+- "Omitir por ahora" (permanece pendiente y visible).
+
+Reglas de "No aplica":
+
+- sólo puede ser seleccionado por el usuario;
+- nunca por la IA;
+- debe quedar registrado explícitamente;
+- es distinto de "No lo sé";
+- no debe provocar generación automática de contenido.
+
+"No lo sé" es una respuesta informativa válida y no habilita que la IA invente
+contenido.
+
+Regla de detención:
+
+- no hay cantidad rígida obligatoria de preguntas;
+- máximo orientativo de 8 preguntas principales por primera ronda;
+- la IA debe detenerse antes si se alcanzó cobertura mínima, si la persona pide
+  generar brief, si lo restante requiere investigación externa, si la persona
+  declara reiteradamente no disponer de más datos o si continuar no cambia
+  materialmente la comprensión del caso.
+
+Si quedan incertidumbres, el sistema debe indicar:
+"Podemos preparar un brief provisional. Permanecen N incertidumbres relevantes."
+
 La interfaz debe evitar una conversación extensa separada del canvas.
+
+### 7.4 Bloqueos y advertencias
+
+La revisión crítica debe distinguir:
+
+- **BLOQUEO CRÍTICO**: la información disponible podría producir un brief
+  materialmente engañoso.
+- **ADVERTENCIA**: falta información útil o hay afirmaciones débiles, pero puede
+  comunicarse explícitamente como incertidumbre.
+
+Hecho central (para contradicciones):
+
+Un hecho se considera central cuando puede cambiar materialmente:
+
+- la existencia del riesgo;
+- la exposición;
+- el impacto;
+- la urgencia temporal;
+- la evidencia principal;
+- la intervención requerida.
+
+Reglas sobre contradicciones:
+
+- una contradicción confirmada entre hechos centrales constituye BLOQUEO CRÍTICO;
+- una contradicción potencial debe presentarse primero al usuario para
+  aclaración;
+- la IA no puede seleccionar silenciosamente cuál afirmación es correcta;
+- contradicciones no materiales pueden registrarse como ADVERTENCIA.
+
+Ejemplos de BLOQUEO CRÍTICO:
+
+- cifra relevante presentada como hecho sin fuente ni confirmación humana;
+- contradicciones entre dos hechos centrales no resueltas;
+- impacto principal presentado como certeza cuando sólo es supuesto;
+- ausencia completa de intervención requerida.
+
+Reglas de efecto:
+
+- un bloqueo crítico impide "Listo para elevar";
+- una advertencia no impide generar brief provisional.
+
+### 7.5 Regla de "Listo para elevar"
+
+Un caso sólo puede llegar a "Listo para elevar" cuando:
+
+- situación está definida;
+- exposición está definida;
+- existe al menos un impacto plausible;
+- hechos e inferencias están diferenciados;
+- incertidumbres están visibles;
+- no existen bloqueos críticos;
+- intervención requerida está definida;
+- gravedad fue declarada por la persona;
+- el brief fue revisado;
+- el usuario ejecutó explícitamente "Aprobar brief".
+
+La aprobación del brief requiere, en este orden:
+
+1. checklist visible de condiciones de "Listo para elevar";
+2. acción explícita "Aprobar brief";
+3. confirmación final con el mensaje:
+   "Estás por marcar este caso como LISTO PARA ELEVAR."
+
+La IA nunca puede ejecutar ni confirmar "Aprobar brief".
 
 ## 8. User Scenarios and Testing
 
@@ -239,13 +357,17 @@ La interfaz debe evitar una conversación extensa separada del canvas.
    **When** selecciona "No lo sé"  
    **Then** el dato se registra como faltante y no se inventa una respuesta.
 
-4. **Given** una respuesta del usuario  
-   **When** se procesa  
-   **Then** el canvas se actualiza y muestra qué contenido cambió.
+4. **Given** que la información no aplica al caso  
+   **When** la persona selecciona "No aplica"  
+   **Then** la dimensión o dato queda marcado explícitamente como no aplicable.
 
 5. **Given** que la persona desea avanzar  
-   **When** omite una pregunta  
-   **Then** el sistema permite continuar y mantiene visible el dato faltante.
+   **When** selecciona "Omitir por ahora"  
+   **Then** el dato permanece pendiente y visible.
+
+6. **Given** una respuesta del usuario  
+   **When** se procesa  
+   **Then** el canvas se actualiza y muestra qué contenido cambió.
 
 ---
 
@@ -301,9 +423,13 @@ a la real.
    - advertencia;
    - oportunidad de mejora.
 
-3. La revisión no debe asignar gravedad al riesgo.
+3. Una contradicción potencial entre hechos centrales debe presentarse primero a la persona usuaria para aclaración.
 
-4. Si no existe evidencia suficiente para una conclusión, debe mostrarse:
+4. Una contradicción confirmada entre hechos centrales debe quedar como bloqueo crítico.
+
+5. La revisión no debe asignar gravedad al riesgo.
+
+6. Si no existe evidencia suficiente para una conclusión, debe mostrarse:
    "No hay evidencia suficiente para sostener esta afirmación".
 
 ---
@@ -347,22 +473,79 @@ a la real.
 
 #### Brief obligatorio
 
-El brief debe contener:
+El producto debe generar dos vistas del mismo artefacto:
+
+A) Brief ejecutivo (lectura rápida para el superior)
 
 1. Situación
 2. Por qué importa
-3. Consecuencias posibles
-4. Evidencia disponible
-5. Incertidumbres y datos faltantes
-6. Escenarios
-7. Alternativas y trade-offs
-8. Gravedad asignada por la persona
-9. Intervención requerida
-10. Fuentes
+3. Impactos posibles
+4. Evidencia
+5. Incertidumbres
+6. Escenarios / alternativas
+7. Gravedad
+8. Intervención requerida
+
+Reglas del brief ejecutivo:
+
+- La gravedad debe indicar explícitamente: "Evaluación realizada por el usuario".
+- Debe tender a una extensión aproximada máxima de una página.
+
+B) Vista expandida (auditoría del proceso)
+
+Debe incluir:
+
+- fuentes;
+- hechos;
+- inferencias;
+- supuestos;
+- datos faltantes;
+- evaluación humana;
+- advertencias;
+- historial de revisión.
+
+Regla de cobertura mínima para ofrecer generación de brief:
+
+Definición de "dimensión definida":
+
+Una dimensión se considera definida únicamente cuando contiene al menos un
+elemento relevante con estado:
+
+- validado por el usuario; o
+- editado por el usuario.
+
+Reglas de cobertura por estado:
+
+- un elemento pendiente generado por IA nunca satisface por sí mismo cobertura;
+- un elemento rechazado no participa en cobertura;
+- la edición explícita del usuario implica aceptación del contenido editado y no
+  requiere una segunda acción de validación.
+
+Deben existir como mínimo:
+
+1. situación definida;
+2. exposición definida;
+3. al menos un impacto plausible;
+4. evidencia disponible;
+5. al menos una incertidumbre explícita o declaración explícita de ausencia de
+   incertidumbres relevantes;
+6. intervención requerida definida.
+
+Reglas de "No aplica" para cobertura mínima:
+
+- NO admiten "No aplica": situación, exposición, evidencia, impacto plausible,
+  intervención requerida.
+- La dimensión de incertidumbre puede satisfacer cobertura con la declaración
+  explícita del usuario: "No identifico incertidumbres relevantes con la
+  información disponible.", registrada como EVALUACIÓN HUMANA.
+
+Escenarios y alternativas son deseables, pero no obligatorios. Si no pueden
+identificarse con evidencia suficiente, debe mostrarse explícitamente:
+"No identificados con la evidencia disponible."
 
 #### Acceptance Scenarios
 
-1. Sólo se incorpora automáticamente contenido aceptado o validado.
+1. Sólo se incorpora automáticamente contenido validado o editado por la persona usuaria; contenido pendiente o rechazado no participa automáticamente.
 
 2. Los supuestos e incertidumbres deben permanecer visibles.
 
@@ -370,9 +553,13 @@ El brief debe contener:
 
 4. El brief debe poder editarse antes de marcarlo "Listo para elevar".
 
-5. La aplicación debe poder copiar el brief como texto.
+5. Para aprobar el brief deben verse las condiciones de "Listo para elevar", ejecutarse la acción explícita "Aprobar brief" y mostrarse la confirmación final: "Estás por marcar este caso como LISTO PARA ELEVAR.".
 
-6. El brief debe identificar claramente qué se necesita del superior:
+6. La IA no puede ejecutar ni confirmar la acción de aprobación del brief.
+
+7. La aplicación debe poder copiar el brief como texto.
+
+8. El brief debe identificar claramente qué se necesita del superior:
    - conocimiento;
    - consulta;
    - priorización;
@@ -445,27 +632,35 @@ El brief debe contener:
 - **FR-002**: El sistema debe mostrar los ocho bloques del Decision Canvas.
 - **FR-003**: El sistema debe aceptar una descripción informal.
 - **FR-004**: El sistema debe proponer una organización inicial del contenido.
-- **FR-005**: Toda sugerencia de IA debe requerir validación humana.
-- **FR-006**: El sistema debe formular una pregunta dinámica por vez.
-- **FR-007**: La persona debe poder responder "No lo sé".
-- **FR-008**: El sistema debe registrar información faltante.
-- **FR-009**: Los elementos deben clasificarse epistemológicamente.
-- **FR-010**: La persona debe poder aceptar, editar o rechazar sugerencias.
-- **FR-011**: El sistema debe ejecutar una revisión crítica.
-- **FR-012**: La IA no debe asignar gravedad.
-- **FR-013**: La gravedad debe ser asignada manualmente.
-- **FR-014**: El sistema debe generar el brief estructurado.
-- **FR-015**: La persona debe aprobar el brief.
-- **FR-016**: El sistema debe comparar comunicación original y aumentada.
-- **FR-017**: El evaluador debe poder puntuar ambas versiones.
-- **FR-018**: La demostración debe funcionar con los tres casos definidos.
-- **FR-019**: La aplicación debe mostrar el origen de cada elemento.
-- **FR-020**: La aplicación debe evitar inventar fuentes o datos.
-- **FR-021**: El proveedor de IA debe estar desacoplado de la interfaz.
-- **FR-022**: Los prompts deben mantenerse fuera de los componentes visuales.
-- **FR-023**: Un caso podrá cambiar al estado "Listo para revisión" cuando los ocho bloques del Decision Canvas contengan al menos un elemento.
-- **FR-024**: Un caso solo podrá marcarse "Listo para elevar" cuando una persona lo apruebe explícitamente y los bloques de evidencia, incertidumbres, alternativas e intervención requerida tengan contenido.
-- **FR-025**: La IA podrá formular como máximo 5 preguntas dinámicas por caso antes de sugerir generar el brief.
+- **FR-005**: Toda sugerencia de IA debe iniciar como pendiente de validación.
+- **FR-006**: La persona usuaria debe poder aceptar, editar, reclasificar o rechazar sugerencias.
+- **FR-007**: El sistema debe preservar origen de cada elemento (usuario o IA).
+- **FR-008**: El sistema debe preservar estado de cada elemento (pendiente, validado, editado, rechazado).
+- **FR-009**: Todo elemento relevante del canvas debe clasificarse como HECHO, INFERENCIA, SUPUESTO, DATO FALTANTE o EVALUACIÓN HUMANA.
+- **FR-010**: El sistema debe formular una sola pregunta dinámica por vez.
+- **FR-011**: La persona debe poder responder "No lo sé", "No aplica" u "Omitir por ahora" además de una respuesta normal.
+- **FR-012**: "No lo sé" debe registrarse como dato faltante y nunca habilitar contenido inventado.
+- **FR-013**: "No aplica" sólo puede ser seleccionado por la persona usuaria, nunca por la IA, debe quedar registrado y no debe disparar generación automática de contenido.
+- **FR-014**: No existe límite rígido obligatorio de preguntas; el máximo orientativo por primera ronda es 8 preguntas principales.
+- **FR-015**: El sistema debe detener preguntas antes del máximo cuando se cumpla alguna condición de detención definida en la sección 7.3.
+- **FR-016**: El sistema debe ejecutar revisión crítica clasificando hallazgos en BLOQUEO CRÍTICO o ADVERTENCIA.
+- **FR-017**: Una contradicción confirmada entre hechos centrales debe clasificarse como BLOQUEO CRÍTICO.
+- **FR-018**: Una contradicción potencial debe presentarse al usuario para aclaración y la IA no puede resolverla silenciosamente por su cuenta.
+- **FR-019**: Un BLOQUEO CRÍTICO impide llegar al estado "Listo para elevar".
+- **FR-020**: Las ADVERTENCIAS no impiden generar brief provisional si quedan visibles.
+- **FR-021**: La IA no debe asignar gravedad, no debe recomendar categoría y no debe preseleccionar una opción.
+- **FR-022**: La gravedad debe ser definida únicamente por la persona con opciones: Sin evaluar, Baja, Media, Alta, Crítica.
+- **FR-023**: El producto debe mostrar explícitamente "Evaluación realizada por el usuario".
+- **FR-024**: El sistema sólo debe ofrecer generar brief cuando exista cobertura mínima definida en la sección de brief obligatorio y ninguna condición mínima dependa sólo de elementos pendientes de IA.
+- **FR-025**: Escenarios y alternativas son deseables pero no obligatorios; cuando no haya evidencia suficiente deben mostrarse como "No identificados con la evidencia disponible.".
+- **FR-026**: Para cobertura mínima no admiten "No aplica": situación, exposición, evidencia, impacto plausible e intervención requerida.
+- **FR-027**: La dimensión de incertidumbre puede satisfacer cobertura con la declaración explícita "No identifico incertidumbres relevantes con la información disponible.", registrada como EVALUACIÓN HUMANA.
+- **FR-028**: El caso puede llegar a "Listo para elevar" únicamente si se cumplen todas las condiciones de la sección "Listo para elevar".
+- **FR-029**: La aprobación de brief debe exigir checklist visible, acción explícita "Aprobar brief" y confirmación final con el mensaje definido en la sección 7.5.
+- **FR-030**: La IA nunca puede ejecutar ni confirmar "Aprobar brief" ni declarar unilateralmente un caso como "Listo para elevar".
+- **FR-031**: El sistema debe comparar comunicación original y aumentada y permitir puntuación por criterios definidos.
+- **FR-032**: La demostración debe funcionar con los tres casos definidos.
+- **FR-033**: La aplicación debe evitar inventar fuentes o datos y debe abstenerse explícitamente cuando falte información suficiente.
 
 ## 11. Non-Functional Requirements
 
@@ -581,6 +776,4 @@ relevante del brief.
 
 - ¿Debe existir una vista cronológica además del canvas?
 - ¿Cómo se representarán visualmente las relaciones entre evidencia e impacto?
-- ¿Qué acciones se permitirán mediante teclado?
-- ¿Cuánto detalle debe contener el brief para leerse en menos de un minuto?
-- ¿El brief debe tener una versión corta y otra expandida?
+- ¿Qué acciones mínimas de accesibilidad por teclado son obligatorias en MVP (navegar bloques, responder pregunta, aprobar brief)?

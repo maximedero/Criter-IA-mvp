@@ -1,93 +1,114 @@
 # Data Model: Decision Workspace MVP
 
+## Persistence Container (localStorage)
+- `dw.cases`: array de `DecisionCase`
+- `dw.canvas`: mapa `caseId -> CanvasState`
+- `dw.briefs`: mapa `caseId -> BriefArtifact`
+- `dw.aiSessions`: mapa `caseId -> AiQuestionSession`
+- `dw.audit`: array de `AuditEvent`
+- `dw.fixtures`: catálogo de casos base para demo
+
+Rules:
+- Cada registro de caso debe almacenar `createdAt` y `expiresAt`.
+- Al cargar la app y antes de listar casos, se eliminan registros expirados.
+- Debe soportar decenas de casos en entorno local.
+
 ## Entity: DecisionCase
 - id (UUID)
 - title (string, 1..140)
 - informalDescription (text)
-- status (enum): borrador | recopilando_evidencia | en_analisis | listo_para_revision | listo_para_elevar | elevado | cerrado
+- status (enum): nuevo | borrador | en_analisis | revision_critica | evaluacion_humana | brief_borrador | listo_para_elevar
 - severity (enum): sin_evaluar | baja | media | alta | critica
 - humanApprovedForElevation (boolean)
 - createdAt (datetime)
 - updatedAt (datetime)
-- expiresAt (datetime, <= createdAt + 90 días)
+- expiresAt (datetime)
 
-Rules:
-- `listo_para_revision` requiere 8 dimensiones con al menos un elemento.
-- `listo_para_elevar` requiere aprobación humana explícita y contenido en evidencia, incertidumbres, alternativas e intervención requerida.
+## Entity: CanvasState
+- caseId (UUID)
+- dimensions (array de 8 `CanvasDimension`)
+- lastUpdatedAt (datetime)
 
 ## Entity: CanvasDimension
-- id (UUID)
-- caseId (FK -> DecisionCase)
 - type (enum): contexto_senal | exposicion | evidencia | impactos | incertidumbres | escenarios | alternativas | intervencion_requerida
-- displayOrder (int)
-- completionState (enum): vacio | parcial | completo
+- completionState (enum): vacio | parcial | definido
+- notApplicable (boolean)
+- statements (array de `Statement`)
+
+Rules:
+- `notApplicable=true` sólo puede establecerse por usuario.
+- `notApplicable` no está permitido en situación, exposición, evidencia, impacto plausible e intervención requerida.
 
 ## Entity: Statement
 - id (UUID)
-- caseId (FK)
-- dimensionId (FK -> CanvasDimension)
 - content (text)
 - epistemicType (enum): hecho | inferencia | supuesto | dato_faltante | evaluacion_humana
 - sourceType (enum): documental | confirmado_por_persona | sin_fuente
-- validationState (enum): sugerido_ia | pendiente_revision | validado | rechazado | editado
-- authorType (enum): humano | ia
+- validationState (enum): pendiente | validado | editado | rechazado
+- authorType (enum): usuario | ia
 - createdAt (datetime)
 - updatedAt (datetime)
 
 Rules:
 - Si `epistemicType=hecho`, `sourceType` no puede ser `sin_fuente`.
-- Contenido `sugerido_ia` no se incluye en brief final hasta validación humana.
+- Para cobertura mínima cuentan sólo `validationState` en `validado|editado`.
+- `pendiente` y `rechazado` no satisfacen cobertura.
 
-## Entity: EvidenceSource
+## Entity: ReviewFinding
 - id (UUID)
-- caseId (FK)
-- statementId (FK -> Statement, nullable)
-- label (string)
-- reference (string)  
-- sourceKind (enum): documento | enlace | nota_persona
-- verifiedByHuman (boolean)
+- caseId (UUID)
+- level (enum): bloqueo_critico | advertencia
+- findingType (enum): contradiccion | evidencia_insuficiente | impacto_debil | intervencion_ausente | otro
+- isCentralFactConflict (boolean)
+- resolvedByUser (boolean)
+- createdAt (datetime)
 
-## Entity: Brief
+Rules:
+- Contradicción confirmada entre hechos centrales => `bloqueo_critico`.
+- Contradicción potencial requiere aclaración humana previa.
+
+## Entity: BriefArtifact
 - id (UUID)
-- caseId (FK, unique active)
-- situation (text)
-- relevance (text)
-- possibleConsequences (text)
-- availableEvidence (text)
-- uncertainties (text)
-- scenarios (text)
-- alternativesTradeoffs (text)
+- caseId (UUID)
+- executiveView (text)
+- expandedView (text)
 - assignedSeverity (enum)
 - requiredIntervention (text)
-- sources (text)
-- readyToElevate (boolean)
+- readyChecklistSnapshot (json)
 - approvedByHuman (boolean)
+- approvedAt (datetime, nullable)
 - createdAt (datetime)
 - updatedAt (datetime)
 
+Rules:
+- Aprobación requiere checklist visible + acción explícita + confirmación final.
+- IA no puede aprobar ni confirmar aprobación.
+
 ## Entity: AiQuestionSession
-- id (UUID)
-- caseId (FK)
-- questionCount (int, 0..5)
+- caseId (UUID)
+- primaryRoundQuestionCount (int, >=0)
+- primaryRoundGuidanceMax (int, default 8)
+- stopReason (enum): cobertura_minima | solicitud_usuario | investigacion_externa | saturacion | sin_cambio_material
 - lastQuestionAt (datetime)
-- suggestionOffered (boolean)
 
 Rules:
-- `questionCount` máximo 5 por caso antes de sugerir generación de brief.
+- No existe límite rígido obligatorio de preguntas.
+- El valor 8 es orientativo para primera ronda.
 
 ## Entity: AuditEvent
 - id (UUID)
-- caseId (FK)
+- caseId (UUID)
 - eventType (enum): crear_caso | actualizar_caso | sugerencia_ia | aceptar_sugerencia | editar_sugerencia | rechazar_sugerencia | cambio_estado | generar_brief | aprobar_brief
 - payloadJson (json)
-- actorType (enum): humano | sistema | ia
+- actorType (enum): usuario | sistema | ia
 - createdAt (datetime)
 
 ## State Transitions
-- borrador -> recopilando_evidencia | en_analisis
-- en_analisis -> listo_para_revision (gate FR-023)
-- listo_para_revision -> en_analisis | listo_para_elevar (gate FR-024)
-- listo_para_elevar -> elevado | en_analisis
-- elevado -> cerrado
+- nuevo -> borrador
+- borrador -> en_analisis
+- en_analisis -> revision_critica
+- revision_critica -> evaluacion_humana | en_analisis
+- evaluacion_humana -> brief_borrador
+- brief_borrador -> listo_para_elevar
 
-Invalid transitions are rejected with domain error codes.
+Invalid transitions are rejected by reglas de dominio.

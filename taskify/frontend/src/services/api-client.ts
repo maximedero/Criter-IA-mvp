@@ -1,5 +1,3 @@
-const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:4000";
-
 export type CaseItem = {
   id: string;
   title: string;
@@ -22,40 +20,31 @@ export type NextQuestionResponse = {
   suggestion: string | null;
 };
 
-async function request<T>(path: string, options?: RequestInit): Promise<T> {
-  const response = await fetch(`${API_BASE}${path}`, {
-    headers: { "Content-Type": "application/json" },
-    ...options
-  });
-
-  if (!response.ok) {
-    throw new Error(`Request failed with ${response.status}`);
-  }
-
-  return response.json() as Promise<T>;
+export async function listCases(): Promise<CaseItem[]> {
+  return [];
 }
 
-export function listCases(): Promise<CaseItem[]> {
-  return request<CaseItem[]>("/cases");
+export async function createCase(_payload: { title: string; informalDescription: string }): Promise<CaseItem> {
+  throw new Error("API client is not used in Slice 1 frontend-only flow");
 }
 
-export function createCase(payload: { title: string; informalDescription: string }): Promise<CaseItem> {
-  return request<CaseItem>("/cases", { method: "POST", body: JSON.stringify(payload) });
+export async function listStatements(_caseId: string): Promise<Statement[]> {
+  return [];
 }
 
-export function listStatements(caseId: string): Promise<Statement[]> {
-  return request<Statement[]>(`/cases/${caseId}/canvas/statements`);
+export async function createStatement(
+  _caseId: string,
+  _payload: { dimensionType: string; content: string; epistemicType: string; sourceType?: string }
+): Promise<Statement> {
+  throw new Error("Canvas APIs are not available in Slice 1");
 }
 
-export function createStatement(caseId: string, payload: { dimensionType: string; content: string; epistemicType: string; sourceType?: string }): Promise<Statement> {
-  return request<Statement>(`/cases/${caseId}/canvas/statements`, {
-    method: "POST",
-    body: JSON.stringify(payload)
-  });
+export async function getNextQuestion(_caseId: string): Promise<NextQuestionResponse> {
+  return {
+    question: null,
+    questionCount: 0,
+    maxQuestionsReached: false,
+    suggestion: null
+  };
 }
 
-export function getNextQuestion(caseId: string): Promise<NextQuestionResponse> {
-  return request<NextQuestionResponse>(`/cases/${caseId}/ai/questions/next`, {
-    method: "POST"
-  });
-}

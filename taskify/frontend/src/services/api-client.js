@@ -1,31 +1,20 @@
-const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:4000";
-async function request(path, options) {
-    const response = await fetch(`${API_BASE}${path}`, {
-        headers: { "Content-Type": "application/json" },
-        ...options
-    });
-    if (!response.ok) {
-        throw new Error(`Request failed with ${response.status}`);
-    }
-    return response.json();
+export async function listCases() {
+    return [];
 }
-export function listCases() {
-    return request("/cases");
+export async function createCase(_payload) {
+    throw new Error("API client is not used in Slice 1 frontend-only flow");
 }
-export function createCase(payload) {
-    return request("/cases", { method: "POST", body: JSON.stringify(payload) });
+export async function listStatements(_caseId) {
+    return [];
 }
-export function listStatements(caseId) {
-    return request(`/cases/${caseId}/canvas/statements`);
+export async function createStatement(_caseId, _payload) {
+    throw new Error("Canvas APIs are not available in Slice 1");
 }
-export function createStatement(caseId, payload) {
-    return request(`/cases/${caseId}/canvas/statements`, {
-        method: "POST",
-        body: JSON.stringify(payload)
-    });
-}
-export function getNextQuestion(caseId) {
-    return request(`/cases/${caseId}/ai/questions/next`, {
-        method: "POST"
-    });
+export async function getNextQuestion(_caseId) {
+    return {
+        question: null,
+        questionCount: 0,
+        maxQuestionsReached: false,
+        suggestion: null
+    };
 }

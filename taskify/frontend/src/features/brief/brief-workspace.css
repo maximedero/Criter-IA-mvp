@@ -1,0 +1,171 @@
+.dw-brief-workspace {
+  width: 100%;
+  display: grid;
+  gap: var(--spacing-12);
+  padding: var(--spacing-16);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-control);
+  background: var(--color-graphite);
+}
+
+.dw-brief-alert {
+  margin: 0;
+  color: var(--color-state-error);
+}
+
+.dw-brief-tabs,
+.dw-brief-inline-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-8);
+}
+
+.dw-comparison-page {
+  display: grid;
+  gap: var(--spacing-12);
+}
+
+.dw-comparison-page__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--spacing-12);
+}
+
+.dw-comparison-page__grid article,
+.dw-brief-editor {
+  padding: var(--spacing-12);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-control);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.dw-approval-panel,
+.dw-approval-ready-panel {
+  display: grid;
+  gap: var(--spacing-12);
+  padding: var(--spacing-12);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-control);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.dw-approval-checklist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--spacing-8);
+}
+
+.dw-approval-checklist__item {
+  display: grid;
+  gap: var(--spacing-8);
+  padding: var(--spacing-8) var(--spacing-12);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-control);
+  background: var(--color-graphite);
+}
+
+.dw-approval-badge {
+  width: fit-content;
+  padding: 4px var(--spacing-8);
+  border-radius: var(--radius-buttons);
+  border: 1px solid var(--color-hairline);
+  font-size: var(--text-caption);
+}
+
+.dw-approval-badge--passed {
+  color: var(--color-bone);
+  background: rgba(107, 98, 242, 0.25);
+}
+
+.dw-approval-badge--pending {
+  color: var(--color-bone);
+  background: rgba(239, 68, 68, 0.18);
+}
+
+.dw-approval-status {
+  margin: 0;
+  padding: var(--spacing-8) var(--spacing-12);
+  border-radius: var(--radius-control);
+  border: 1px solid var(--color-hairline);
+}
+
+.dw-approval-status--ready {
+  background: rgba(107, 98, 242, 0.18);
+}
+
+.dw-approval-status--blocked {
+  background: rgba(239, 68, 68, 0.14);
+}
+
+.dw-approve-dialog__overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.55);
+  padding: var(--spacing-16);
+}
+
+.dw-approve-dialog {
+  width: min(100%, 560px);
+  background: var(--color-graphite);
+  color: var(--color-bone);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-control);
+  padding: var(--spacing-16);
+  display: grid;
+  gap: var(--spacing-12);
+}
+
+.dw-approve-dialog h5,
+.dw-approve-dialog p {
+  margin: 0;
+}
+
+.dw-approve-dialog__meta {
+  margin: 0;
+  display: grid;
+  gap: var(--spacing-8);
+}
+
+.dw-approve-dialog__meta > div {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: var(--spacing-8);
+}
+
+.dw-approve-dialog__meta dt,
+.dw-approve-dialog__meta dd {
+  margin: 0;
+}
+
+.dw-approve-dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-12);
+}
+
+@media (max-width: 1024px) {
+  .dw-brief-workspace {
+    padding: var(--spacing-12);
+  }
+}
+
+@media (max-width: 768px) {
+  .dw-comparison-page__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dw-brief-tabs,
+  .dw-brief-inline-actions,
+  .dw-approve-dialog__actions {
+    flex-direction: column;
+  }
+
+  .dw-approve-dialog__meta > div {
+    grid-template-columns: 1fr;
+  }
+}

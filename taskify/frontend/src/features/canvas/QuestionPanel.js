@@ -7,6 +7,7 @@ import { answerActiveQuestion, declareNoRelevantUncertainty, supersedeActiveQues
 import { findActiveQuestion, getAiQuestionSession, setActiveQuestion, setStopResult } from "../../providers/storage/aiSessionStorage";
 import { parseSuggestNextQuestionResult } from "../../providers/ai";
 import { QuestionResponseActions } from "./QuestionResponseActions";
+import { Button } from "../../app/ui/Button";
 function statusAllowsQuestion(status) {
     return status === "DRAFT" || status === "IN_ANALYSIS";
 }
@@ -28,7 +29,7 @@ export function QuestionPanel({ caseId, initialNarrative, caseStatus, items, pro
     if (!statusAllowsQuestion(caseStatus)) {
         return null;
     }
-    return (_jsxs("section", { "aria-label": "Asistencia contextual", children: [_jsx("h4", { children: "ASISTENCIA CONTEXTUAL" }), _jsx("button", { type: "button", onClick: async () => {
+    return (_jsxs("section", { "aria-label": "Asistencia contextual", children: [_jsx("h4", { children: "ASISTENCIA CONTEXTUAL" }), _jsx(Button, { type: "button", onClick: async () => {
                     setError(null);
                     setLocalMessage(null);
                     if (!canRequestNextQuestion(activeQuestion)) {
@@ -64,7 +65,7 @@ export function QuestionPanel({ caseId, initialNarrative, caseStatus, items, pro
                     finally {
                         setRequesting(false);
                     }
-                }, disabled: requesting, children: "Obtener siguiente pregunta" }), session.lastStop?.message ? _jsx("p", { children: session.lastStop.message }) : null, localMessage ? _jsx("p", { children: localMessage }) : null, error ? _jsx("p", { role: "alert", children: error }) : null, activeQuestion ? (_jsxs("section", { children: [_jsx("h5", { children: "Pregunta activa" }), _jsxs("p", { children: [_jsx("strong", { children: "Dimensi\u00F3n:" }), " ", CANVAS_DIMENSION_LABELS[activeQuestion.targetDimension]] }), _jsxs("p", { children: [_jsx("strong", { children: "Pregunta:" }), " ", activeQuestion.question] }), _jsxs("p", { children: [_jsx("strong", { children: "Por qu\u00E9 importa:" }), " ", activeQuestion.reason] }), _jsx(QuestionResponseActions, { question: activeQuestion, answering: answering, error: error, answerText: answerText, selectedEpistemicType: selectedEpistemicType, onAnswerTextChange: setAnswerText, onEpistemicTypeChange: () => {
+                }, disabled: requesting, children: "Obtener siguiente pregunta" }), session.lastStop?.message ? _jsx("p", { children: session.lastStop.message }) : null, localMessage ? _jsx("p", { children: localMessage }) : null, error ? (_jsx("p", { className: "dw-canvas-alert", role: "alert", children: error })) : null, activeQuestion ? (_jsxs("section", { children: [_jsx("h5", { children: "Pregunta activa" }), _jsxs("p", { children: [_jsx("strong", { children: "Dimensi\u00F3n:" }), " ", CANVAS_DIMENSION_LABELS[activeQuestion.targetDimension]] }), _jsxs("p", { children: [_jsx("strong", { children: "Pregunta:" }), " ", activeQuestion.question] }), _jsxs("p", { children: [_jsx("strong", { children: "Por qu\u00E9 importa:" }), " ", activeQuestion.reason] }), _jsx(QuestionResponseActions, { question: activeQuestion, answering: answering, error: error, answerText: answerText, selectedEpistemicType: selectedEpistemicType, onAnswerTextChange: setAnswerText, onEpistemicTypeChange: () => {
                             // optional override left for future
                         }, onDeclareNoUncertainty: () => {
                             setError(null);
@@ -94,7 +95,7 @@ export function QuestionPanel({ caseId, initialNarrative, caseStatus, items, pro
                             finally {
                                 setAnswering(false);
                             }
-                        } })] })) : null, !activeQuestion && session.questions.length > 0 ? (_jsx("button", { type: "button", onClick: async () => {
+                        } })] })) : null, !activeQuestion && session.questions.length > 0 ? (_jsx(Button, { type: "button", variant: "ghost", onClick: async () => {
                     setError(null);
                     setLocalMessage(null);
                     setRequesting(true);

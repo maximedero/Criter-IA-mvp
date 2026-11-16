@@ -16,8 +16,10 @@ import { HumanSeverityPanel, mapMissingCoverageLabels } from "../canvas/HumanSev
 import { CanvasPage } from "../canvas/canvas-page";
 import { BriefWorkspace } from "../brief/BriefWorkspace";
 import { CriticalReviewPanel } from "../review/CriticalReviewPanel";
+import { Button } from "../../app/ui/Button";
 import { CaseForm } from "./CaseForm";
 import { CaseStatusControl } from "./CaseStatusControl";
+import "./inbox-page.css";
 function formatUpdatedAt(value) {
     return new Date(value).toLocaleString("es-AR", {
         year: "numeric",
@@ -67,7 +69,7 @@ export function InboxPage({ aiProvider }) {
             (selectedCase.status === "CRITICAL_REVIEW" && criticalReviewComplete) ||
             selectedCase.status === "BRIEF_DRAFT";
         const shouldRenderBriefWorkspace = selectedCase.status === "BRIEF_DRAFT" || selectedCase.status === "READY_TO_ESCALATE";
-        return (_jsxs("section", { children: [_jsx("h2", { children: "Detalle de caso" }), _jsxs("p", { children: [_jsx("strong", { children: "T\u00EDtulo:" }), " ", selectedCase.title] }), _jsxs("p", { children: [_jsx("strong", { children: "Estado:" }), " ", CASE_STATUS_LABELS[selectedCase.status]] }), _jsxs("p", { children: [_jsx("strong", { children: "Relato inicial:" }), " ", selectedCase.initialNarrative] }), _jsx(CaseStatusControl, { status: selectedCase.status, items: selectedCaseItems, criticalReviewComplete: criticalReviewComplete, openBlockers: openBlockers, humanSeverity: severityAssessment.severity, onStatusChange: handleStatusChange }), _jsx(CanvasPage, { caseId: selectedCase.id, initialNarrative: selectedCase.initialNarrative, caseStatus: selectedCase.status, aiProvider: provider, onItemsChange: (nextItems) => {
+        return (_jsxs("section", { className: "dw-case-detail", children: [_jsx("h2", { children: "Detalle de caso" }), _jsxs("div", { className: "dw-case-detail__summary", children: [_jsxs("p", { children: [_jsx("strong", { children: "T\u00EDtulo:" }), " ", selectedCase.title] }), _jsxs("p", { children: [_jsx("strong", { children: "Estado:" }), " ", CASE_STATUS_LABELS[selectedCase.status]] }), _jsxs("p", { children: [_jsx("strong", { children: "Relato inicial:" }), " ", selectedCase.initialNarrative] })] }), _jsx(CaseStatusControl, { status: selectedCase.status, items: selectedCaseItems, criticalReviewComplete: criticalReviewComplete, openBlockers: openBlockers, humanSeverity: severityAssessment.severity, onStatusChange: handleStatusChange }), _jsx(CanvasPage, { caseId: selectedCase.id, initialNarrative: selectedCase.initialNarrative, caseStatus: selectedCase.status, aiProvider: provider, onItemsChange: (nextItems) => {
                         setSelectedCaseItems(nextItems);
                         if (selectedCase.status === "DRAFT") {
                             const hasUserValidatedOrEditedItem = nextItems.some((item) => item.origin === "USER" && (item.validationStatus === "VALIDATED" || item.validationStatus === "EDITED"));
@@ -124,16 +126,16 @@ export function InboxPage({ aiProvider }) {
                         else {
                             setBriefError("No se pudo completar la transición a Listo para elevar.");
                         }
-                    } })) : null, briefError ? _jsx("p", { role: "alert", children: briefError }) : null, _jsx("button", { type: "button", onClick: () => {
+                    } })) : null, briefError ? (_jsx("p", { className: "dw-inbox__alert", role: "alert", children: briefError })) : null, _jsx(Button, { type: "button", variant: "ghost", onClick: () => {
                         setViewMode("inbox");
                         refresh();
                     }, children: "Volver al Inbox" })] }));
     }
-    return (_jsxs("section", { children: [_jsx("h2", { children: "Inbox" }), showCreateForm ? (_jsx(CaseForm, { onCancel: () => setShowCreateForm(false), onCreate: (payload) => {
+    return (_jsxs("section", { className: "dw-inbox", children: [_jsxs("div", { className: "dw-inbox__header", children: [_jsx("h2", { children: "Inbox" }), !showCreateForm ? (_jsx(Button, { type: "button", onClick: () => setShowCreateForm(true), children: "Nuevo caso" })) : null] }), showCreateForm ? (_jsx(CaseForm, { onCancel: () => setShowCreateForm(false), onCreate: (payload) => {
                     createDecisionCase(payload);
                     setShowCreateForm(false);
                     refresh();
-                } })) : (_jsx("button", { type: "button", onClick: () => setShowCreateForm(true), children: "Nuevo caso" })), items.length === 0 ? _jsx("p", { children: "No hay casos cargados." }) : null, items.length > 0 ? (_jsxs("table", { children: [_jsx("thead", { children: _jsxs("tr", { children: [_jsx("th", { children: "T\u00EDtulo" }), _jsx("th", { children: "Estado" }), _jsx("th", { children: "Actualizado" }), _jsx("th", { children: "Acci\u00F3n" })] }) }), _jsx("tbody", { children: items.map((item) => (_jsxs("tr", { children: [_jsx("td", { children: item.title }), _jsx("td", { children: CASE_STATUS_LABELS[item.status] }), _jsx("td", { children: formatUpdatedAt(item.updatedAt) }), _jsx("td", { children: _jsx("button", { type: "button", onClick: () => {
+                } })) : null, items.length === 0 ? _jsx("p", { className: "dw-inbox__empty", children: "No hay casos cargados." }) : null, items.length > 0 ? (_jsxs("table", { className: "dw-inbox__table", children: [_jsx("thead", { children: _jsxs("tr", { children: [_jsx("th", { children: "T\u00EDtulo" }), _jsx("th", { children: "Estado" }), _jsx("th", { children: "Actualizado" }), _jsx("th", { children: "Acci\u00F3n" })] }) }), _jsx("tbody", { children: items.map((item) => (_jsxs("tr", { children: [_jsx("td", { children: item.title }), _jsx("td", { children: CASE_STATUS_LABELS[item.status] }), _jsx("td", { children: formatUpdatedAt(item.updatedAt) }), _jsx("td", { children: _jsx(Button, { type: "button", variant: "ghost", onClick: () => {
                                             setSelectedCaseId(item.id);
                                             setSelectedCaseItems(listCanvasItemsByCase(item.id));
                                             setViewMode("detail");

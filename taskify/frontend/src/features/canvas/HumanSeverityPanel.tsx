@@ -10,6 +10,7 @@ import {
 } from "../../providers/storage/humanSeverityStorage";
 import type { HumanSeverityAssessment } from "../../domain/models/HumanSeverityAssessment";
 import { HUMAN_SEVERITY_LABELS } from "../../domain/models/HumanSeverityAssessment";
+import { Button } from "../../app/ui/Button";
 
 type Props = {
   caseId: string;
@@ -194,17 +195,23 @@ export function HumanSeverityPanel({
         <textarea value={rationale} onChange={(event) => setRationale(event.target.value)} disabled={!canEdit} />
       </label>
 
-      <button type="button" onClick={save} disabled={!canEdit}>
-        Guardar evaluación
-      </button>
+      <div className="dw-human-severity__actions">
+        <Button type="button" onClick={save} disabled={!canEdit}>
+          Guardar evaluación
+        </Button>
 
-      <button type="button" onClick={tryContinue}>
-        Continuar a preparación del brief
-      </button>
+        <Button type="button" variant="ghost" onClick={tryContinue}>
+          Continuar a preparación del brief
+        </Button>
+      </div>
 
       {transition.allowed ? <p>Evaluación completa. El caso puede avanzar a preparación del brief.</p> : null}
 
-      {error ? <p role="alert">{error}</p> : null}
+      {error ? (
+        <p className="dw-canvas-alert" role="alert">
+          {error}
+        </p>
+      ) : null}
       {message ? <p>{message}</p> : null}
     </section>
   );

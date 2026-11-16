@@ -6,6 +6,8 @@ import { parseReviewCaseResult } from "../../providers/ai";
 import { getAiQuestionSession } from "../../providers/storage/aiSessionStorage";
 import { getCriticalReview, isCriticalReviewComplete, persistReviewResult, setCriticalReviewCompleteFlag } from "../../providers/storage/criticalReviewStorage";
 import { calculateReviewSummary, canAcknowledgeAsUncertainty, canCompleteCriticalReview } from "../../domain/rules/reviewRules";
+import { Button } from "../../app/ui/Button";
+import "./critical-review-panel.css";
 function findingLevelLabel(level) {
     return level === "BLOCKER" ? "BLOQUEO CRÍTICO" : "ADVERTENCIA";
 }
@@ -83,13 +85,13 @@ export function CriticalReviewPanel({ caseId, initialNarrative, caseStatus, item
         }
     };
     const review = getCriticalReview(caseId);
-    return (_jsxs("section", { "aria-label": "Revisi\u00F3n cr\u00EDtica", children: [_jsx("h4", { children: "REVISI\u00D3N CR\u00CDTICA" }), _jsx("button", { type: "button", onClick: executeReview, children: review ? "Volver a revisar" : "Ejecutar revisión crítica" }), error ? _jsx("p", { role: "alert", children: error }) : null, message ? _jsx("p", { children: message }) : null, review ? (_jsxs(_Fragment, { children: [_jsx("p", { children: "Resumen:" }), _jsxs("ul", { children: [_jsxs("li", { children: [summary?.openBlockers ?? 0, " bloqueos abiertos"] }), _jsxs("li", { children: [summary?.openWarnings ?? 0, " advertencias abiertas"] }), _jsxs("li", { children: [summary?.resolvedFindings ?? 0, " hallazgos resueltos"] })] }), review.findings.map((finding) => {
+    return (_jsxs("section", { "aria-label": "Revisi\u00F3n cr\u00EDtica", className: "dw-review-panel", children: [_jsx("h4", { children: "REVISI\u00D3N CR\u00CDTICA" }), _jsx(Button, { type: "button", onClick: executeReview, children: review ? "Volver a revisar" : "Ejecutar revisión crítica" }), error ? (_jsx("p", { className: "dw-review-panel__alert", role: "alert", children: error })) : null, message ? _jsx("p", { children: message }) : null, review ? (_jsxs(_Fragment, { children: [_jsx("p", { children: "Resumen:" }), _jsxs("ul", { className: "dw-review-panel__summary", children: [_jsxs("li", { children: [summary?.openBlockers ?? 0, " bloqueos abiertos"] }), _jsxs("li", { children: [summary?.openWarnings ?? 0, " advertencias abiertas"] }), _jsxs("li", { children: [summary?.resolvedFindings ?? 0, " hallazgos resueltos"] })] }), review.findings.map((finding) => {
                         const related = items.filter((item) => finding.relatedItemIds.includes(item.id));
                         const allowAcknowledge = canAcknowledgeAsUncertainty(finding, items);
                         const clarification = clarificationInput[finding.id] ?? "";
                         const dismissReason = dismissInput[finding.id] ?? "";
                         const acknowledgeText = acknowledgeInput[finding.id] ?? "";
-                        return (_jsxs("article", { children: [_jsx("h5", { children: findingLevelLabel(finding.level) }), _jsx("p", { children: _jsx("strong", { children: finding.title }) }), _jsx("p", { children: finding.message }), _jsxs("p", { children: [_jsx("strong", { children: "Acci\u00F3n sugerida:" }), " ", finding.suggestedHumanAction] }), _jsxs("p", { children: [_jsx("strong", { children: "Estado:" }), " ", statusText(finding.status)] }), _jsx("p", { children: "Relacionado con:" }), related.length > 0 ? (_jsx("ul", { children: related.map((item) => (_jsx("li", { children: item.content }, item.id))) })) : (_jsx("p", { children: "Elemento relacionado modificado o eliminado." })), finding.status === "OPEN" ? (_jsxs("div", { children: [_jsx("button", { type: "button", onClick: () => setPendingEditedResolution(finding.id), children: "Editar item" }), pendingEditedResolution === finding.id ? (_jsx("button", { type: "button", onClick: () => {
+                        return (_jsxs("article", { className: "dw-review-finding", children: [_jsx("h5", { children: findingLevelLabel(finding.level) }), _jsx("p", { children: _jsx("strong", { children: finding.title }) }), _jsx("p", { children: finding.message }), _jsxs("p", { children: [_jsx("strong", { children: "Acci\u00F3n sugerida:" }), " ", finding.suggestedHumanAction] }), _jsxs("p", { children: [_jsx("strong", { children: "Estado:" }), " ", statusText(finding.status)] }), _jsx("p", { children: "Relacionado con:" }), related.length > 0 ? (_jsx("ul", { children: related.map((item) => (_jsx("li", { children: item.content }, item.id))) })) : (_jsx("p", { children: "Elemento relacionado modificado o eliminado." })), finding.status === "OPEN" ? (_jsxs("div", { className: "dw-review-finding__actions", children: [_jsx(Button, { type: "button", variant: "ghost", onClick: () => setPendingEditedResolution(finding.id), children: "Editar item" }), pendingEditedResolution === finding.id ? (_jsx(Button, { type: "button", onClick: () => {
                                                 markFindingResolvedByEdit(caseId, finding.id);
                                                 setPendingEditedResolution(null);
                                                 setMessage("Hallazgo marcado como resuelto por edición.");
@@ -99,7 +101,7 @@ export function CriticalReviewPanel({ caseId, initialNarrative, caseStatus, item
                                                             ...prev,
                                                             [finding.id]: event.target.value
                                                         }));
-                                                    } })] }), _jsx("button", { type: "button", onClick: () => {
+                                                    } })] }), _jsx(Button, { type: "button", onClick: () => {
                                                 try {
                                                     resolveFindingByClarification(caseId, finding.id, clarification);
                                                     setClarificationInput((prev) => ({ ...prev, [finding.id]: "" }));
@@ -114,7 +116,7 @@ export function CriticalReviewPanel({ caseId, initialNarrative, caseStatus, item
                                                             ...prev,
                                                             [finding.id]: event.target.value
                                                         }));
-                                                    } })] }), _jsx("button", { type: "button", disabled: !allowAcknowledge, onClick: () => {
+                                                    } })] }), _jsx(Button, { type: "button", variant: "ghost", disabled: !allowAcknowledge, onClick: () => {
                                                 try {
                                                     acknowledgeFindingAsUncertainty(caseId, finding.id, acknowledgeText, "MISSING_INFORMATION");
                                                     setAcknowledgeInput((prev) => ({ ...prev, [finding.id]: "" }));
@@ -129,7 +131,7 @@ export function CriticalReviewPanel({ caseId, initialNarrative, caseStatus, item
                                                             ...prev,
                                                             [finding.id]: event.target.value
                                                         }));
-                                                    } })] }), _jsx("button", { type: "button", onClick: () => {
+                                                    } })] }), _jsx(Button, { type: "button", variant: "ghost", onClick: () => {
                                                 try {
                                                     dismissFinding(caseId, finding.id, dismissReason);
                                                     setDismissInput((prev) => ({ ...prev, [finding.id]: "" }));
@@ -140,7 +142,7 @@ export function CriticalReviewPanel({ caseId, initialNarrative, caseStatus, item
                                                     setError(err instanceof Error ? err.message : "No se pudo descartar el hallazgo.");
                                                 }
                                             }, children: "Descartar hallazgo" })] })) : null] }, finding.id));
-                    }), coverageLockMessage(coverage.hasMinimumCoverage) ? _jsx("p", { children: coverageLockMessage(coverage.hasMinimumCoverage) }) : null, !canComplete ? (_jsx("p", { children: "No pod\u00E9s completar la revisi\u00F3n mientras existan bloqueos cr\u00EDticos abiertos." })) : (_jsx("p", { children: "Los bloqueos cr\u00EDticos est\u00E1n resueltos. Pod\u00E9s completar la revisi\u00F3n." })), _jsx("button", { type: "button", disabled: !canComplete || !coverage.hasMinimumCoverage || review.status === "COMPLETED", onClick: () => {
+                    }), coverageLockMessage(coverage.hasMinimumCoverage) ? _jsx("p", { children: coverageLockMessage(coverage.hasMinimumCoverage) }) : null, !canComplete ? (_jsx("p", { children: "No pod\u00E9s completar la revisi\u00F3n mientras existan bloqueos cr\u00EDticos abiertos." })) : (_jsx("p", { children: "Los bloqueos cr\u00EDticos est\u00E1n resueltos. Pod\u00E9s completar la revisi\u00F3n." })), _jsx(Button, { type: "button", disabled: !canComplete || !coverage.hasMinimumCoverage || review.status === "COMPLETED", onClick: () => {
                             try {
                                 completeCriticalReview(caseId);
                                 setMessage("Revisión completada. El caso puede avanzar a evaluación humana.");

@@ -1,3 +1,6 @@
+import { Button } from "../../app/ui/Button";
+import "./brief-workspace.css";
+
 type Props = {
   controlText: string;
   aiText: string;
@@ -22,13 +25,15 @@ export function ComparisonPage({ controlText, aiText, onSubmitScores }: Props) {
   });
 
   return (
-    <section>
+    <section className="dw-comparison-page">
       <h2>Comparación ciega</h2>
-      <div>
+      <div className="dw-comparison-page__grid">
         <article>{controlText}</article>
         <article>{aiText}</article>
       </div>
-      <button onClick={() => onSubmitScores(scores)}>Guardar evaluación</button>
+      <Button type="button" onClick={() => onSubmitScores(scores)}>
+        Guardar evaluación
+      </Button>
     </section>
   );
 }

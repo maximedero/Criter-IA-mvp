@@ -1,4 +1,5 @@
 import { FormEvent, useState } from "react";
+import { Button } from "../../app/ui/Button";
 
 type Props = {
   onCancel: () => void;
@@ -37,21 +38,39 @@ export function CaseForm({ onCancel, onCreate }: Props) {
       <h2>Nuevo caso</h2>
       <label>
         Título
-        <input value={title} onChange={(e) => setTitle(e.target.value)} />
+        <input
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          aria-invalid={titleError ? "true" : "false"}
+          aria-describedby={titleError ? "case-form-title-error" : undefined}
+        />
       </label>
-      {titleError ? <p>{titleError}</p> : null}
+      {titleError ? (
+        <p id="case-form-title-error" role="alert">
+          {titleError}
+        </p>
+      ) : null}
 
       <label>
         ¿Qué está pasando?
-        <textarea value={initialNarrative} onChange={(e) => setInitialNarrative(e.target.value)} />
+        <textarea
+          value={initialNarrative}
+          onChange={(e) => setInitialNarrative(e.target.value)}
+          aria-invalid={narrativeError ? "true" : "false"}
+          aria-describedby={narrativeError ? "case-form-narrative-error" : undefined}
+        />
       </label>
-      {narrativeError ? <p>{narrativeError}</p> : null}
+      {narrativeError ? (
+        <p id="case-form-narrative-error" role="alert">
+          {narrativeError}
+        </p>
+      ) : null}
 
       <div>
-        <button type="button" onClick={onCancel}>
+        <Button type="button" variant="ghost" onClick={onCancel}>
           Cancelar
-        </button>
-        <button type="submit">Crear caso</button>
+        </Button>
+        <Button type="submit">Crear caso</Button>
       </div>
     </form>
   );

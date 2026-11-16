@@ -18,6 +18,8 @@ import { CoveragePanel } from "./CoveragePanel";
 import { QuestionPanel } from "./QuestionPanel";
 import { StatementCard } from "./statement-card";
 import { StatementEditor } from "./StatementEditor";
+import { Button } from "../../app/ui/Button";
+import "./canvas-page.css";
 
 type Props = {
   caseId: string;
@@ -51,11 +53,11 @@ export function CanvasPage({ caseId, initialNarrative, caseStatus, aiProvider, o
   const editingItem = editingId ? items.find((item) => item.id === editingId) ?? null : null;
 
   return (
-    <section>
+    <section className="dw-canvas-page">
       <h3>Decision Canvas</h3>
 
-      <div>
-        <button
+      <div className="dw-canvas-page__actions">
+        <Button
           type="button"
           onClick={async () => {
             setAnalyzingNarrative(true);
@@ -85,10 +87,14 @@ export function CanvasPage({ caseId, initialNarrative, caseStatus, aiProvider, o
           }}
         >
           Analizar relato
-        </button>
+        </Button>
 
         {analyzingNarrative ? <p>Analizando relato...</p> : null}
-        {analysisError ? <p role="alert">{analysisError}</p> : null}
+        {analysisError ? (
+          <p className="dw-canvas-page__alert" role="alert">
+            {analysisError}
+          </p>
+        ) : null}
         {analysisEmptyMessage ? <p>{analysisEmptyMessage}</p> : null}
       </div>
 
@@ -101,16 +107,16 @@ export function CanvasPage({ caseId, initialNarrative, caseStatus, aiProvider, o
         provider={provider}
         onItemsUpdated={refresh}
       />
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 12 }}>
+      <div className="dw-canvas-page__grid">
         {CANVAS_DIMENSIONS.map((dimension) => {
           const dimensionItems = items.filter((item) => item.dimension === dimension);
           const isAdding = addingDimension === dimension;
 
           return (
-            <section key={dimension}>
+            <section key={dimension} className="dw-canvas-dimension">
               <h4>{CANVAS_DIMENSION_LABELS[dimension]}</h4>
 
-              {dimensionItems.length === 0 ? <p>Sin contenido</p> : null}
+              {dimensionItems.length === 0 ? <p className="dw-canvas-dimension__empty">Sin contenido</p> : null}
 
               {dimensionItems.map((item) =>
                 editingItem && editingItem.id === item.id ? (
@@ -167,9 +173,9 @@ export function CanvasPage({ caseId, initialNarrative, caseStatus, aiProvider, o
                   }}
                 />
               ) : (
-                <button type="button" onClick={() => setAddingDimension(dimension)}>
+                <Button type="button" variant="ghost" onClick={() => setAddingDimension(dimension)}>
                   + Agregar
-                </button>
+                </Button>
               )}
             </section>
           );

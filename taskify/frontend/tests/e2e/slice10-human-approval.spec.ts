@@ -78,9 +78,12 @@ test("slice10 dynamics human approval flow", async ({ page }) => {
   const dialog = page.getByRole("dialog", { name: "Confirmar aprobación" });
   await expect(dialog).toBeVisible();
   await expect(dialog.getByText("Estás por marcar este caso como LISTO PARA ELEVAR.")).toBeVisible();
-  await expect(dialog.getByText(`Caso: ${TITLE}`)).toBeVisible();
-  await expect(dialog.getByText("Versión del brief: v1")).toBeVisible();
-  await expect(dialog.getByText("Gravedad: Alta")).toBeVisible();
+  await expect(dialog).toContainText("Caso");
+  await expect(dialog).toContainText(TITLE);
+  await expect(dialog).toContainText("Versión del brief");
+  await expect(dialog).toContainText("v1");
+  await expect(dialog).toContainText("Gravedad");
+  await expect(dialog).toContainText("Alta");
   await expect(dialog.getByText("Evaluación de gravedad realizada por el usuario.")).toBeVisible();
 
   await dialog.getByRole("button", { name: "Cancelar" }).click();

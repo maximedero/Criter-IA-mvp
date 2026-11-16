@@ -17,6 +17,60 @@ dinámicas y construye progresivamente un brief ejecutivo.
 La persona mantiene el control sobre el contenido, determina la gravedad del
 riesgo y aprueba el brief final.
 
+## Contrato de Diseño UI (obligatorio)
+
+Este feature adopta `DESIGN.md` como contrato normativo de interfaz y experiencia.
+Toda implementación visual y de interacción debe cumplir dicho contrato, salvo excepción explícita documentada.
+
+### Fuente de verdad de diseño
+
+- Documento base: `specs/001-decision-workspace/DESIGN.md`
+- Prioridad: ante conflicto, prevalece este orden:
+  1. Constitución del producto
+  2. `spec.md` del feature
+  3. `DESIGN.md`
+  4. decisiones locales de implementación
+
+### Alcance de cumplimiento
+
+Aplica a:
+
+- layout y jerarquía visual;
+- tipografía, espaciado, densidad y ritmo vertical;
+- componentes base (botones, inputs, tabs, modales, alertas, chips, tarjetas);
+- estados (vacío, carga, error, éxito, deshabilitado);
+- microcopy visible al usuario;
+- accesibilidad base (roles, foco, navegación por teclado, contraste mínimo requerido por el diseño).
+
+### Criterios funcionales de aceptación UI
+
+El feature se considera completo sólo si:
+
+1. Todos los componentes nuevos o modificados respetan tokens y patrones definidos en `DESIGN.md`.
+2. No se introducen variantes visuales ad hoc sin documentar.
+3. Los estados críticos de UI (carga/error/confirmación/deshabilitado) son consistentes con `DESIGN.md`.
+4. Existe evidencia de validación en pruebas de componente y/o E2E para los estados clave.
+5. No hay regresiones de homogeneidad visual en pantallas relacionadas.
+
+### Definiciones de no cumplimiento
+
+Se considera incumplimiento del contrato de diseño:
+
+- uso de espaciados, tamaños o colores fuera de los tokens definidos;
+- labels o textos visibles inconsistentes con el estilo y tono acordado;
+- patrones de interacción diferentes para acciones equivalentes;
+- accesibilidad rota en controles interactivos relevantes;
+- incorporación de nuevos estilos sin actualización de `DESIGN.md`.
+
+### Gestión de excepciones
+
+Si una regla de `DESIGN.md` no puede aplicarse:
+
+- registrar excepción en `plan.md` (sección “Riesgos y excepciones de diseño”);
+- justificar impacto;
+- definir resolución temporal y tarea de cierre;
+- no cerrar el feature con excepción abierta sin aprobación explícita.
+
 ## Clarifications
 
 ### Session 2026-11-13

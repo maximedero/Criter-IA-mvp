@@ -19,6 +19,8 @@ import {
 } from "../../providers/storage/criticalReviewStorage";
 import { calculateReviewSummary, canAcknowledgeAsUncertainty, canCompleteCriticalReview } from "../../domain/rules/reviewRules";
 import type { CaseStatus } from "../../domain/models/CaseStatus";
+import { Button } from "../../app/ui/Button";
+import "./critical-review-panel.css";
 
 type Props = {
   caseId: string;
@@ -119,20 +121,24 @@ export function CriticalReviewPanel({ caseId, initialNarrative, caseStatus, item
   const review = getCriticalReview(caseId);
 
   return (
-    <section aria-label="Revisión crítica">
+    <section aria-label="Revisión crítica" className="dw-review-panel">
       <h4>REVISIÓN CRÍTICA</h4>
 
-      <button type="button" onClick={executeReview}>
+      <Button type="button" onClick={executeReview}>
         {review ? "Volver a revisar" : "Ejecutar revisión crítica"}
-      </button>
+      </Button>
 
-      {error ? <p role="alert">{error}</p> : null}
+      {error ? (
+        <p className="dw-review-panel__alert" role="alert">
+          {error}
+        </p>
+      ) : null}
       {message ? <p>{message}</p> : null}
 
       {review ? (
         <>
           <p>Resumen:</p>
-          <ul>
+          <ul className="dw-review-panel__summary">
             <li>{summary?.openBlockers ?? 0} bloqueos abiertos</li>
             <li>{summary?.openWarnings ?? 0} advertencias abiertas</li>
             <li>{summary?.resolvedFindings ?? 0} hallazgos resueltos</li>
@@ -146,7 +152,7 @@ export function CriticalReviewPanel({ caseId, initialNarrative, caseStatus, item
             const acknowledgeText = acknowledgeInput[finding.id] ?? "";
 
             return (
-              <article key={finding.id}>
+              <article key={finding.id} className="dw-review-finding">
                 <h5>{findingLevelLabel(finding.level)}</h5>
                 <p>
                   <strong>{finding.title}</strong>
@@ -171,13 +177,13 @@ export function CriticalReviewPanel({ caseId, initialNarrative, caseStatus, item
                 )}
 
                 {finding.status === "OPEN" ? (
-                  <div>
-                    <button type="button" onClick={() => setPendingEditedResolution(finding.id)}>
+                  <div className="dw-review-finding__actions">
+                    <Button type="button" variant="ghost" onClick={() => setPendingEditedResolution(finding.id)}>
                       Editar item
-                    </button>
+                    </Button>
 
                     {pendingEditedResolution === finding.id ? (
-                      <button
+                      <Button
                         type="button"
                         onClick={() => {
                           markFindingResolvedByEdit(caseId, finding.id);
@@ -187,7 +193,7 @@ export function CriticalReviewPanel({ caseId, initialNarrative, caseStatus, item
                         }}
                       >
                         Marcar como resuelto por edición
-                      </button>
+                      </Button>
                     ) : null}
 
                     <label>
@@ -202,7 +208,7 @@ export function CriticalReviewPanel({ caseId, initialNarrative, caseStatus, item
                         }}
                       />
                     </label>
-                    <button
+                    <Button
                       type="button"
                       onClick={() => {
                         try {
@@ -216,7 +222,7 @@ export function CriticalReviewPanel({ caseId, initialNarrative, caseStatus, item
                       }}
                     >
                       Aclarar
-                    </button>
+                    </Button>
 
                     <label>
                       Registrar incertidumbre
@@ -230,8 +236,9 @@ export function CriticalReviewPanel({ caseId, initialNarrative, caseStatus, item
                         }}
                       />
                     </label>
-                    <button
+                    <Button
                       type="button"
+                      variant="ghost"
                       disabled={!allowAcknowledge}
                       onClick={() => {
                         try {
@@ -245,7 +252,7 @@ export function CriticalReviewPanel({ caseId, initialNarrative, caseStatus, item
                       }}
                     >
                       Reconocer como incertidumbre
-                    </button>
+                    </Button>
 
                     <label>
                       Razón de descarte
@@ -259,8 +266,9 @@ export function CriticalReviewPanel({ caseId, initialNarrative, caseStatus, item
                         }}
                       />
                     </label>
-                    <button
+                    <Button
                       type="button"
+                      variant="ghost"
                       onClick={() => {
                         try {
                           dismissFinding(caseId, finding.id, dismissReason);
@@ -273,7 +281,7 @@ export function CriticalReviewPanel({ caseId, initialNarrative, caseStatus, item
                       }}
                     >
                       Descartar hallazgo
-                    </button>
+                    </Button>
                   </div>
                 ) : null}
               </article>
@@ -287,7 +295,7 @@ export function CriticalReviewPanel({ caseId, initialNarrative, caseStatus, item
             <p>Los bloqueos críticos están resueltos. Podés completar la revisión.</p>
           )}
 
-          <button
+          <Button
             type="button"
             disabled={!canComplete || !coverage.hasMinimumCoverage || review.status === "COMPLETED"}
             onClick={() => {
@@ -301,7 +309,7 @@ export function CriticalReviewPanel({ caseId, initialNarrative, caseStatus, item
             }}
           >
             Completar revisión
-          </button>
+          </Button>
 
           {review.status === "COMPLETED" || isCriticalReviewComplete(caseId) ? (
             <p>Revisión completada. El caso puede avanzar a evaluación humana.</p>

@@ -210,8 +210,10 @@ describe.sequential("slice10 human approval ui", () => {
     const dialog = screen.getByRole("dialog", { name: "Confirmar aprobación" });
     expect(dialog).toBeInTheDocument();
     expect(screen.getByText("Estás por marcar este caso como LISTO PARA ELEVAR.")).toBeInTheDocument();
-    expect(screen.getByText("Versión del brief: v2")).toBeInTheDocument();
-    expect(dialog).toHaveTextContent("Gravedad: Alta");
+    expect(dialog).toHaveTextContent("Versión del brief");
+    expect(dialog).toHaveTextContent("v2");
+    expect(dialog).toHaveTextContent("Gravedad");
+    expect(dialog).toHaveTextContent("Alta");
 
     fireEvent.click(screen.getByRole("button", { name: "Cancelar" }));
 

@@ -11,6 +11,16 @@ import { Button } from "../../app/ui/Button";
 function statusAllowsQuestion(status) {
     return status === "DRAFT" || status === "IN_ANALYSIS";
 }
+function missingCoverageLabel(dimension) {
+    const labels = {
+        SITUATION: "SITUACIÓN",
+        EXPOSURE: "EXPOSICIÓN",
+        IMPACT: "IMPACTO",
+        EVIDENCE: "EVIDENCIA",
+        INTERVENTION: "INTERVENCION"
+    };
+    return labels[dimension] ?? dimension;
+}
 function toCoveredCanvasDimensions(items) {
     return items
         .filter((item) => item.validationStatus === "VALIDATED" || item.validationStatus === "EDITED")
@@ -127,5 +137,5 @@ export function QuestionPanel({ caseId, initialNarrative, caseStatus, items, pro
                     finally {
                         setRequesting(false);
                     }
-                }, disabled: requesting || coverage.hasMinimumCoverage, children: "Siguiente pregunta" })) : null, _jsxs("p", { children: ["Cobertura actual: ", coverage.coveredCount, " de ", coverage.requiredCount] }), _jsxs("p", { children: ["Dimensiones faltantes: ", missingCoverage(coverage).join(", ") || "Ninguna"] })] }));
+                }, disabled: requesting || coverage.hasMinimumCoverage, children: "Siguiente pregunta" })) : null, _jsxs("p", { children: ["Cobertura actual: ", coverage.coveredCount, " de ", coverage.requiredCount] }), _jsxs("p", { children: ["Dimensiones faltantes: ", missingCoverage(coverage).map((dimension) => missingCoverageLabel(dimension)).join(", ") || "Ninguna"] })] }));
 }

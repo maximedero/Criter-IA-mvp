@@ -35,6 +35,18 @@ function statusAllowsQuestion(status: CaseStatus): boolean {
   return status === "DRAFT" || status === "IN_ANALYSIS";
 }
 
+function missingCoverageLabel(dimension: string): string {
+  const labels: Record<string, string> = {
+    SITUATION: "SITUACIÓN",
+    EXPOSURE: "EXPOSICIÓN",
+    IMPACT: "IMPACTO",
+    EVIDENCE: "EVIDENCIA",
+    INTERVENTION: "INTERVENCION"
+  };
+
+  return labels[dimension] ?? dimension;
+}
+
 function toCoveredCanvasDimensions(items: CanvasItem[]): CanvasItem["dimension"][] {
   return items
     .filter((item) => item.validationStatus === "VALIDATED" || item.validationStatus === "EDITED")
@@ -221,7 +233,9 @@ export function QuestionPanel({ caseId, initialNarrative, caseStatus, items, pro
       <p>
         Cobertura actual: {coverage.coveredCount} de {coverage.requiredCount}
       </p>
-      <p>Dimensiones faltantes: {missingCoverage(coverage).join(", ") || "Ninguna"}</p>
+      <p>
+        Dimensiones faltantes: {missingCoverage(coverage).map((dimension) => missingCoverageLabel(dimension)).join(", ") || "Ninguna"}
+      </p>
     </section>
   );
 }

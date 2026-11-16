@@ -2,12 +2,10 @@
   "ExpandedNodes": [
     "",
     "\\taskify",
-    "\\taskify\\.specify",
-    "\\taskify\\.specify\\memory",
-    "\\taskify\\.specify\\scripts",
-    "\\taskify\\specs",
-    "\\taskify\\specs\\001-decision-workspace"
+    "\\taskify\\frontend",
+    "\\taskify\\frontend\\src",
+    "\\taskify\\frontend\\src\\app",
+    "\\taskify\\frontend\\src\\app\\ui"
   ],
-  "SelectedNode": "\\taskify\\specs\\001-decision-workspace\\spec.md",
   "PreviewInSolutionExplorer": false
 }

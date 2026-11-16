@@ -299,6 +299,76 @@ export const executiveCommunicationSchema = z.object({
         updatedAt: z.string().min(1)
     })
 });
+export const composeExecutiveCommunicationInputSchema = z
+    .object({
+    caseId: z.string().min(1),
+    caseTitle: z.string().min(1),
+    audience: z.literal("DIRECT_LEADER"),
+    validatedCanvasItems: z.array(canvasItemSchema),
+    criticalReview: z.object({
+        reviewId: z.string().min(1),
+        caseId: z.string().min(1),
+        createdAt: z.string().min(1),
+        updatedAt: z.string().min(1),
+        completedAt: z.string().optional(),
+        findings: z.array(reviewFindingSchema),
+        summary: reviewSummarySchema,
+        canCompleteReview: z.boolean(),
+        status: z.literal("COMPLETED")
+    }),
+    openWarnings: z.array(reviewFindingSchema),
+    humanSeverityAssessment: z.object({
+        caseId: z.string().min(1),
+        severity: z.enum(["UNASSESSED", "LOW", "MEDIUM", "HIGH", "CRITICAL"]),
+        rationale: z.string().optional(),
+        assessedBy: z.literal("USER"),
+        assessedAt: z.string().nullable(),
+        updatedAt: z.string().min(1),
+        status: z.enum(["UNASSESSED", "ASSESSED"])
+    }),
+    structuredBrief: executiveBriefSchema,
+    requiredIntervention: z.string().min(1),
+    language: z.literal("es")
+})
+    .superRefine((value, ctx) => {
+    const nonConsolidable = value.validatedCanvasItems.find((item) => item.validationStatus !== "VALIDATED" && item.validationStatus !== "EDITED");
+    if (nonConsolidable) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["validatedCanvasItems"],
+            message: "only VALIDATED/EDITED items are allowed"
+        });
+    }
+    if (value.humanSeverityAssessment.severity === "UNASSESSED") {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["humanSeverityAssessment", "severity"],
+            message: "severity cannot be UNASSESSED"
+        });
+    }
+});
+export const composedExecutiveCommunicationSchema = z.object({
+    email: z.object({
+        subject: z.string().min(1),
+        body: z.string().min(1)
+    }),
+    message: z.object({
+        body: z.string().min(1)
+    }),
+    traceability: z.object({
+        sourceItemIds: z.array(z.string().min(1)),
+        severityAssessmentId: z.string().min(1),
+        criticalReviewId: z.string().min(1),
+        limitations: z.array(z.string())
+    }),
+    compositionMetadata: z.object({
+        generatedBy: z.literal("AI"),
+        provider: z.literal("MockAIProvider"),
+        generatedAt: z.string().min(1),
+        language: z.literal("es"),
+        promptVersion: z.string().min(1)
+    })
+});
 export const generateBriefInputSchema = z
     .object({
     caseId: z.string().min(1),

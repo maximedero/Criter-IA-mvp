@@ -67,6 +67,46 @@ function formatSectionLabel(key: ExecutiveSectionKey): string {
   return found?.label ?? key;
 }
 
+function getNextStepMessage(params: {
+  caseStatus: CaseStatus;
+  hasMinimumCoverage: boolean;
+  openBlockers: number;
+  severity: HumanSeverityAssessment["severity"];
+  briefExists: boolean;
+  reviewedByUser: boolean;
+  stale: boolean;
+}): string {
+  if (!params.hasMinimumCoverage) {
+    return "Completá la dimensión Intervención para continuar.";
+  }
+
+  if (params.openBlockers > 0) {
+    return "Revisá los hallazgos críticos.";
+  }
+
+  if (params.severity === "UNASSESSED") {
+    return "Evaluá la gravedad del caso.";
+  }
+
+  if (!params.briefExists) {
+    return "Generá la comunicación ejecutiva para continuar.";
+  }
+
+  if (params.stale) {
+    return "Regenerá la comunicación ejecutiva para sincronizar cambios del análisis.";
+  }
+
+  if (params.caseStatus === "READY_TO_ESCALATE") {
+    return "El caso está listo para elevar.";
+  }
+
+  if (!params.reviewedByUser) {
+    return "Revisá la comunicación ejecutiva antes de aprobar.";
+  }
+
+  return "Podés avanzar con la aprobación humana cuando corresponda.";
+}
+
 export function BriefWorkspace({
   decisionCase,
   items,
@@ -191,6 +231,24 @@ export function BriefWorkspace({
   const isApprovedForCurrentBrief = isReadyToEscalate && approvalMatchesCurrentBrief;
   const canApproveBrief =
     decisionCase.status === "BRIEF_DRAFT" && readiness.ready && Boolean(brief) && approval?.status !== "APPROVED";
+
+  const nextStepMessage = getNextStepMessage({
+    caseStatus: decisionCase.status,
+    hasMinimumCoverage,
+    openBlockers,
+    severity: severityAssessment.severity,
+    briefExists: Boolean(brief),
+    reviewedByUser: Boolean(brief?.reviewedByUser),
+    stale: record.stale
+  });
+
+  const statusSummary = {
+    cobertura: hasMinimumCoverage ? "Completa" : "Pendiente",
+    revision: brief?.reviewedByUser ? "Revisado" : "Pendiente",
+    gravedad: severityAssessment.severity === "UNASSESSED" ? "Sin evaluar" : HUMAN_SEVERITY_LABELS[severityAssessment.severity],
+    brief: brief ? `v${brief.version} (${record.stale ? "stale" : brief.status})` : "No generado",
+    aprobacion: isApprovedForCurrentBrief ? "Aprobado" : approval?.status === "APPROVED" ? "Desincronizada" : "Pendiente"
+  };
 
   const contextualQuestionHistory: PersistedQuestion[] = getAiQuestionSession(decisionCase.id).questions;
 
@@ -443,6 +501,22 @@ export function BriefWorkspace({
         revisado antes de elevarlo.
       </p>
 
+      <section aria-label="Próximo paso" className="dw-brief-next-step">
+        <h5>PRÓXIMO PASO</h5>
+        <p>{nextStepMessage}</p>
+      </section>
+
+      <section aria-label="Estado compacto" className="dw-brief-status-summary">
+        <h5>Estado compacto</h5>
+        <ul>
+          <li><strong>Cobertura:</strong> {statusSummary.cobertura}</li>
+          <li><strong>Revisión:</strong> {statusSummary.revision}</li>
+          <li><strong>Gravedad:</strong> {statusSummary.gravedad}</li>
+          <li><strong>Brief:</strong> {statusSummary.brief}</li>
+          <li><strong>Aprobación:</strong> {statusSummary.aprobacion}</li>
+        </ul>
+      </section>
+
       {!gate.allowed && decisionCase.status === "BRIEF_DRAFT" ? (
         <p className="dw-brief-alert" role="alert">
           {gate.reasons[0]}
@@ -522,14 +596,14 @@ export function BriefWorkspace({
               variant={view === "expanded" ? "primary" : "ghost"}
               onClick={() => setView("expanded")}
             >
-              Vista expandida
+              Análisis completo y trazabilidad
             </Button>
           </div>
 
           {view === "communication" ? (
             <section>
               <article>
-                <h5>Correo electrónico</h5>
+                <h5>Correo</h5>
                 {editingCommunication === "emailSubject" ? (
                   <>
                     <label>

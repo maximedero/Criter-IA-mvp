@@ -4,24 +4,35 @@ const STORAGE_KEY = "dw.briefs";
 
 type BriefMap = Record<string, BriefRecord>;
 
+type LegacyBriefRecord = Partial<BriefRecord> & {
+  current?: DecisionBrief | null;
+  history?: DecisionBrief[];
+};
+
 function nowIso(): string {
   return new Date().toISOString();
 }
 
-function recordNeedsCommunicationMigration(record: BriefRecord): boolean {
+function recordNeedsCommunicationMigration(record: LegacyBriefRecord): boolean {
   const currentNeeds = Boolean(record.current && !(record.current as DecisionBrief & { communication?: unknown }).communication);
-  const historyNeeds = record.history.some(
+  const historyNeeds = (record.history ?? []).some(
     (item) => !(item as DecisionBrief & { communication?: unknown }).communication
   );
+  const staleNeeds = typeof record.stale !== "boolean";
+  const historyArrayNeeds = !Array.isArray(record.history);
 
-  return currentNeeds || historyNeeds;
+  return currentNeeds || historyNeeds || staleNeeds || historyArrayNeeds;
 }
 
 function withCommunication(brief: DecisionBrief): DecisionBrief {
-  const timestamp = brief.updatedAt || nowIso();
+  const timestamp = brief.updatedAt || brief.createdAt || nowIso();
 
   return {
     ...brief,
+    version: Number.isInteger(brief.version) && brief.version > 0 ? brief.version : 1,
+    status: brief.status ?? "GENERATED",
+    reviewedByUser: Boolean(brief.reviewedByUser),
+    reviewedAt: brief.reviewedByUser ? brief.reviewedAt ?? null : null,
     communication: brief.communication ?? {
       email: {
         subject: "",
@@ -38,11 +49,11 @@ function withCommunication(brief: DecisionBrief): DecisionBrief {
   };
 }
 
-function normalizeRecord(record: BriefRecord): BriefRecord {
+function normalizeRecord(record: LegacyBriefRecord): BriefRecord {
   return {
-    ...record,
     current: record.current ? withCommunication(record.current) : null,
-    history: record.history.map(withCommunication)
+    history: (record.history ?? []).map(withCommunication),
+    stale: typeof record.stale === "boolean" ? record.stale : false
   };
 }
 
@@ -77,7 +88,7 @@ function emptyRecord(): BriefRecord {
 
 export function getBriefRecord(caseId: string): BriefRecord {
   const map = loadMap();
-  const record = map[caseId] ?? emptyRecord();
+  const record = (map[caseId] as LegacyBriefRecord | undefined) ?? emptyRecord();
   const normalized = normalizeRecord(record);
 
   if (recordNeedsCommunicationMigration(record)) {

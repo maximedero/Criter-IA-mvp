@@ -104,6 +104,31 @@ export function canMarkBriefAsReviewed(context) {
         reasons: unique.map((code) => BRIEF_GATE_ERRORS[code])
     };
 }
+export function updateCommunicationAsEdited(brief, target, content) {
+    const updatedAt = nowIso();
+    return {
+        ...brief,
+        status: "EDITED_BY_USER",
+        communication: {
+            email: {
+                ...brief.communication.email,
+                subject: target === "emailSubject" ? content : brief.communication.email.subject,
+                body: target === "emailBody" ? content : brief.communication.email.body,
+                editedByUser: target === "emailSubject" || target === "emailBody" ? true : brief.communication.email.editedByUser,
+                updatedAt: target === "emailSubject" || target === "emailBody" ? updatedAt : brief.communication.email.updatedAt
+            },
+            message: {
+                ...brief.communication.message,
+                body: target === "messageBody" ? content : brief.communication.message.body,
+                editedByUser: target === "messageBody" ? true : brief.communication.message.editedByUser,
+                updatedAt: target === "messageBody" ? updatedAt : brief.communication.message.updatedAt
+            }
+        },
+        reviewedByUser: false,
+        reviewedAt: null,
+        updatedAt
+    };
+}
 export function createBriefGenerationInput(params) {
     const consolidable = params.activeItems.filter((item) => item.validationStatus === "VALIDATED" || item.validationStatus === "EDITED");
     const openWarnings = params.completedCriticalReview.findings.filter((finding) => finding.level === "WARNING" && finding.status === "OPEN");
@@ -143,31 +168,6 @@ export function updateSectionAsEdited(brief, section, content) {
         reviewedByUser: false,
         reviewedAt: null,
         updatedAt: nowIso()
-    };
-}
-export function updateCommunicationAsEdited(brief, target, content) {
-    const updatedAt = nowIso();
-    return {
-        ...brief,
-        status: "EDITED_BY_USER",
-        communication: {
-            email: {
-                ...brief.communication.email,
-                subject: target === "emailSubject" ? content : brief.communication.email.subject,
-                body: target === "emailBody" ? content : brief.communication.email.body,
-                editedByUser: target === "emailSubject" || target === "emailBody" ? true : brief.communication.email.editedByUser,
-                updatedAt: target === "emailSubject" || target === "emailBody" ? updatedAt : brief.communication.email.updatedAt
-            },
-            message: {
-                ...brief.communication.message,
-                body: target === "messageBody" ? content : brief.communication.message.body,
-                editedByUser: target === "messageBody" ? true : brief.communication.message.editedByUser,
-                updatedAt: target === "messageBody" ? updatedAt : brief.communication.message.updatedAt
-            }
-        },
-        reviewedByUser: false,
-        reviewedAt: null,
-        updatedAt
     };
 }
 export function markBriefAsReviewed(brief) {

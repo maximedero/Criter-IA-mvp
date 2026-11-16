@@ -125,6 +125,21 @@ function severity(): HumanSeverityAssessment {
   };
 }
 
+function assertInterventionPreserved(body: string, expectedConcepts: string[]): void {
+  const normalized = body.toLowerCase();
+  expectedConcepts.forEach((concept) => {
+    expect(normalized).toContain(concept.toLowerCase());
+  });
+
+  const paragraphs = body
+    .split(/\n\s*\n/)
+    .map((entry) => entry.trim())
+    .filter(Boolean);
+  const lastParagraph = paragraphs.at(-1) ?? "";
+  expect(lastParagraph.length).toBeGreaterThan(0);
+  expect(expectedConcepts.some((concept) => lastParagraph.toLowerCase().includes(concept.toLowerCase()))).toBe(true);
+}
+
 describe("slice9 brief workflow", () => {
   it("brief status enum supports expected values", async () => {
     const provider = new MockAIProvider();
@@ -306,7 +321,7 @@ describe("slice9 brief workflow", () => {
     expect(result.communication.email.body).toContain("gravedad fue evaluada por el usuario");
     expect(result.communication.email.body).toContain("alternativa");
     expect(result.communication.email.body).toContain("incertidumbre");
-    expect(result.communication.email.body).toContain("Te solicito");
+    assertInterventionPreserved(result.communication.email.body, ["compras", "alternativas contractuales", "plazos"]);
   });
 
   it("communication excludes PENDING and REJECTED content", async () => {
@@ -351,7 +366,7 @@ describe("slice9 brief workflow", () => {
     });
 
     expect(result.communication.email.body).toContain("incertidumbre");
-    expect(result.communication.email.body).toContain("Te solicito");
+    assertInterventionPreserved(result.communication.email.body, ["análisis transversal", "recolección de información"]);
     expect(result.communication.message.body).toContain("Incertidumbre");
 
     const combined = `${result.communication.email.body} ${result.communication.message.body}`.toLowerCase();

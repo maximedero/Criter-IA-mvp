@@ -8,7 +8,7 @@ import { canAdvanceToBriefDraft } from "../../domain/workflow/humanSeverityWorkf
 import { MockAIProvider } from "../../providers/ai";
 import { getBriefRecord } from "../../providers/storage/briefStorage";
 import { listCanvasItemsByCase } from "../../providers/storage/canvasStorage";
-import { createDecisionCase, getDecisionCaseById, listDecisionCases, updateDecisionCaseStatus } from "../../providers/storage/casesStorage";
+import { createDecisionCase, deleteDecisionCase, getDecisionCaseById, listDecisionCases, updateDecisionCaseStatus } from "../../providers/storage/casesStorage";
 import { getCriticalReview, isCriticalReviewComplete } from "../../providers/storage/criticalReviewStorage";
 import { getHumanSeverityAssessment } from "../../providers/storage/humanSeverityStorage";
 import { getHumanBriefApproval } from "../../providers/storage/humanApprovalStorage";
@@ -135,9 +135,21 @@ export function InboxPage({ aiProvider }) {
                     createDecisionCase(payload);
                     setShowCreateForm(false);
                     refresh();
-                } })) : null, items.length === 0 ? _jsx("p", { className: "dw-inbox__empty", children: "No hay casos cargados." }) : null, items.length > 0 ? (_jsxs("table", { className: "dw-inbox__table", children: [_jsx("thead", { children: _jsxs("tr", { children: [_jsx("th", { children: "T\u00EDtulo" }), _jsx("th", { children: "Estado" }), _jsx("th", { children: "Actualizado" }), _jsx("th", { children: "Acci\u00F3n" })] }) }), _jsx("tbody", { children: items.map((item) => (_jsxs("tr", { children: [_jsx("td", { children: item.title }), _jsx("td", { children: CASE_STATUS_LABELS[item.status] }), _jsx("td", { children: formatUpdatedAt(item.updatedAt) }), _jsx("td", { children: _jsx(Button, { type: "button", variant: "ghost", onClick: () => {
-                                            setSelectedCaseId(item.id);
-                                            setSelectedCaseItems(listCanvasItemsByCase(item.id));
-                                            setViewMode("detail");
-                                        }, children: "Abrir" }) })] }, item.id))) })] })) : null] }));
+                } })) : null, items.length === 0 ? _jsx("p", { className: "dw-inbox__empty", children: "No hay casos cargados." }) : null, items.length > 0 ? (_jsxs("table", { className: "dw-inbox__table", children: [_jsx("thead", { children: _jsxs("tr", { children: [_jsx("th", { children: "T\u00EDtulo" }), _jsx("th", { children: "Estado" }), _jsx("th", { children: "Actualizado" }), _jsx("th", { children: "Acci\u00F3n" })] }) }), _jsx("tbody", { children: items.map((item) => (_jsxs("tr", { children: [_jsx("td", { children: item.title }), _jsx("td", { children: CASE_STATUS_LABELS[item.status] }), _jsx("td", { children: formatUpdatedAt(item.updatedAt) }), _jsxs("td", { className: "dw-inbox__actions", children: [_jsx(Button, { type: "button", variant: "ghost", onClick: () => {
+                                                setSelectedCaseId(item.id);
+                                                setSelectedCaseItems(listCanvasItemsByCase(item.id));
+                                                setViewMode("detail");
+                                            }, children: "Abrir" }), _jsx(Button, { type: "button", variant: "ghost", onClick: () => {
+                                                const confirmed = window.confirm(`¿Eliminar el caso \"${item.title}\"?`);
+                                                if (!confirmed) {
+                                                    return;
+                                                }
+                                                deleteDecisionCase(item.id);
+                                                if (selectedCaseId === item.id) {
+                                                    setSelectedCaseId(null);
+                                                    setSelectedCaseItems([]);
+                                                    setViewMode("inbox");
+                                                }
+                                                refresh();
+                                            }, children: "Eliminar" })] })] }, item.id))) })] })) : null] }));
 }

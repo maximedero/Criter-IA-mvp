@@ -1,4 +1,4 @@
-import { analyzeNarrativeInputSchema, analyzeNarrativeResultSchema, generateBriefInputSchema, generateBriefResultSchema, reviewCaseInputSchema, reviewCaseResultSchema, suggestNextQuestionInputSchema, suggestNextQuestionResultSchema } from "../../validation/aiSchemas";
+import { analyzeNarrativeInputSchema, analyzeNarrativeResultSchema, composeExecutiveCommunicationInputSchema, composedExecutiveCommunicationSchema, generateBriefInputSchema, generateBriefResultSchema, reviewCaseInputSchema, reviewCaseResultSchema, suggestNextQuestionInputSchema, suggestNextQuestionResultSchema } from "../../validation/aiSchemas";
 export function parseAnalyzeNarrativeInput(value) {
     return analyzeNarrativeInputSchema.parse(value);
 }
@@ -22,4 +22,10 @@ export function parseGenerateBriefInput(value) {
 }
 export function parseGenerateBriefResult(value) {
     return generateBriefResultSchema.parse(value);
+}
+export function parseComposeExecutiveCommunicationInput(value) {
+    return composeExecutiveCommunicationInputSchema.parse(value);
+}
+export function parseComposedExecutiveCommunication(value) {
+    return composedExecutiveCommunicationSchema.parse(value);
 }

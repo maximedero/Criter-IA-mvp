@@ -87,8 +87,8 @@
   "artifacts": {
     "canvas": [
       {
-        "id": "c0c03de6-d569-4e52-92ba-e5783d9187b4",
-        "caseId": "88fde49b-9b6e-444b-b74d-80bd592a709e",
+        "id": "91c6d4c3-20df-49ca-95a9-c910dbfd6fe0",
+        "caseId": "6473d845-f3e8-4255-92d0-8a30eae5660b",
         "dimension": "CONTEXT",
         "content": "El contrato con el proveedor venció el 31/10/2026.",
         "epistemicType": "FACT",
@@ -100,12 +100,12 @@
           "source": "INITIAL_NARRATIVE",
           "originalContent": "El contrato con el proveedor venció el 31/10/2026."
         },
-        "createdAt": "2026-11-16T05:01:25.385Z",
-        "updatedAt": "2026-11-16T05:01:25.432Z"
+        "createdAt": "2026-11-16T15:58:56.980Z",
+        "updatedAt": "2026-11-16T15:58:57.061Z"
       },
       {
-        "id": "3f1a0afb-599c-48f5-ac2f-4fb551e081bd",
-        "caseId": "88fde49b-9b6e-444b-b74d-80bd592a709e",
+        "id": "e3f71330-f642-40ac-a4a9-69aa07942000",
+        "caseId": "6473d845-f3e8-4255-92d0-8a30eae5660b",
         "dimension": "CONTEXT",
         "content": "El proveedor continúa trabajando hasta finalizar el proyecto actualmente en curso.",
         "epistemicType": "FACT",
@@ -117,12 +117,12 @@
           "source": "INITIAL_NARRATIVE",
           "originalContent": "El proveedor continúa trabajando hasta finalizar el proyecto actualmente en curso."
         },
-        "createdAt": "2026-11-16T05:01:25.385Z",
-        "updatedAt": "2026-11-16T05:01:25.482Z"
+        "createdAt": "2026-11-16T15:58:56.980Z",
+        "updatedAt": "2026-11-16T15:58:57.247Z"
       },
       {
-        "id": "8c53315f-a146-400b-98c0-93f2d414fca9",
-        "caseId": "88fde49b-9b6e-444b-b74d-80bd592a709e",
+        "id": "82be6cce-5841-4e7d-954d-4fc3b2cebcb9",
+        "caseId": "6473d845-f3e8-4255-92d0-8a30eae5660b",
         "dimension": "EXPOSURE",
         "content": "Actualmente no pueden iniciarse nuevos proyectos ni tareas.",
         "epistemicType": "FACT",
@@ -134,89 +134,89 @@
           "source": "INITIAL_NARRATIVE",
           "originalContent": "Actualmente no pueden iniciarse nuevos proyectos ni tareas."
         },
-        "createdAt": "2026-11-16T05:01:25.385Z",
-        "updatedAt": "2026-11-16T05:01:25.516Z"
+        "createdAt": "2026-11-16T15:58:56.981Z",
+        "updatedAt": "2026-11-16T15:58:57.449Z"
       },
       {
-        "id": "37875bc9-c154-4d04-9809-3aed8969f1c3",
-        "caseId": "88fde49b-9b6e-444b-b74d-80bd592a709e",
+        "id": "af08c970-34e9-411e-a7f8-523c45b1014c",
+        "caseId": "6473d845-f3e8-4255-92d0-8a30eae5660b",
         "dimension": "IMPACT",
         "content": "Nuevas necesidades de mantenimiento correctivo y evolutivo podrían quedar sin capacidad externa.",
         "epistemicType": "INFERENCE",
         "origin": "USER",
         "validationStatus": "VALIDATED",
-        "createdAt": "2026-11-16T05:01:25.631Z",
-        "updatedAt": "2026-11-16T05:01:25.631Z"
+        "createdAt": "2026-11-16T15:58:57.654Z",
+        "updatedAt": "2026-11-16T15:58:57.654Z"
       },
       {
-        "id": "871d99a3-d187-4858-852a-c89c151f81ec",
-        "caseId": "88fde49b-9b6e-444b-b74d-80bd592a709e",
+        "id": "097d5854-f164-4b66-bdc4-e88a9d5af3ff",
+        "caseId": "6473d845-f3e8-4255-92d0-8a30eae5660b",
         "dimension": "EVIDENCE",
         "content": "El proceso de Compras puede demorar aproximadamente entre 1 y 6 meses según conocimiento aportado por el usuario.",
         "epistemicType": "FACT",
         "origin": "USER",
         "validationStatus": "VALIDATED",
-        "createdAt": "2026-11-16T05:01:25.750Z",
-        "updatedAt": "2026-11-16T05:01:25.750Z"
+        "createdAt": "2026-11-16T15:58:57.852Z",
+        "updatedAt": "2026-11-16T15:58:57.852Z"
       },
       {
-        "id": "947f4f53-3f23-4cdc-bc08-b08c1c5802c9",
-        "caseId": "88fde49b-9b6e-444b-b74d-80bd592a709e",
+        "id": "36bf9590-b124-4965-a92c-57c9645701da",
+        "caseId": "6473d845-f3e8-4255-92d0-8a30eae5660b",
         "dimension": "UNCERTAINTY",
         "content": "No conocemos cuándo termina exactamente el proyecto actual ni la demanda de nuevos trabajos de mantenimiento en los próximos meses.",
         "epistemicType": "MISSING_INFORMATION",
         "origin": "USER",
         "validationStatus": "VALIDATED",
-        "createdAt": "2026-11-16T05:01:25.850Z",
-        "updatedAt": "2026-11-16T05:01:25.850Z"
+        "createdAt": "2026-11-16T15:58:58.038Z",
+        "updatedAt": "2026-11-16T15:58:58.038Z"
       },
       {
-        "id": "33feaed9-90e9-417c-aef7-475396cd9beb",
-        "caseId": "88fde49b-9b6e-444b-b74d-80bd592a709e",
+        "id": "80bf89b1-93f0-4be1-833d-68a19a14ae38",
+        "caseId": "6473d845-f3e8-4255-92d0-8a30eae5660b",
         "dimension": "INTERVENTION",
         "content": "Necesito que mi superior consulte con Compras qué alternativas contractuales son viables y cuáles son sus plazos.",
         "epistemicType": "HUMAN_EVALUATION",
         "origin": "USER",
         "validationStatus": "VALIDATED",
-        "createdAt": "2026-11-16T05:01:25.947Z",
-        "updatedAt": "2026-11-16T05:01:25.947Z"
+        "createdAt": "2026-11-16T15:58:58.256Z",
+        "updatedAt": "2026-11-16T15:58:58.256Z"
       },
       {
-        "id": "b51e9460-e536-476e-9c63-12d9c735ad6a",
-        "caseId": "88fde49b-9b6e-444b-b74d-80bd592a709e",
+        "id": "92ded572-6fef-4078-bb21-a89e8d330964",
+        "caseId": "6473d845-f3e8-4255-92d0-8a30eae5660b",
         "dimension": "SCENARIO",
         "content": "Si la contratación se demora más de lo esperado, podrían acumularse necesidades sin cobertura externa.",
         "epistemicType": "INFERENCE",
         "origin": "USER",
         "validationStatus": "VALIDATED",
-        "createdAt": "2026-11-16T05:01:26.064Z",
-        "updatedAt": "2026-11-16T05:01:26.064Z"
+        "createdAt": "2026-11-16T15:58:58.671Z",
+        "updatedAt": "2026-11-16T15:58:58.671Z"
       },
       {
-        "id": "d86862df-3f3c-4844-8c0e-acf7ad1b432e",
-        "caseId": "88fde49b-9b6e-444b-b74d-80bd592a709e",
+        "id": "2381dd90-9b69-4d38-89aa-971b84ca3036",
+        "caseId": "6473d845-f3e8-4255-92d0-8a30eae5660b",
         "dimension": "ALTERNATIVE",
         "content": "Una prórroga contractual podría ser una alternativa, pero su viabilidad no está confirmada.",
         "epistemicType": "ASSUMPTION",
         "origin": "USER",
         "validationStatus": "VALIDATED",
-        "createdAt": "2026-11-16T05:01:26.165Z",
-        "updatedAt": "2026-11-16T05:01:26.165Z"
+        "createdAt": "2026-11-16T15:58:58.909Z",
+        "updatedAt": "2026-11-16T15:58:58.909Z"
       },
       {
-        "id": "79f31b63-bf30-4ac6-89fe-a806f3b7708f",
-        "caseId": "88fde49b-9b6e-444b-b74d-80bd592a709e",
+        "id": "2beba53e-5a08-43bf-9e66-82d33ab542d8",
+        "caseId": "6473d845-f3e8-4255-92d0-8a30eae5660b",
         "dimension": "INTERVENTION",
         "content": "Solicito que el nivel superior priorice una decisión sobre alternativas contractuales y un plan de continuidad operativa.",
         "epistemicType": "HUMAN_EVALUATION",
         "origin": "USER",
         "validationStatus": "VALIDATED",
-        "createdAt": "2026-11-16T05:01:26.266Z",
-        "updatedAt": "2026-11-16T05:01:26.266Z"
+        "createdAt": "2026-11-16T15:58:59.043Z",
+        "updatedAt": "2026-11-16T15:58:59.043Z"
       }
     ],
     "aiSession": {
-      "caseId": "88fde49b-9b6e-444b-b74d-80bd592a709e",
+      "caseId": "6473d845-f3e8-4255-92d0-8a30eae5660b",
       "questionCount": 4,
       "questions": [
         {
@@ -231,12 +231,12 @@
             "DONT_KNOW",
             "SKIP_FOR_NOW"
           ],
-          "caseId": "88fde49b-9b6e-444b-b74d-80bd592a709e",
+          "caseId": "6473d845-f3e8-4255-92d0-8a30eae5660b",
           "status": "ANSWERED",
-          "createdAt": "2026-11-16T05:01:25.584Z",
-          "updatedAt": "2026-11-16T05:01:25.631Z",
-          "answeredAt": "2026-11-16T05:01:25.631Z",
-          "resultingCanvasItemId": "37875bc9-c154-4d04-9809-3aed8969f1c3"
+          "createdAt": "2026-11-16T15:58:57.541Z",
+          "updatedAt": "2026-11-16T15:58:57.654Z",
+          "answeredAt": "2026-11-16T15:58:57.654Z",
+          "resultingCanvasItemId": "af08c970-34e9-411e-a7f8-523c45b1014c"
         },
         {
           "id": "dw-q-evidence",
@@ -250,12 +250,12 @@
             "DONT_KNOW",
             "SKIP_FOR_NOW"
           ],
-          "caseId": "88fde49b-9b6e-444b-b74d-80bd592a709e",
+          "caseId": "6473d845-f3e8-4255-92d0-8a30eae5660b",
           "status": "ANSWERED",
-          "createdAt": "2026-11-16T05:01:25.681Z",
-          "updatedAt": "2026-11-16T05:01:25.750Z",
-          "answeredAt": "2026-11-16T05:01:25.750Z",
-          "resultingCanvasItemId": "871d99a3-d187-4858-852a-c89c151f81ec"
+          "createdAt": "2026-11-16T15:58:57.763Z",
+          "updatedAt": "2026-11-16T15:58:57.856Z",
+          "answeredAt": "2026-11-16T15:58:57.856Z",
+          "resultingCanvasItemId": "097d5854-f164-4b66-bdc4-e88a9d5af3ff"
         },
         {
           "id": "dw-q-uncertainty",
@@ -269,12 +269,12 @@
             "DONT_KNOW",
             "SKIP_FOR_NOW"
           ],
-          "caseId": "88fde49b-9b6e-444b-b74d-80bd592a709e",
+          "caseId": "6473d845-f3e8-4255-92d0-8a30eae5660b",
           "status": "ANSWERED",
-          "createdAt": "2026-11-16T05:01:25.798Z",
-          "updatedAt": "2026-11-16T05:01:25.850Z",
-          "answeredAt": "2026-11-16T05:01:25.850Z",
-          "resultingCanvasItemId": "947f4f53-3f23-4cdc-bc08-b08c1c5802c9"
+          "createdAt": "2026-11-16T15:58:57.956Z",
+          "updatedAt": "2026-11-16T15:58:58.038Z",
+          "answeredAt": "2026-11-16T15:58:58.038Z",
+          "resultingCanvasItemId": "36bf9590-b124-4965-a92c-57c9645701da"
         },
         {
           "id": "dw-q-intervention",
@@ -288,24 +288,24 @@
             "DONT_KNOW",
             "SKIP_FOR_NOW"
           ],
-          "caseId": "88fde49b-9b6e-444b-b74d-80bd592a709e",
+          "caseId": "6473d845-f3e8-4255-92d0-8a30eae5660b",
           "status": "ANSWERED",
-          "createdAt": "2026-11-16T05:01:25.897Z",
-          "updatedAt": "2026-11-16T05:01:25.947Z",
-          "answeredAt": "2026-11-16T05:01:25.947Z",
-          "resultingCanvasItemId": "33feaed9-90e9-417c-aef7-475396cd9beb"
+          "createdAt": "2026-11-16T15:58:58.197Z",
+          "updatedAt": "2026-11-16T15:58:58.256Z",
+          "answeredAt": "2026-11-16T15:58:58.256Z",
+          "resultingCanvasItemId": "80bf89b1-93f0-4be1-833d-68a19a14ae38"
         }
       ],
       "lastStop": null,
       "userStopped": false,
-      "updatedAt": "2026-11-16T05:01:25.947Z"
+      "updatedAt": "2026-11-16T15:58:58.256Z"
     },
     "criticalReview": [
       {
-        "reviewId": "dw-review-88fde49b-9b6e-444b-b74d-80bd592a709e-dynamics-v1",
-        "caseId": "88fde49b-9b6e-444b-b74d-80bd592a709e",
-        "createdAt": "2026-11-16T05:01:26.348Z",
-        "updatedAt": "2026-11-16T05:01:26.556Z",
+        "reviewId": "dw-review-6473d845-f3e8-4255-92d0-8a30eae5660b-dynamics-v1",
+        "caseId": "6473d845-f3e8-4255-92d0-8a30eae5660b",
+        "createdAt": "2026-11-16T15:58:59.559Z",
+        "updatedAt": "2026-11-16T15:58:59.673Z",
         "findings": [
           {
             "id": "dw-review-dyn-1",
@@ -314,14 +314,14 @@
             "title": "Vencimiento y continuidad requieren aclaración",
             "message": "El caso registra un vencimiento contractual y, al mismo tiempo, continuidad del proveedor durante el proyecto actual. Aclarar si se trata de un vencimiento formal con una continuidad transitoria.",
             "relatedItemIds": [
-              "c0c03de6-d569-4e52-92ba-e5783d9187b4",
-              "3f1a0afb-599c-48f5-ac2f-4fb551e081bd"
+              "91c6d4c3-20df-49ca-95a9-c910dbfd6fe0",
+              "e3f71330-f642-40ac-a4a9-69aa07942000"
             ],
             "rationale": "La coexistencia de ambas afirmaciones requiere precisión contextual para evitar ambigüedad en el brief.",
             "suggestedHumanAction": "Aclarar la relación entre ambas afirmaciones sin eliminar ninguna automáticamente.",
             "status": "RESOLVED_BY_CLARIFICATION",
             "clarification": "El vencimiento contractual es formal y la continuidad actual es transitoria para cerrar el proyecto en curso.",
-            "resolvedAt": "2026-11-16T05:01:26.416Z"
+            "resolvedAt": "2026-11-16T15:58:59.622Z"
           }
         ],
         "summary": {
@@ -332,30 +332,30 @@
         },
         "canCompleteReview": true,
         "status": "COMPLETED",
-        "completedAt": "2026-11-16T05:01:26.556Z"
+        "completedAt": "2026-11-16T15:58:59.673Z"
       }
     ],
     "severityAssessment": {
-      "caseId": "88fde49b-9b6e-444b-b74d-80bd592a709e",
+      "caseId": "6473d845-f3e8-4255-92d0-8a30eae5660b",
       "severity": "HIGH",
       "assessedBy": "USER",
-      "assessedAt": "2026-11-16T05:01:26.799Z",
-      "updatedAt": "2026-11-16T05:01:26.799Z",
+      "assessedAt": "2026-11-16T15:58:59.807Z",
+      "updatedAt": "2026-11-16T15:58:59.807Z",
       "status": "ASSESSED",
       "rationale": ""
     },
     "briefRecord": {
       "current": {
-        "id": "dw-brief-88fde49b-9b6e-444b-b74d-80bd592a709e-1794805286899",
-        "caseId": "88fde49b-9b6e-444b-b74d-80bd592a709e",
+        "id": "dw-brief-6473d845-f3e8-4255-92d0-8a30eae5660b-1794844739906",
+        "caseId": "6473d845-f3e8-4255-92d0-8a30eae5660b",
         "version": 1,
         "status": "REVIEWED_BY_USER",
         "executive": {
           "situation": {
             "content": "El contrato con el proveedor venció el 31/10/2026. El proveedor continúa trabajando hasta finalizar el proyecto actualmente en curso.",
             "sourceItemIds": [
-              "c0c03de6-d569-4e52-92ba-e5783d9187b4",
-              "3f1a0afb-599c-48f5-ac2f-4fb551e081bd"
+              "91c6d4c3-20df-49ca-95a9-c910dbfd6fe0",
+              "e3f71330-f642-40ac-a4a9-69aa07942000"
             ],
             "hasSufficientInformation": true,
             "limitations": []
@@ -363,7 +363,7 @@
           "whyItMatters": {
             "content": "Actualmente no pueden iniciarse nuevos proyectos ni tareas. Se mantiene explícita la incertidumbre relevante.",
             "sourceItemIds": [
-              "8c53315f-a146-400b-98c0-93f2d414fca9"
+              "82be6cce-5841-4e7d-954d-4fc3b2cebcb9"
             ],
             "hasSufficientInformation": true,
             "limitations": []
@@ -371,7 +371,7 @@
           "possibleImpacts": {
             "content": "Nuevas necesidades de mantenimiento correctivo y evolutivo podrían quedar sin capacidad externa.",
             "sourceItemIds": [
-              "37875bc9-c154-4d04-9809-3aed8969f1c3"
+              "af08c970-34e9-411e-a7f8-523c45b1014c"
             ],
             "hasSufficientInformation": true,
             "limitations": []
@@ -379,7 +379,7 @@
           "evidence": {
             "content": "El proceso de Compras puede demorar aproximadamente entre 1 y 6 meses según conocimiento aportado por el usuario.",
             "sourceItemIds": [
-              "871d99a3-d187-4858-852a-c89c151f81ec"
+              "097d5854-f164-4b66-bdc4-e88a9d5af3ff"
             ],
             "hasSufficientInformation": true,
             "limitations": []
@@ -387,7 +387,7 @@
           "uncertainties": {
             "content": "No conocemos cuándo termina exactamente el proyecto actual ni la demanda de nuevos trabajos de mantenimiento en los próximos meses.",
             "sourceItemIds": [
-              "947f4f53-3f23-4cdc-bc08-b08c1c5802c9"
+              "36bf9590-b124-4965-a92c-57c9645701da"
             ],
             "hasSufficientInformation": true,
             "limitations": []
@@ -395,8 +395,8 @@
           "scenariosAndAlternatives": {
             "content": "Si la contratación se demora más de lo esperado, podrían acumularse necesidades sin cobertura externa. Una prórroga contractual podría ser una alternativa, pero su viabilidad no está confirmada.",
             "sourceItemIds": [
-              "b51e9460-e536-476e-9c63-12d9c735ad6a",
-              "d86862df-3f3c-4844-8c0e-acf7ad1b432e"
+              "92ded572-6fef-4078-bb21-a89e8d330964",
+              "2381dd90-9b69-4d38-89aa-971b84ca3036"
             ],
             "hasSufficientInformation": true,
             "limitations": []
@@ -406,14 +406,14 @@
             "label": "Alta",
             "rationale": "",
             "assessedBy": "USER",
-            "assessedAt": "2026-11-16T05:01:26.799Z",
+            "assessedAt": "2026-11-16T15:58:59.807Z",
             "notice": "Evaluación realizada por el usuario."
           },
           "requiredIntervention": {
             "content": "Necesito que mi superior consulte con Compras qué alternativas contractuales son viables y cuáles son sus plazos. Solicito que el nivel superior priorice una decisión sobre alternativas contractuales y un plan de continuidad operativa.",
             "sourceItemIds": [
-              "33feaed9-90e9-417c-aef7-475396cd9beb",
-              "79f31b63-bf30-4ac6-89fe-a806f3b7708f"
+              "80bf89b1-93f0-4be1-833d-68a19a14ae38",
+              "2beba53e-5a08-43bf-9e66-82d33ab542d8"
             ],
             "hasSufficientInformation": true,
             "limitations": []
@@ -422,7 +422,7 @@
         "expanded": {
           "facts": [
             {
-              "itemId": "c0c03de6-d569-4e52-92ba-e5783d9187b4",
+              "itemId": "91c6d4c3-20df-49ca-95a9-c910dbfd6fe0",
               "dimension": "CONTEXT",
               "epistemicType": "FACT",
               "origin": "AI",
@@ -430,7 +430,7 @@
               "content": "El contrato con el proveedor venció el 31/10/2026."
             },
             {
-              "itemId": "3f1a0afb-599c-48f5-ac2f-4fb551e081bd",
+              "itemId": "e3f71330-f642-40ac-a4a9-69aa07942000",
               "dimension": "CONTEXT",
               "epistemicType": "FACT",
               "origin": "AI",
@@ -438,7 +438,7 @@
               "content": "El proveedor continúa trabajando hasta finalizar el proyecto actualmente en curso."
             },
             {
-              "itemId": "8c53315f-a146-400b-98c0-93f2d414fca9",
+              "itemId": "82be6cce-5841-4e7d-954d-4fc3b2cebcb9",
               "dimension": "EXPOSURE",
               "epistemicType": "FACT",
               "origin": "AI",
@@ -446,7 +446,7 @@
               "content": "Actualmente no pueden iniciarse nuevos proyectos ni tareas."
             },
             {
-              "itemId": "871d99a3-d187-4858-852a-c89c151f81ec",
+              "itemId": "097d5854-f164-4b66-bdc4-e88a9d5af3ff",
               "dimension": "EVIDENCE",
               "epistemicType": "FACT",
               "origin": "USER",
@@ -456,7 +456,7 @@
           ],
           "inferences": [
             {
-              "itemId": "37875bc9-c154-4d04-9809-3aed8969f1c3",
+              "itemId": "af08c970-34e9-411e-a7f8-523c45b1014c",
               "dimension": "IMPACT",
               "epistemicType": "INFERENCE",
               "origin": "USER",
@@ -464,7 +464,7 @@
               "content": "Nuevas necesidades de mantenimiento correctivo y evolutivo podrían quedar sin capacidad externa."
             },
             {
-              "itemId": "b51e9460-e536-476e-9c63-12d9c735ad6a",
+              "itemId": "92ded572-6fef-4078-bb21-a89e8d330964",
               "dimension": "SCENARIO",
               "epistemicType": "INFERENCE",
               "origin": "USER",
@@ -474,7 +474,7 @@
           ],
           "assumptions": [
             {
-              "itemId": "d86862df-3f3c-4844-8c0e-acf7ad1b432e",
+              "itemId": "2381dd90-9b69-4d38-89aa-971b84ca3036",
               "dimension": "ALTERNATIVE",
               "epistemicType": "ASSUMPTION",
               "origin": "USER",
@@ -484,7 +484,7 @@
           ],
           "missingInformation": [
             {
-              "itemId": "947f4f53-3f23-4cdc-bc08-b08c1c5802c9",
+              "itemId": "36bf9590-b124-4965-a92c-57c9645701da",
               "dimension": "UNCERTAINTY",
               "epistemicType": "MISSING_INFORMATION",
               "origin": "USER",
@@ -494,7 +494,7 @@
           ],
           "humanEvaluations": [
             {
-              "itemId": "33feaed9-90e9-417c-aef7-475396cd9beb",
+              "itemId": "80bf89b1-93f0-4be1-833d-68a19a14ae38",
               "dimension": "INTERVENTION",
               "epistemicType": "HUMAN_EVALUATION",
               "origin": "USER",
@@ -502,7 +502,7 @@
               "content": "Necesito que mi superior consulte con Compras qué alternativas contractuales son viables y cuáles son sus plazos."
             },
             {
-              "itemId": "79f31b63-bf30-4ac6-89fe-a806f3b7708f",
+              "itemId": "2beba53e-5a08-43bf-9e66-82d33ab542d8",
               "dimension": "INTERVENTION",
               "epistemicType": "HUMAN_EVALUATION",
               "origin": "USER",
@@ -512,7 +512,7 @@
           ],
           "evidenceItems": [
             {
-              "itemId": "871d99a3-d187-4858-852a-c89c151f81ec",
+              "itemId": "097d5854-f164-4b66-bdc4-e88a9d5af3ff",
               "dimension": "EVIDENCE",
               "epistemicType": "FACT",
               "origin": "USER",
@@ -527,8 +527,8 @@
               "title": "Vencimiento y continuidad requieren aclaración",
               "resolution": "RESOLVED_BY_CLARIFICATION",
               "relatedItemIds": [
-                "c0c03de6-d569-4e52-92ba-e5783d9187b4",
-                "3f1a0afb-599c-48f5-ac2f-4fb551e081bd"
+                "91c6d4c3-20df-49ca-95a9-c910dbfd6fe0",
+                "e3f71330-f642-40ac-a4a9-69aa07942000"
               ]
             }
           ],
@@ -537,75 +537,76 @@
           ],
           "generationLimitations": [
             "La IA solo consolidó contenido validado o editado por el usuario.",
-            "Persisten datos faltantes que requieren validación humana."
+            "Persisten datos faltantes que requieren validación humana.",
+            "Persisten incertidumbres materiales que requieren validación adicional."
           ]
         },
         "traceability": {
           "sectionSources": {
             "situation": [
-              "c0c03de6-d569-4e52-92ba-e5783d9187b4",
-              "3f1a0afb-599c-48f5-ac2f-4fb551e081bd"
+              "91c6d4c3-20df-49ca-95a9-c910dbfd6fe0",
+              "e3f71330-f642-40ac-a4a9-69aa07942000"
             ],
             "whyItMatters": [
-              "8c53315f-a146-400b-98c0-93f2d414fca9"
+              "82be6cce-5841-4e7d-954d-4fc3b2cebcb9"
             ],
             "possibleImpacts": [
-              "37875bc9-c154-4d04-9809-3aed8969f1c3"
+              "af08c970-34e9-411e-a7f8-523c45b1014c"
             ],
             "evidence": [
-              "871d99a3-d187-4858-852a-c89c151f81ec"
+              "097d5854-f164-4b66-bdc4-e88a9d5af3ff"
             ],
             "uncertainties": [
-              "947f4f53-3f23-4cdc-bc08-b08c1c5802c9"
+              "36bf9590-b124-4965-a92c-57c9645701da"
             ],
             "scenariosAndAlternatives": [
-              "b51e9460-e536-476e-9c63-12d9c735ad6a",
-              "d86862df-3f3c-4844-8c0e-acf7ad1b432e"
+              "92ded572-6fef-4078-bb21-a89e8d330964",
+              "2381dd90-9b69-4d38-89aa-971b84ca3036"
             ],
             "requiredIntervention": [
-              "33feaed9-90e9-417c-aef7-475396cd9beb",
-              "79f31b63-bf30-4ac6-89fe-a806f3b7708f"
+              "80bf89b1-93f0-4be1-833d-68a19a14ae38",
+              "2beba53e-5a08-43bf-9e66-82d33ab542d8"
             ]
           },
-          "severityAssessmentRef": "88fde49b-9b6e-444b-b74d-80bd592a709e:2026-11-16T05:01:26.799Z",
-          "criticalReviewId": "dw-review-88fde49b-9b6e-444b-b74d-80bd592a709e-dynamics-v1",
-          "generatedFromCanvasUpdatedAt": "2026-11-16T05:01:26.266Z",
+          "severityAssessmentRef": "6473d845-f3e8-4255-92d0-8a30eae5660b:2026-11-16T15:58:59.807Z",
+          "criticalReviewId": "dw-review-6473d845-f3e8-4255-92d0-8a30eae5660b-dynamics-v1",
+          "generatedFromCanvasUpdatedAt": "2026-11-16T15:58:59.043Z",
           "generationProvider": "MockAIProvider",
-          "generationTimestamp": "2026-11-16T05:01:26.901Z",
+          "generationTimestamp": "2026-11-16T15:58:59.907Z",
           "editedSections": [
             "whyItMatters"
           ],
-          "userReviewTimestamp": "2026-11-16T05:01:27.135Z"
+          "userReviewTimestamp": "2026-11-16T15:59:00.190Z"
         },
         "communication": {
           "email": {
-            "subject": "Brief ejecutivo — Fase8 Dynamics 365",
-            "body": "Te comparto el estado actual del caso Fase8 Dynamics 365. El contrato con el proveedor venció el 31/10/2026. El proveedor continúa trabajando hasta finalizar el proyecto actualmente en curso.\n\nActualmente no pueden iniciarse nuevos proyectos ni tareas. En este escenario, el riesgo principal observado es: Nuevas necesidades de mantenimiento correctivo y evolutivo podrían quedar sin capacidad externa.\n\nLas incertidumbres que siguen abiertas son: No conocemos cuándo termina exactamente el proyecto actual ni la demanda de nuevos trabajos de mantenimiento en los próximos meses.. Además, hoy sólo contamos con estas alternativas validadas: Si la contratación se demora más de lo esperado, podrían acumularse necesidades sin cobertura externa. Una prórroga contractual podría ser una alternativa, pero su viabilidad no está confirmada..\n\nLa gravedad fue evaluada por el usuario como Alta.\n\nTe solicito tu intervención para definir próximos pasos: Necesito que mi superior consulte con Compras qué alternativas contractuales son viables y cuáles son sus plazos. Solicito que el nivel superior priorice una decisión sobre alternativas contractuales y un plan de continuidad operativa.",
+            "subject": "Definición de continuidad contractual para Fase8 Dynamics 365",
+            "body": "Te comparto una actualización sobre Fase8 Dynamics 365. El contrato con el proveedor venció el 31/10/2026. El proveedor continúa trabajando hasta finalizar el proyecto actualmente en curso.\n\nActualmente no pueden iniciarse nuevos proyectos ni tareas. En este marco, podría verse afectada la capacidad de respuesta ante nuevas necesidades, porque Nuevas necesidades de mantenimiento correctivo y evolutivo podrían quedar sin capacidad externa.\n\nTodavía no puede confirmarse un escenario de resolución y siguen abiertas incertidumbres materiales: No conocemos cuándo termina exactamente el proyecto actual ni la demanda de nuevos trabajos de mantenimiento en los próximos meses.\n\nLa gravedad fue evaluada por el usuario como Alta.\n\nNecesito tu intervención para Necesito que mi superior consulte con Compras qué alternativas contractuales son viables y cuáles son sus plazos.",
             "editedByUser": false,
-            "updatedAt": "2026-11-16T05:01:26.899Z"
+            "updatedAt": "2026-11-16T15:58:59.905Z"
           },
           "message": {
-            "body": "Resumen ejecutivo: Nuevas necesidades de mantenimiento correctivo y evolutivo podrían quedar sin capacidad externa.. Incertidumbre principal: No conocemos cuándo termina exactamente el proyecto actual ni la demanda de nuevos trabajos de mantenimiento en los próximos meses.. Gravedad evaluada por el usuario: Alta. Pedido: Necesito que mi superior consulte con Compras qué alternativas contractuales son viables y cuáles son sus plazos. Solicito que el nivel superior priorice una decisión sobre alternativas contractuales y un plan de continuidad operativa.",
+            "body": "El contrato con el proveedor venció el 31/10/2026. El proveedor continúa trabajando hasta finalizar el proyecto actualmente en curso. Actualmente no pueden iniciarse nuevos proyectos ni tareas.\n\nExiste riesgo de limitar nuevos trabajos y todavía hay incertidumbres materiales: No conocemos cuándo termina exactamente el proyecto actual ni la demanda de nuevos trabajos de mantenimiento en los próximos meses.\n\nGravedad evaluada por el usuario: Alta. Necesito tu intervención para Necesito que mi superior consulte con Compras qué alternativas contractuales son viables y cuáles son sus plazos.",
             "editedByUser": false,
-            "updatedAt": "2026-11-16T05:01:26.899Z"
+            "updatedAt": "2026-11-16T15:58:59.905Z"
           }
         },
         "generatedBy": "AI",
         "reviewedByUser": true,
-        "createdAt": "2026-11-16T05:01:26.899Z",
-        "updatedAt": "2026-11-16T05:01:27.135Z",
-        "reviewedAt": "2026-11-16T05:01:27.135Z"
+        "createdAt": "2026-11-16T15:58:59.905Z",
+        "updatedAt": "2026-11-16T15:59:00.190Z",
+        "reviewedAt": "2026-11-16T15:59:00.190Z"
       },
       "history": [],
       "stale": false
     },
     "approvalRecord": {
-      "caseId": "88fde49b-9b6e-444b-b74d-80bd592a709e",
-      "briefId": "dw-brief-88fde49b-9b6e-444b-b74d-80bd592a709e-1794805286899",
+      "caseId": "6473d845-f3e8-4255-92d0-8a30eae5660b",
+      "briefId": "dw-brief-6473d845-f3e8-4255-92d0-8a30eae5660b-1794844739906",
       "briefVersion": 1,
       "status": "APPROVED",
       "approvedBy": "USER",
-      "approvedAt": "2026-11-16T05:01:27.231Z",
+      "approvedAt": "2026-11-16T15:59:00.308Z",
       "confirmedBriefVersion": 1,
       "checklistSnapshot": {
         "ready": true,
@@ -714,10 +715,10 @@
           }
         ],
         "blockers": [],
-        "evaluatedAt": "2026-11-16T05:01:27.231Z"
+        "evaluatedAt": "2026-11-16T15:59:00.308Z"
       },
-      "createdAt": "2026-11-16T05:01:27.231Z",
-      "updatedAt": "2026-11-16T05:01:27.231Z"
+      "createdAt": "2026-11-16T15:59:00.308Z",
+      "updatedAt": "2026-11-16T15:59:00.308Z"
     }
   }
 }

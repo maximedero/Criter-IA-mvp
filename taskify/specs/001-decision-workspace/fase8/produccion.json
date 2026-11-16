@@ -87,8 +87,8 @@
   "artifacts": {
     "canvas": [
       {
-        "id": "0e9dae94-10ea-4060-b728-22e0a11f83fe",
-        "caseId": "2f40669b-8336-48dc-bdab-9608e8ecd2de",
+        "id": "d15ce12f-c26d-4dd9-826f-f92c96892e7d",
+        "caseId": "f0457938-c849-48fc-b0fa-3c78dca87199",
         "dimension": "CONTEXT",
         "content": "La fabricación requiere comprometer una fecha de entrega, pero hoy no se conoce con precisión la probabilidad de cumplimiento.",
         "epistemicType": "FACT",
@@ -100,12 +100,12 @@
           "source": "INITIAL_NARRATIVE",
           "originalContent": "La fabricación requiere comprometer una fecha de entrega, pero hoy no se conoce con precisión la probabilidad de cumplimiento."
         },
-        "createdAt": "2026-11-16T05:01:53.600Z",
-        "updatedAt": "2026-11-16T05:01:53.646Z"
+        "createdAt": "2026-11-16T15:45:32.762Z",
+        "updatedAt": "2026-11-16T15:45:32.847Z"
       },
       {
-        "id": "9615f4f7-0ace-4421-a68b-6ce5b15a8b29",
-        "caseId": "2f40669b-8336-48dc-bdab-9608e8ecd2de",
+        "id": "e1f0a7f0-1818-47bc-9a2e-3866cdefcb1e",
+        "caseId": "f0457938-c849-48fc-b0fa-3c78dca87199",
         "dimension": "EXPOSURE",
         "content": "Las fechas comprometidas se incumplen con frecuencia, afectando la coordinación operativa.",
         "epistemicType": "FACT",
@@ -117,12 +117,12 @@
           "source": "INITIAL_NARRATIVE",
           "originalContent": "Las fechas comprometidas se incumplen con frecuencia, afectando la coordinación operativa."
         },
-        "createdAt": "2026-11-16T05:01:53.600Z",
-        "updatedAt": "2026-11-16T05:01:53.696Z"
+        "createdAt": "2026-11-16T15:45:32.763Z",
+        "updatedAt": "2026-11-16T15:45:32.987Z"
       },
       {
-        "id": "545af07d-26c3-4c94-9d96-51cb72fc56dc",
-        "caseId": "2f40669b-8336-48dc-bdab-9608e8ecd2de",
+        "id": "83b5678b-39ed-4bf5-9574-5745099f1fe4",
+        "caseId": "f0457938-c849-48fc-b0fa-3c78dca87199",
         "dimension": "INTERVENTION",
         "content": "Se requiere definir cómo comunicar intervalos de entrega con un nivel de confianza defendible sin inventar probabilidades.",
         "epistemicType": "HUMAN_EVALUATION",
@@ -134,78 +134,78 @@
           "source": "INITIAL_NARRATIVE",
           "originalContent": "Se requiere definir cómo comunicar intervalos de entrega con un nivel de confianza defendible sin inventar probabilidades."
         },
-        "createdAt": "2026-11-16T05:01:53.600Z",
-        "updatedAt": "2026-11-16T05:01:53.730Z"
+        "createdAt": "2026-11-16T15:45:32.763Z",
+        "updatedAt": "2026-11-16T15:45:33.059Z"
       },
       {
-        "id": "4983ba94-d0f0-4a2a-af02-701341420569",
-        "caseId": "2f40669b-8336-48dc-bdab-9608e8ecd2de",
+        "id": "a1c3d95c-44f7-47a0-862e-e46a20a6109a",
+        "caseId": "f0457938-c849-48fc-b0fa-3c78dca87199",
         "dimension": "IMPACT",
         "content": "Se reprograman órdenes, se descoordina la cadena interna y se deteriora la previsibilidad de entrega comprometida.",
         "epistemicType": "INFERENCE",
         "origin": "USER",
         "validationStatus": "VALIDATED",
-        "createdAt": "2026-11-16T05:01:53.865Z",
-        "updatedAt": "2026-11-16T05:01:53.865Z"
+        "createdAt": "2026-11-16T15:45:33.315Z",
+        "updatedAt": "2026-11-16T15:45:33.315Z"
       },
       {
-        "id": "5a34f0a5-c170-4768-9d9b-53cdd1c6f42e",
-        "caseId": "2f40669b-8336-48dc-bdab-9608e8ecd2de",
+        "id": "2f044bbb-f75a-48be-b8c9-54ac623a6b65",
+        "caseId": "f0457938-c849-48fc-b0fa-3c78dca87199",
         "dimension": "EVIDENCE",
         "content": "Existen registros operativos dispersos por área, pero todavía no están consolidados en un indicador común de cumplimiento.",
         "epistemicType": "FACT",
         "origin": "USER",
         "validationStatus": "VALIDATED",
-        "createdAt": "2026-11-16T05:01:53.980Z",
-        "updatedAt": "2026-11-16T05:01:53.980Z"
+        "createdAt": "2026-11-16T15:45:33.525Z",
+        "updatedAt": "2026-11-16T15:45:33.525Z"
       },
       {
-        "id": "bc288f93-06c5-4de5-bb05-ea5234ac45df",
-        "caseId": "2f40669b-8336-48dc-bdab-9608e8ecd2de",
+        "id": "9db7989a-431b-4ca8-b4a3-3894ec1bb3ff",
+        "caseId": "f0457938-c849-48fc-b0fa-3c78dca87199",
         "dimension": "UNCERTAINTY",
         "content": "Faltan series históricas comparables por etapa, variabilidad por proceso y trazabilidad de cuellos de botella. Se requiere análisis cuantitativo externo.",
         "epistemicType": "MISSING_INFORMATION",
         "origin": "USER",
         "validationStatus": "VALIDATED",
-        "createdAt": "2026-11-16T05:01:54.080Z",
-        "updatedAt": "2026-11-16T05:01:54.080Z"
+        "createdAt": "2026-11-16T15:45:33.694Z",
+        "updatedAt": "2026-11-16T15:45:33.694Z"
       },
       {
-        "id": "3ed63844-f3dc-4199-942b-a6bca1f2c2ef",
-        "caseId": "2f40669b-8336-48dc-bdab-9608e8ecd2de",
+        "id": "0d59cecb-753f-4d0d-96c8-21063b3c76b3",
+        "caseId": "f0457938-c849-48fc-b0fa-3c78dca87199",
         "dimension": "SCENARIO",
         "content": "Si la variabilidad operativa se mantiene sin medición comparable, la confiabilidad de los compromisos seguirá siendo baja.",
         "epistemicType": "INFERENCE",
         "origin": "USER",
         "validationStatus": "VALIDATED",
-        "createdAt": "2026-11-16T05:01:54.199Z",
-        "updatedAt": "2026-11-16T05:01:54.199Z"
+        "createdAt": "2026-11-16T15:45:33.950Z",
+        "updatedAt": "2026-11-16T15:45:33.950Z"
       },
       {
-        "id": "84dd5355-5fbf-4b84-8319-c5f3f0b384e4",
-        "caseId": "2f40669b-8336-48dc-bdab-9608e8ecd2de",
+        "id": "2e4b3142-84de-4a41-9690-a7a3073ab1d1",
+        "caseId": "f0457938-c849-48fc-b0fa-3c78dca87199",
         "dimension": "ALTERNATIVE",
         "content": "Una alternativa es comprometer ventanas de entrega por etapa crítica en lugar de una fecha puntual hasta contar con base cuantitativa suficiente.",
         "epistemicType": "ASSUMPTION",
         "origin": "USER",
         "validationStatus": "VALIDATED",
-        "createdAt": "2026-11-16T05:01:54.307Z",
-        "updatedAt": "2026-11-16T05:01:54.307Z"
+        "createdAt": "2026-11-16T15:45:34.143Z",
+        "updatedAt": "2026-11-16T15:45:34.143Z"
       },
       {
-        "id": "cecdbeb5-95ba-495d-accf-6856793480a5",
-        "caseId": "2f40669b-8336-48dc-bdab-9608e8ecd2de",
+        "id": "b52f4d98-97d9-47e4-b431-0076e8a0a437",
+        "caseId": "f0457938-c849-48fc-b0fa-3c78dca87199",
         "dimension": "INTERVENTION",
         "content": "Solicito definir un alcance de medición y patrocinio para un análisis cuantitativo externo sobre cumplimiento de fechas.",
         "epistemicType": "HUMAN_EVALUATION",
         "origin": "USER",
         "validationStatus": "VALIDATED",
-        "createdAt": "2026-11-16T05:01:54.396Z",
-        "updatedAt": "2026-11-16T05:01:54.396Z"
+        "createdAt": "2026-11-16T15:45:34.316Z",
+        "updatedAt": "2026-11-16T15:45:34.316Z"
       }
     ],
     "aiSession": {
-      "caseId": "2f40669b-8336-48dc-bdab-9608e8ecd2de",
+      "caseId": "f0457938-c849-48fc-b0fa-3c78dca87199",
       "questionCount": 3,
       "questions": [
         {
@@ -220,12 +220,12 @@
             "DONT_KNOW",
             "SKIP_FOR_NOW"
           ],
-          "caseId": "2f40669b-8336-48dc-bdab-9608e8ecd2de",
+          "caseId": "f0457938-c849-48fc-b0fa-3c78dca87199",
           "status": "ANSWERED",
-          "createdAt": "2026-11-16T05:01:53.798Z",
-          "updatedAt": "2026-11-16T05:01:53.865Z",
-          "answeredAt": "2026-11-16T05:01:53.865Z",
-          "resultingCanvasItemId": "4983ba94-d0f0-4a2a-af02-701341420569"
+          "createdAt": "2026-11-16T15:45:33.181Z",
+          "updatedAt": "2026-11-16T15:45:33.315Z",
+          "answeredAt": "2026-11-16T15:45:33.315Z",
+          "resultingCanvasItemId": "a1c3d95c-44f7-47a0-862e-e46a20a6109a"
         },
         {
           "id": "dw-q-prod-evidence",
@@ -239,12 +239,12 @@
             "DONT_KNOW",
             "SKIP_FOR_NOW"
           ],
-          "caseId": "2f40669b-8336-48dc-bdab-9608e8ecd2de",
+          "caseId": "f0457938-c849-48fc-b0fa-3c78dca87199",
           "status": "ANSWERED",
-          "createdAt": "2026-11-16T05:01:53.917Z",
-          "updatedAt": "2026-11-16T05:01:53.980Z",
-          "answeredAt": "2026-11-16T05:01:53.980Z",
-          "resultingCanvasItemId": "5a34f0a5-c170-4768-9d9b-53cdd1c6f42e"
+          "createdAt": "2026-11-16T15:45:33.393Z",
+          "updatedAt": "2026-11-16T15:45:33.525Z",
+          "answeredAt": "2026-11-16T15:45:33.525Z",
+          "resultingCanvasItemId": "2f044bbb-f75a-48be-b8c9-54ac623a6b65"
         },
         {
           "id": "dw-q-prod-uncertainty",
@@ -258,24 +258,24 @@
             "DONT_KNOW",
             "SKIP_FOR_NOW"
           ],
-          "caseId": "2f40669b-8336-48dc-bdab-9608e8ecd2de",
+          "caseId": "f0457938-c849-48fc-b0fa-3c78dca87199",
           "status": "ANSWERED",
-          "createdAt": "2026-11-16T05:01:54.030Z",
-          "updatedAt": "2026-11-16T05:01:54.080Z",
-          "answeredAt": "2026-11-16T05:01:54.080Z",
-          "resultingCanvasItemId": "bc288f93-06c5-4de5-bb05-ea5234ac45df"
+          "createdAt": "2026-11-16T15:45:33.599Z",
+          "updatedAt": "2026-11-16T15:45:33.695Z",
+          "answeredAt": "2026-11-16T15:45:33.695Z",
+          "resultingCanvasItemId": "9db7989a-431b-4ca8-b4a3-3894ec1bb3ff"
         }
       ],
       "lastStop": null,
       "userStopped": false,
-      "updatedAt": "2026-11-16T05:01:54.080Z"
+      "updatedAt": "2026-11-16T15:45:33.695Z"
     },
     "criticalReview": [
       {
-        "reviewId": "dw-review-2f40669b-8336-48dc-bdab-9608e8ecd2de-none",
-        "caseId": "2f40669b-8336-48dc-bdab-9608e8ecd2de",
-        "createdAt": "2026-11-16T05:01:54.479Z",
-        "updatedAt": "2026-11-16T05:01:54.530Z",
+        "reviewId": "dw-review-f0457938-c849-48fc-b0fa-3c78dca87199-none",
+        "caseId": "f0457938-c849-48fc-b0fa-3c78dca87199",
+        "createdAt": "2026-11-16T15:45:34.443Z",
+        "updatedAt": "2026-11-16T15:45:34.551Z",
         "findings": [],
         "summary": {
           "totalFindings": 0,
@@ -285,29 +285,29 @@
         },
         "canCompleteReview": true,
         "status": "COMPLETED",
-        "completedAt": "2026-11-16T05:01:54.530Z"
+        "completedAt": "2026-11-16T15:45:34.551Z"
       }
     ],
     "severityAssessment": {
-      "caseId": "2f40669b-8336-48dc-bdab-9608e8ecd2de",
+      "caseId": "f0457938-c849-48fc-b0fa-3c78dca87199",
       "severity": "MEDIUM",
       "assessedBy": "USER",
-      "assessedAt": "2026-11-16T05:01:54.645Z",
-      "updatedAt": "2026-11-16T05:01:54.645Z",
+      "assessedAt": "2026-11-16T15:45:34.759Z",
+      "updatedAt": "2026-11-16T15:45:34.759Z",
       "status": "ASSESSED",
       "rationale": ""
     },
     "briefRecord": {
       "current": {
-        "id": "dw-brief-2f40669b-8336-48dc-bdab-9608e8ecd2de-1794805314730",
-        "caseId": "2f40669b-8336-48dc-bdab-9608e8ecd2de",
+        "id": "dw-brief-f0457938-c849-48fc-b0fa-3c78dca87199-1794843934896",
+        "caseId": "f0457938-c849-48fc-b0fa-3c78dca87199",
         "version": 1,
         "status": "REVIEWED_BY_USER",
         "executive": {
           "situation": {
             "content": "La fabricación requiere comprometer una fecha de entrega, pero hoy no se conoce con precisión la probabilidad de cumplimiento.",
             "sourceItemIds": [
-              "0e9dae94-10ea-4060-b728-22e0a11f83fe"
+              "d15ce12f-c26d-4dd9-826f-f92c96892e7d"
             ],
             "hasSufficientInformation": true,
             "limitations": []
@@ -315,7 +315,7 @@
           "whyItMatters": {
             "content": "Las fechas comprometidas se incumplen con frecuencia, afectando la coordinación operativa. Se mantiene explícita la incertidumbre relevante.",
             "sourceItemIds": [
-              "9615f4f7-0ace-4421-a68b-6ce5b15a8b29"
+              "e1f0a7f0-1818-47bc-9a2e-3866cdefcb1e"
             ],
             "hasSufficientInformation": true,
             "limitations": []
@@ -323,7 +323,7 @@
           "possibleImpacts": {
             "content": "Se reprograman órdenes, se descoordina la cadena interna y se deteriora la previsibilidad de entrega comprometida.",
             "sourceItemIds": [
-              "4983ba94-d0f0-4a2a-af02-701341420569"
+              "a1c3d95c-44f7-47a0-862e-e46a20a6109a"
             ],
             "hasSufficientInformation": true,
             "limitations": []
@@ -331,7 +331,7 @@
           "evidence": {
             "content": "Existen registros operativos dispersos por área, pero todavía no están consolidados en un indicador común de cumplimiento.",
             "sourceItemIds": [
-              "5a34f0a5-c170-4768-9d9b-53cdd1c6f42e"
+              "2f044bbb-f75a-48be-b8c9-54ac623a6b65"
             ],
             "hasSufficientInformation": true,
             "limitations": []
@@ -339,7 +339,7 @@
           "uncertainties": {
             "content": "Faltan series históricas comparables por etapa, variabilidad por proceso y trazabilidad de cuellos de botella. Se requiere análisis cuantitativo externo.",
             "sourceItemIds": [
-              "bc288f93-06c5-4de5-bb05-ea5234ac45df"
+              "9db7989a-431b-4ca8-b4a3-3894ec1bb3ff"
             ],
             "hasSufficientInformation": true,
             "limitations": []
@@ -347,8 +347,8 @@
           "scenariosAndAlternatives": {
             "content": "Si la variabilidad operativa se mantiene sin medición comparable, la confiabilidad de los compromisos seguirá siendo baja. Una alternativa es comprometer ventanas de entrega por etapa crítica en lugar de una fecha puntual hasta contar con base cuantitativa suficiente.",
             "sourceItemIds": [
-              "3ed63844-f3dc-4199-942b-a6bca1f2c2ef",
-              "84dd5355-5fbf-4b84-8319-c5f3f0b384e4"
+              "0d59cecb-753f-4d0d-96c8-21063b3c76b3",
+              "2e4b3142-84de-4a41-9690-a7a3073ab1d1"
             ],
             "hasSufficientInformation": true,
             "limitations": []
@@ -358,14 +358,14 @@
             "label": "Media",
             "rationale": "",
             "assessedBy": "USER",
-            "assessedAt": "2026-11-16T05:01:54.645Z",
+            "assessedAt": "2026-11-16T15:45:34.759Z",
             "notice": "Evaluación realizada por el usuario."
           },
           "requiredIntervention": {
             "content": "Se requiere definir cómo comunicar intervalos de entrega con un nivel de confianza defendible sin inventar probabilidades. Solicito definir un alcance de medición y patrocinio para un análisis cuantitativo externo sobre cumplimiento de fechas.",
             "sourceItemIds": [
-              "545af07d-26c3-4c94-9d96-51cb72fc56dc",
-              "cecdbeb5-95ba-495d-accf-6856793480a5"
+              "83b5678b-39ed-4bf5-9574-5745099f1fe4",
+              "b52f4d98-97d9-47e4-b431-0076e8a0a437"
             ],
             "hasSufficientInformation": true,
             "limitations": []
@@ -374,7 +374,7 @@
         "expanded": {
           "facts": [
             {
-              "itemId": "0e9dae94-10ea-4060-b728-22e0a11f83fe",
+              "itemId": "d15ce12f-c26d-4dd9-826f-f92c96892e7d",
               "dimension": "CONTEXT",
               "epistemicType": "FACT",
               "origin": "AI",
@@ -382,7 +382,7 @@
               "content": "La fabricación requiere comprometer una fecha de entrega, pero hoy no se conoce con precisión la probabilidad de cumplimiento."
             },
             {
-              "itemId": "9615f4f7-0ace-4421-a68b-6ce5b15a8b29",
+              "itemId": "e1f0a7f0-1818-47bc-9a2e-3866cdefcb1e",
               "dimension": "EXPOSURE",
               "epistemicType": "FACT",
               "origin": "AI",
@@ -390,7 +390,7 @@
               "content": "Las fechas comprometidas se incumplen con frecuencia, afectando la coordinación operativa."
             },
             {
-              "itemId": "5a34f0a5-c170-4768-9d9b-53cdd1c6f42e",
+              "itemId": "2f044bbb-f75a-48be-b8c9-54ac623a6b65",
               "dimension": "EVIDENCE",
               "epistemicType": "FACT",
               "origin": "USER",
@@ -400,7 +400,7 @@
           ],
           "inferences": [
             {
-              "itemId": "4983ba94-d0f0-4a2a-af02-701341420569",
+              "itemId": "a1c3d95c-44f7-47a0-862e-e46a20a6109a",
               "dimension": "IMPACT",
               "epistemicType": "INFERENCE",
               "origin": "USER",
@@ -408,7 +408,7 @@
               "content": "Es posible que Se reprograman órdenes, se descoordina la cadena interna y se deteriora la previsibilidad de entrega comprometida."
             },
             {
-              "itemId": "3ed63844-f3dc-4199-942b-a6bca1f2c2ef",
+              "itemId": "0d59cecb-753f-4d0d-96c8-21063b3c76b3",
               "dimension": "SCENARIO",
               "epistemicType": "INFERENCE",
               "origin": "USER",
@@ -418,7 +418,7 @@
           ],
           "assumptions": [
             {
-              "itemId": "84dd5355-5fbf-4b84-8319-c5f3f0b384e4",
+              "itemId": "2e4b3142-84de-4a41-9690-a7a3073ab1d1",
               "dimension": "ALTERNATIVE",
               "epistemicType": "ASSUMPTION",
               "origin": "USER",
@@ -428,7 +428,7 @@
           ],
           "missingInformation": [
             {
-              "itemId": "bc288f93-06c5-4de5-bb05-ea5234ac45df",
+              "itemId": "9db7989a-431b-4ca8-b4a3-3894ec1bb3ff",
               "dimension": "UNCERTAINTY",
               "epistemicType": "MISSING_INFORMATION",
               "origin": "USER",
@@ -438,7 +438,7 @@
           ],
           "humanEvaluations": [
             {
-              "itemId": "545af07d-26c3-4c94-9d96-51cb72fc56dc",
+              "itemId": "83b5678b-39ed-4bf5-9574-5745099f1fe4",
               "dimension": "INTERVENTION",
               "epistemicType": "HUMAN_EVALUATION",
               "origin": "AI",
@@ -446,7 +446,7 @@
               "content": "Se requiere definir cómo comunicar intervalos de entrega con un nivel de confianza defendible sin inventar probabilidades."
             },
             {
-              "itemId": "cecdbeb5-95ba-495d-accf-6856793480a5",
+              "itemId": "b52f4d98-97d9-47e4-b431-0076e8a0a437",
               "dimension": "INTERVENTION",
               "epistemicType": "HUMAN_EVALUATION",
               "origin": "USER",
@@ -456,7 +456,7 @@
           ],
           "evidenceItems": [
             {
-              "itemId": "5a34f0a5-c170-4768-9d9b-53cdd1c6f42e",
+              "itemId": "2f044bbb-f75a-48be-b8c9-54ac623a6b65",
               "dimension": "EVIDENCE",
               "epistemicType": "FACT",
               "origin": "USER",
@@ -471,74 +471,75 @@
           ],
           "generationLimitations": [
             "La IA solo consolidó contenido validado o editado por el usuario.",
-            "Persisten datos faltantes que requieren validación humana."
+            "Persisten datos faltantes que requieren validación humana.",
+            "Persisten incertidumbres materiales que requieren validación adicional."
           ]
         },
         "traceability": {
           "sectionSources": {
             "situation": [
-              "0e9dae94-10ea-4060-b728-22e0a11f83fe"
+              "d15ce12f-c26d-4dd9-826f-f92c96892e7d"
             ],
             "whyItMatters": [
-              "9615f4f7-0ace-4421-a68b-6ce5b15a8b29"
+              "e1f0a7f0-1818-47bc-9a2e-3866cdefcb1e"
             ],
             "possibleImpacts": [
-              "4983ba94-d0f0-4a2a-af02-701341420569"
+              "a1c3d95c-44f7-47a0-862e-e46a20a6109a"
             ],
             "evidence": [
-              "5a34f0a5-c170-4768-9d9b-53cdd1c6f42e"
+              "2f044bbb-f75a-48be-b8c9-54ac623a6b65"
             ],
             "uncertainties": [
-              "bc288f93-06c5-4de5-bb05-ea5234ac45df"
+              "9db7989a-431b-4ca8-b4a3-3894ec1bb3ff"
             ],
             "scenariosAndAlternatives": [
-              "3ed63844-f3dc-4199-942b-a6bca1f2c2ef",
-              "84dd5355-5fbf-4b84-8319-c5f3f0b384e4"
+              "0d59cecb-753f-4d0d-96c8-21063b3c76b3",
+              "2e4b3142-84de-4a41-9690-a7a3073ab1d1"
             ],
             "requiredIntervention": [
-              "545af07d-26c3-4c94-9d96-51cb72fc56dc",
-              "cecdbeb5-95ba-495d-accf-6856793480a5"
+              "83b5678b-39ed-4bf5-9574-5745099f1fe4",
+              "b52f4d98-97d9-47e4-b431-0076e8a0a437"
             ]
           },
-          "severityAssessmentRef": "2f40669b-8336-48dc-bdab-9608e8ecd2de:2026-11-16T05:01:54.645Z",
-          "criticalReviewId": "dw-review-2f40669b-8336-48dc-bdab-9608e8ecd2de-none",
-          "generatedFromCanvasUpdatedAt": "2026-11-16T05:01:54.396Z",
+          "severityAssessmentRef": "f0457938-c849-48fc-b0fa-3c78dca87199:2026-11-16T15:45:34.759Z",
+          "criticalReviewId": "dw-review-f0457938-c849-48fc-b0fa-3c78dca87199-none",
+          "generatedFromCanvasUpdatedAt": "2026-11-16T15:45:34.316Z",
           "generationProvider": "MockAIProvider",
-          "generationTimestamp": "2026-11-16T05:01:54.732Z",
+          "generationTimestamp": "2026-11-16T15:45:34.898Z",
           "editedSections": [
             "whyItMatters"
           ],
-          "userReviewTimestamp": "2026-11-16T05:01:54.967Z"
+          "userReviewTimestamp": "2026-11-16T15:45:35.265Z"
         },
         "communication": {
           "email": {
-            "subject": "Brief ejecutivo — Fase8 Producción",
-            "body": "Te comparto el estado actual del caso Fase8 Producción. La fabricación requiere comprometer una fecha de entrega, pero hoy no se conoce con precisión la probabilidad de cumplimiento.\n\nLas fechas comprometidas se incumplen con frecuencia, afectando la coordinación operativa. En este escenario, el riesgo principal observado es: Se reprograman órdenes, se descoordina la cadena interna y se deteriora la previsibilidad de entrega comprometida.\n\nLas incertidumbres que siguen abiertas son: Faltan series históricas comparables por etapa, variabilidad por proceso y trazabilidad de cuellos de botella. Se requiere análisis cuantitativo externo.. Además, hoy sólo contamos con estas alternativas validadas: Si la variabilidad operativa se mantiene sin medición comparable, la confiabilidad de los compromisos seguirá siendo baja. Una alternativa es comprometer ventanas de entrega por etapa crítica en lugar de una fecha puntual hasta contar con base cuantitativa suficiente..\n\nLa gravedad fue evaluada por el usuario como Media.\n\nTe solicito tu intervención para definir próximos pasos: Se requiere definir cómo comunicar intervalos de entrega con un nivel de confianza defendible sin inventar probabilidades. Solicito definir un alcance de medición y patrocinio para un análisis cuantitativo externo sobre cumplimiento de fechas.",
+            "subject": "Intervención para análisis transversal de cumplimiento en Fase8 Producción",
+            "body": "Te comparto una actualización de Fase8 Producción. La fabricación requiere comprometer una fecha de entrega, pero hoy no se conoce con precisión la probabilidad de cumplimiento.\n\nLas fechas comprometidas se incumplen con frecuencia, afectando la coordinación operativa. Esto podría sostener incumplimientos de compromisos si no se consolida un análisis transversal; por ahora, el impacto plausible es: Se reprograman órdenes, se descoordina la cadena interna y se deteriora la previsibilidad de entrega comprometida.\n\nIntervienen varias áreas y todavía no existe evidencia consolidada suficiente para estimar una probabilidad defendible. Las incertidumbres materiales actuales son: Faltan series históricas comparables por etapa, variabilidad por proceso y trazabilidad de cuellos de botella. Se requiere análisis cuantitativo externo.\n\nLa gravedad fue evaluada por el usuario como Media.\n\nNecesito tu intervención para Se requiere definir cómo comunicar intervalos de entrega con un nivel de confianza defendible sin inventar probabilidades.",
             "editedByUser": false,
-            "updatedAt": "2026-11-16T05:01:54.730Z"
+            "updatedAt": "2026-11-16T15:45:34.895Z"
           },
           "message": {
-            "body": "Resumen ejecutivo: Se reprograman órdenes, se descoordina la cadena interna y se deteriora la previsibilidad de entrega comprometida.. Incertidumbre principal: Faltan series históricas comparables por etapa, variabilidad por proceso y trazabilidad de cuellos de botella. Se requiere análisis cuantitativo externo.. Gravedad evaluada por el usuario: Media. Pedido: Se requiere definir cómo comunicar intervalos de entrega con un nivel de confianza defendible sin inventar probabilidades. Solicito definir un alcance de medición y patrocinio para un análisis cuantitativo externo sobre cumplimiento de fechas.",
+            "body": "La fabricación requiere comprometer una fecha de entrega, pero hoy no se conoce con precisión la probabilidad de cumplimiento.\n\nIntervienen varias áreas y existe riesgo de nuevos incumplimientos; todavía no puede confirmarse una probabilidad defendible por falta de evidencia consolidada.\n\nGravedad evaluada por el usuario: Media. Necesito tu intervención para Se requiere definir cómo comunicar intervalos de entrega con un nivel de confianza defendible sin inventar probabilidades.",
             "editedByUser": false,
-            "updatedAt": "2026-11-16T05:01:54.730Z"
+            "updatedAt": "2026-11-16T15:45:34.895Z"
           }
         },
         "generatedBy": "AI",
         "reviewedByUser": true,
-        "createdAt": "2026-11-16T05:01:54.730Z",
-        "updatedAt": "2026-11-16T05:01:54.967Z",
-        "reviewedAt": "2026-11-16T05:01:54.967Z"
+        "createdAt": "2026-11-16T15:45:34.895Z",
+        "updatedAt": "2026-11-16T15:45:35.265Z",
+        "reviewedAt": "2026-11-16T15:45:35.265Z"
       },
       "history": [],
       "stale": false
     },
     "approvalRecord": {
-      "caseId": "2f40669b-8336-48dc-bdab-9608e8ecd2de",
-      "briefId": "dw-brief-2f40669b-8336-48dc-bdab-9608e8ecd2de-1794805314730",
+      "caseId": "f0457938-c849-48fc-b0fa-3c78dca87199",
+      "briefId": "dw-brief-f0457938-c849-48fc-b0fa-3c78dca87199-1794843934896",
       "briefVersion": 1,
       "status": "APPROVED",
       "approvedBy": "USER",
-      "approvedAt": "2026-11-16T05:01:55.080Z",
+      "approvedAt": "2026-11-16T15:45:35.422Z",
       "confirmedBriefVersion": 1,
       "checklistSnapshot": {
         "ready": true,
@@ -647,10 +648,10 @@
           }
         ],
         "blockers": [],
-        "evaluatedAt": "2026-11-16T05:01:55.080Z"
+        "evaluatedAt": "2026-11-16T15:45:35.422Z"
       },
-      "createdAt": "2026-11-16T05:01:55.080Z",
-      "updatedAt": "2026-11-16T05:01:55.080Z"
+      "createdAt": "2026-11-16T15:45:35.422Z",
+      "updatedAt": "2026-11-16T15:45:35.422Z"
     }
   }
 }

@@ -142,7 +142,7 @@ describe.sequential("slice9 brief ui", () => {
     expect(getBriefRecord(CASE_ID).current).toBeNull();
   });
 
-  it("generates brief with two views and expected sections", async () => {
+  it("generates brief with jerarquía de vistas y secciones esperadas", async () => {
     render(<App />);
     fireEvent.click(screen.getByRole("button", { name: "Abrir" }));
 
@@ -151,8 +151,18 @@ describe.sequential("slice9 brief ui", () => {
     await waitFor(() => {
       expect(screen.getByRole("tab", { name: "Comunicación ejecutiva" })).toBeInTheDocument();
       expect(screen.getByRole("tab", { name: "Brief ejecutivo" })).toBeInTheDocument();
-      expect(screen.getByRole("tab", { name: "Vista expandida" })).toBeInTheDocument();
+      expect(screen.getByRole("tab", { name: "Análisis completo y trazabilidad" })).toBeInTheDocument();
     });
+
+    expect(screen.getByRole("heading", { name: "PRÓXIMO PASO" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Estado compacto" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Correo" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Mensaje breve" })).toBeInTheDocument();
+    expect(screen.getByText(/Cobertura:/)).toBeInTheDocument();
+    expect(screen.getByText(/Revisión:/)).toBeInTheDocument();
+    expect(screen.getByText(/Gravedad:/)).toBeInTheDocument();
+    expect(screen.getByText(/Brief:/)).toBeInTheDocument();
+    expect(screen.getByText(/Aprobación:/)).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("tab", { name: "Brief ejecutivo" }));
 
@@ -230,8 +240,8 @@ describe.sequential("slice9 brief ui", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Generar borrador de brief" }));
 
-    await waitFor(() => expect(screen.getByRole("tab", { name: "Vista expandida" })).toBeInTheDocument());
-    fireEvent.click(screen.getByRole("tab", { name: "Vista expandida" }));
+    await waitFor(() => expect(screen.getByRole("tab", { name: "Análisis completo y trazabilidad" })).toBeInTheDocument());
+    fireEvent.click(screen.getByRole("tab", { name: "Análisis completo y trazabilidad" }));
 
     expect(screen.getByText("Hechos")).toBeInTheDocument();
     expect(screen.getByText("Inferencias")).toBeInTheDocument();

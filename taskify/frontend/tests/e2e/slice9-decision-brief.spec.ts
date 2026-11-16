@@ -122,13 +122,13 @@ test("slice9 dynamics main flow", async ({ page }) => {
       .locator("p")
       .first()
   ).toHaveText("Una prórroga contractual podría ser una alternativa, pero su viabilidad no está confirmada.");
-  await expect(briefRegion.getByText("Gravedad: Alta")).toBeVisible();
-  await expect(briefRegion.getByText("Evaluación realizada por el usuario.")).toBeVisible();
+  await expect(briefRegion.getByText("Gravedad: Alta").first()).toBeVisible();
+  await expect(briefRegion.getByText("Evaluación realizada por el usuario.").first()).toBeVisible();
   await expect(
     briefRegion.getByText("Se necesita que el superior consulte con Compras qué alternativas contractuales son viables y cuáles son sus plazos.")
   ).toBeVisible();
 
-  await page.getByRole("tab", { name: "Vista expandida" }).click();
+  await page.getByRole("tab", { name: "Análisis completo y trazabilidad" }).click();
   await expect(briefRegion.getByRole("heading", { name: "Hechos" })).toBeVisible();
   await expect(briefRegion.getByRole("heading", { name: "Inferencias" })).toBeVisible();
   await expect(briefRegion.getByRole("heading", { name: "Supuestos" })).toBeVisible();
@@ -179,7 +179,7 @@ test("slice9 dynamics main flow", async ({ page }) => {
       "La restricción impide iniciar nuevos proyectos o tareas y puede limitar la atención externa de nuevas necesidades."
     )
   ).toBeVisible();
-  await expect(page.getByText("Gravedad: Alta")).toBeVisible();
+  await expect(page.getByRole("region", { name: "Estado compacto" }).getByText("Gravedad: Alta")).toBeVisible();
 
   const countersAfterReload = await page.evaluate(() => JSON.parse(localStorage.getItem("dw.ai.observation") ?? "{}"));
   expect(countersAfterReload.generateBrief).toBe(1);

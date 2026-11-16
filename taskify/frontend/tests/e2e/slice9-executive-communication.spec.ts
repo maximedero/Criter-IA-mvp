@@ -135,7 +135,9 @@ test("copia correo y mensaje, maneja error de clipboard, edición y persistencia
 
   await page.getByRole("button", { name: "Copiar como mensaje" }).click();
   await expect(page.getByText("No se pudo copiar el contenido. Seleccionalo manualmente.")).toBeVisible();
-  await expect(page.getByText(/Resumen ejecutivo|Contrato vencido|continuidad transitoria/i).first()).toBeVisible();
+  await expect(
+    page.getByText(/consult(e|ar)\s+con\s+compras|alternativas\s+contractuales|plazos/i).first()
+  ).toBeVisible();
 
   await page.getByRole("button", { name: "Editar mensaje" }).click();
   const editedMessage = "Texto exacto editado para mensaje ejecutivo.";
@@ -261,7 +263,8 @@ test("stale bloquea copias y regeneración reactiva copy con nueva versión", as
   expect(afterRegenerate.stale).toBe(false);
   expect(afterRegenerate.version).toBe(2);
   expect(afterRegenerate.emailBody).toContain("Nuevas necesidades correctivas y evolutivas podrían quedar temporalmente sin capacidad de atención externa.");
-  expect(afterRegenerate.messageBody).toContain("Incertidumbre principal");
+  expect(afterRegenerate.messageBody).toContain("incertidumbr");
+  expect(afterRegenerate.messageBody.toLowerCase()).toContain("compras");
 
   await page.getByRole("button", { name: "Copiar como mensaje" }).click();
   await expect(page.getByText("Mensaje copiado.")).toBeVisible();

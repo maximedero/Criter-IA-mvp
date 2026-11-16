@@ -2,10 +2,21 @@ const STORAGE_KEY = "dw.briefs";
 function nowIso() {
     return new Date().toISOString();
 }
+function recordNeedsCommunicationMigration(record) {
+    const currentNeeds = Boolean(record.current && !record.current.communication);
+    const historyNeeds = (record.history ?? []).some((item) => !item.communication);
+    const staleNeeds = typeof record.stale !== "boolean";
+    const historyArrayNeeds = !Array.isArray(record.history);
+    return currentNeeds || historyNeeds || staleNeeds || historyArrayNeeds;
+}
 function withCommunication(brief) {
-    const timestamp = brief.updatedAt || nowIso();
+    const timestamp = brief.updatedAt || brief.createdAt || nowIso();
     return {
         ...brief,
+        version: Number.isInteger(brief.version) && brief.version > 0 ? brief.version : 1,
+        status: brief.status ?? "GENERATED",
+        reviewedByUser: Boolean(brief.reviewedByUser),
+        reviewedAt: brief.reviewedByUser ? brief.reviewedAt ?? null : null,
         communication: brief.communication ?? {
             email: {
                 subject: "",
@@ -23,15 +34,10 @@ function withCommunication(brief) {
 }
 function normalizeRecord(record) {
     return {
-        ...record,
         current: record.current ? withCommunication(record.current) : null,
-        history: record.history.map(withCommunication)
+        history: (record.history ?? []).map(withCommunication),
+        stale: typeof record.stale === "boolean" ? record.stale : false
     };
-}
-function recordNeedsCommunicationMigration(record) {
-    const currentNeeds = Boolean(record.current && !record.current.communication);
-    const historyNeeds = record.history.some((item) => !item.communication);
-    return currentNeeds || historyNeeds;
 }
 function parse(raw) {
     if (!raw) {

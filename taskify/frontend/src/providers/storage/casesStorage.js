@@ -80,6 +80,15 @@ export function updateDecisionCaseStatus(id, status) {
     writeCases(nextItems);
     return updated;
 }
+export function deleteDecisionCase(id) {
+    const safeId = id.trim();
+    if (!safeId) {
+        throw new Error("case id is required");
+    }
+    const items = loadCases();
+    const nextItems = items.filter((item) => item.id !== safeId);
+    writeCases(nextItems);
+}
 export function clearDecisionCasesForTests() {
     localStorage.removeItem(STORAGE_KEY);
 }

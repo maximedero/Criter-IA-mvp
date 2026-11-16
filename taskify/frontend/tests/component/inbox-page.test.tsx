@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { App } from "../../src/app/App";
 import { clearWorkspaceStorage } from "../setup/test-helpers";
 
@@ -64,5 +64,29 @@ describe("InboxPage", () => {
         "El contrato con el proveedor venció el 31/10/2026. Actualmente continúa trabajando hasta finalizar el proyecto en curso, pero no podemos iniciar nuevos proyectos ni tareas."
       )
     ).toBeInTheDocument();
+  });
+
+  it("deletes case from inbox", () => {
+    const confirmSpy = vi.spyOn(window, "confirm").mockReturnValue(true);
+
+    render(<App />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Nuevo caso" }));
+    fireEvent.change(screen.getByLabelText("Título"), { target: { value: "Contrato Dynamics 365" } });
+    fireEvent.change(screen.getByLabelText("¿Qué está pasando?"), {
+      target: {
+        value:
+          "El contrato con el proveedor venció el 31/10/2026. Actualmente continúa trabajando hasta finalizar el proyecto en curso, pero no podemos iniciar nuevos proyectos ni tareas."
+      }
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Crear caso" }));
+
+    fireEvent.click(screen.getByRole("button", { name: "Eliminar" }));
+
+    expect(confirmSpy).toHaveBeenCalledWith('¿Eliminar el caso "Contrato Dynamics 365"?');
+    expect(screen.queryByText("Contrato Dynamics 365")).not.toBeInTheDocument();
+    expect(screen.getByText("No hay casos cargados.")).toBeInTheDocument();
+
+    confirmSpy.mockRestore();
   });
 });

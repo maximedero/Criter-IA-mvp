@@ -12,6 +12,7 @@ import { getBriefRecord } from "../../providers/storage/briefStorage";
 import { listCanvasItemsByCase } from "../../providers/storage/canvasStorage";
 import {
   createDecisionCase,
+  deleteDecisionCase,
   getDecisionCaseById,
   listDecisionCases,
   updateDecisionCaseStatus
@@ -292,7 +293,7 @@ export function InboxPage({ aiProvider }: Props) {
                 <td>{item.title}</td>
                 <td>{CASE_STATUS_LABELS[item.status]}</td>
                 <td>{formatUpdatedAt(item.updatedAt)}</td>
-                <td>
+                <td className="dw-inbox__actions">
                   <Button
                     type="button"
                     variant="ghost"
@@ -303,6 +304,28 @@ export function InboxPage({ aiProvider }: Props) {
                     }}
                   >
                     Abrir
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={() => {
+                      const confirmed = window.confirm(`¿Eliminar el caso \"${item.title}\"?`);
+                      if (!confirmed) {
+                        return;
+                      }
+
+                      deleteDecisionCase(item.id);
+
+                      if (selectedCaseId === item.id) {
+                        setSelectedCaseId(null);
+                        setSelectedCaseItems([]);
+                        setViewMode("inbox");
+                      }
+
+                      refresh();
+                    }}
+                  >
+                    Eliminar
                   </Button>
                 </td>
               </tr>

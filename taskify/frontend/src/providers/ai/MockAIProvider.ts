@@ -2,6 +2,8 @@ import type {
   AIProvider,
   AnalyzeNarrativeInput,
   AnalyzeNarrativeResult,
+  ComposedExecutiveCommunication,
+  ComposeExecutiveCommunicationInput,
   DynamicQuestion,
   GenerateBriefInput,
   GenerateBriefResult,
@@ -11,6 +13,7 @@ import type {
   SuggestNextQuestionResult
 } from "./AIProvider";
 import type { CanvasDimension, CanvasItem, EpistemicType } from "../../domain/models/CanvasItem";
+import type { ExecutiveBrief } from "../../domain/models/DecisionBrief";
 import type { ReviewFinding } from "../../domain/models/CriticalReview";
 import { HUMAN_SEVERITY_LABELS } from "../../domain/models/HumanSeverityAssessment";
 import {
@@ -620,6 +623,301 @@ function determineSectionFromItem(item: CanvasItem): "situation" | "whyItMatters
   return "requiredIntervention";
 }
 
+const EXECUTIVE_COMPOSER_PROMPT_VERSION = "v1-rcta";
+
+export const EXECUTIVE_COMPOSER_PROMPT = `ROL
+Actuá como un profesional que necesita elevar una situación a su líder de forma clara, prudente y accionable.
+
+CONTEXTO
+Recibís un análisis estructurado y validado que distingue hechos, inferencias, supuestos y datos faltantes.
+
+TAREA
+Redactá un correo ejecutivo y un mensaje breve para un líder directo.
+
+ADAPTACIÓN
+Escribí en español, con tono profesional y natural, sin headings de ficha ni lenguaje técnico interno.
+
+GROUNDING
+Usá exclusivamente información validada del input. No inventes hechos, cifras, fechas, probabilidades, fuentes ni recomendaciones.
+
+HECHOS E INCERTIDUMBRE
+Presentá hechos como hechos. Usá lenguaje prudente para inferencias y mantené visibles las incertidumbres materiales.
+
+GRAVEDAD E INTERVENCIÓN
+Conservá la gravedad humana sin recalcularla. Cerrá con la intervención humana recibida, sin ampliar el mandato.`;
+
+function normalizeForComparison(value: string): string {
+  return value.toLocaleLowerCase("es").replace(/\s+/g, " ").trim();
+}
+
+export function buildMechanicalProjectionForComparison(input: ComposeExecutiveCommunicationInput): {
+  emailSubject: string;
+  emailBody: string;
+  messageBody: string;
+} {
+  const severity = HUMAN_SEVERITY_LABELS[input.humanSeverityAssessment.severity];
+  const emailBody = [
+    `Situación: ${input.structuredBrief.situation.content}`,
+    `Por qué importa: ${input.structuredBrief.whyItMatters.content}`,
+    `Impactos posibles: ${input.structuredBrief.possibleImpacts.content}`,
+    `Evidencia: ${input.structuredBrief.evidence.content}`,
+    `Incertidumbres: ${input.structuredBrief.uncertainties.content}`,
+    `Escenarios/alternativas: ${input.structuredBrief.scenariosAndAlternatives.content}`,
+    `Intervención requerida: ${input.requiredIntervention}`,
+    `Gravedad: ${severity}`,
+    `Resumen técnico: ${input.structuredBrief.situation.content} ${input.structuredBrief.whyItMatters.content} ${input.structuredBrief.possibleImpacts.content}`
+  ].join("\n\n");
+
+  return {
+    emailSubject: `Brief ejecutivo — ${input.caseTitle}`,
+    emailBody,
+    messageBody: `Situación: ${input.structuredBrief.situation.content} Intervención requerida: ${input.requiredIntervention}`
+  };
+}
+
+function hasMechanicalHeadings(value: string): boolean {
+  return /(\n|^)(\s*)(situación|por qué importa|impactos posibles|evidencia|incertidumbres|intervención requerida)\s*:/i.test(value);
+}
+
+function countLiteralRepetitions(output: string, candidates: string[]): number {
+  const normalizedOutput = normalizeForComparison(output);
+  return candidates.reduce((count, candidate) => {
+    const normalizedCandidate = normalizeForComparison(candidate);
+    if (normalizedCandidate.length < 40) {
+      return count;
+    }
+
+    return normalizedOutput.includes(normalizedCandidate) ? count + 1 : count;
+  }, 0);
+}
+
+function assertNonMechanicalComposition(
+  composed: ComposedExecutiveCommunication,
+  composeInput: ComposeExecutiveCommunicationInput
+): void {
+  const output = `${composed.email.body}\n${composed.message.body}`;
+  if (hasMechanicalHeadings(composed.email.body) || hasMechanicalHeadings(composed.message.body)) {
+    throw new Error("EXECUTIVE_COMPOSITION_MECHANICAL_HEADING");
+  }
+
+  const candidates = [
+    composeInput.structuredBrief.situation.content,
+    composeInput.structuredBrief.whyItMatters.content,
+    composeInput.structuredBrief.possibleImpacts.content,
+    composeInput.structuredBrief.evidence.content,
+    composeInput.structuredBrief.uncertainties.content,
+    composeInput.structuredBrief.scenariosAndAlternatives.content
+  ];
+
+  if (countLiteralRepetitions(output, candidates) > 5) {
+    throw new Error("EXECUTIVE_COMPOSITION_LITERAL_REPETITION");
+  }
+
+  if (!/(solicito|necesito|requiero|podés|puede definirse|pedido)/i.test(output)) {
+    throw new Error("EXECUTIVE_COMPOSITION_MISSING_REQUEST");
+  }
+
+  const severityLabel = HUMAN_SEVERITY_LABELS[composeInput.humanSeverityAssessment.severity];
+  if (!output.includes(severityLabel)) {
+    throw new Error("EXECUTIVE_COMPOSITION_SEVERITY_MISMATCH");
+  }
+}
+
+function buildFixtureComposedCommunication(
+  composeInput: ComposeExecutiveCommunicationInput,
+  fixtureType: FixtureType
+): ComposedExecutiveCommunication {
+  const now = nowIso();
+  const severityLabel = HUMAN_SEVERITY_LABELS[composeInput.humanSeverityAssessment.severity];
+  const context = joinOrPlaceholder(
+    composeInput.validatedCanvasItems.filter((item) => item.dimension === "CONTEXT").map((item) => item.content),
+    "No hay información suficiente sobre el contexto."
+  );
+  const exposure = joinOrPlaceholder(
+    composeInput.validatedCanvasItems.filter((item) => item.dimension === "EXPOSURE").map((item) => item.content),
+    "No hay información suficiente sobre exposición."
+  );
+  const impacts = joinOrPlaceholder(
+    composeInput.validatedCanvasItems.filter((item) => item.dimension === "IMPACT").map((item) => item.content),
+    "No hay información suficiente sobre impactos plausibles."
+  );
+  const uncertainties = joinOrPlaceholder(
+    composeInput.validatedCanvasItems.filter((item) => item.dimension === "UNCERTAINTY").map((item) => item.content),
+    "Persisten datos faltantes relevantes para definir el próximo paso."
+  );
+
+  const warnings = composeInput.openWarnings.map((item) => item.message);
+  const limitations = [
+    ...(warnings.length > 0 ? warnings : []),
+    ...(composeInput.validatedCanvasItems.some((item) => item.epistemicType === "MISSING_INFORMATION")
+      ? ["Persisten incertidumbres materiales que requieren validación adicional."]
+      : [])
+  ];
+
+  if (fixtureType === "DYNAMICS") {
+    return {
+      email: {
+        subject: `Definición de continuidad contractual para ${composeInput.caseTitle}`,
+        body: [
+          `Te comparto una actualización sobre ${composeInput.caseTitle}. ${context}`,
+          `${exposure} En este marco, podría verse afectada la capacidad de respuesta ante nuevas necesidades, porque ${impacts}`,
+          `Todavía no puede confirmarse un escenario de resolución y siguen abiertas incertidumbres materiales: ${uncertainties}`,
+          `La gravedad fue evaluada por el usuario como ${severityLabel}.`,
+          `Necesito tu intervención para ${composeInput.requiredIntervention}`
+        ].join("\n\n")
+      },
+      message: {
+        body: [
+          `${context} ${exposure}`,
+          `Existe riesgo de limitar nuevos trabajos y todavía hay incertidumbres materiales: ${uncertainties}`,
+          `Gravedad evaluada por el usuario: ${severityLabel}. Necesito tu intervención para ${composeInput.requiredIntervention}`
+        ].join("\n\n")
+      },
+      traceability: {
+        sourceItemIds: composeInput.validatedCanvasItems.map((item) => item.id),
+        severityAssessmentId: `${composeInput.caseId}:${composeInput.humanSeverityAssessment.assessedAt ?? "unknown"}`,
+        criticalReviewId: composeInput.criticalReview.reviewId,
+        limitations
+      },
+      compositionMetadata: {
+        generatedBy: "AI",
+        provider: "MockAIProvider",
+        generatedAt: now,
+        language: "es",
+        promptVersion: EXECUTIVE_COMPOSER_PROMPT_VERSION
+      }
+    };
+  }
+
+  if (fixtureType === "SHAREPOINT") {
+    return {
+      email: {
+        subject: `Definición de priorización para continuidad de workflows en ${composeInput.caseTitle}`,
+        body: [
+          `Te comparto el estado actual de ${composeInput.caseTitle}. ${context}`,
+          `${exposure} Si no se consolida el plan de transición, existe riesgo de afectar continuidad operativa según ${impacts}`,
+          `La evidencia disponible todavía es parcial y se mantienen incertidumbres materiales para dimensionar alcance: ${uncertainties}`,
+          `La gravedad fue evaluada por el usuario como ${severityLabel}.`,
+          `Necesito tu intervención para ${composeInput.requiredIntervention}`
+        ].join("\n\n")
+      },
+      message: {
+        body: [
+          `${context}`,
+          `Existe riesgo de discontinuidad y aún no contamos con evidencia consolidada para cerrar incertidumbres materiales: ${uncertainties}`,
+          `Gravedad evaluada por el usuario: ${severityLabel}. Necesito tu intervención para ${composeInput.requiredIntervention}`
+        ].join("\n\n")
+      },
+      traceability: {
+        sourceItemIds: composeInput.validatedCanvasItems.map((item) => item.id),
+        severityAssessmentId: `${composeInput.caseId}:${composeInput.humanSeverityAssessment.assessedAt ?? "unknown"}`,
+        criticalReviewId: composeInput.criticalReview.reviewId,
+        limitations
+      },
+      compositionMetadata: {
+        generatedBy: "AI",
+        provider: "MockAIProvider",
+        generatedAt: now,
+        language: "es",
+        promptVersion: EXECUTIVE_COMPOSER_PROMPT_VERSION
+      }
+    };
+  }
+
+  if (fixtureType === "PRODUCCION") {
+    return {
+      email: {
+        subject: `Intervención para análisis transversal de cumplimiento en ${composeInput.caseTitle}`,
+        body: [
+          `Te comparto una actualización de ${composeInput.caseTitle}. ${context}`,
+          `${exposure} Esto podría sostener incumplimientos de compromisos si no se consolida un análisis transversal; por ahora, el impacto plausible es: ${impacts}`,
+          `Intervienen varias áreas y todavía no existe evidencia consolidada suficiente para estimar una probabilidad defendible. Las incertidumbres materiales actuales son: ${uncertainties}`,
+          `La gravedad fue evaluada por el usuario como ${severityLabel}.`,
+          `Necesito tu intervención para ${composeInput.requiredIntervention}`
+        ].join("\n\n")
+      },
+      message: {
+        body: [
+          `${context}`,
+          `Intervienen varias áreas y existe riesgo de nuevos incumplimientos; todavía no puede confirmarse una probabilidad defendible por falta de evidencia consolidada.`,
+          `Gravedad evaluada por el usuario: ${severityLabel}. Necesito tu intervención para ${composeInput.requiredIntervention}`
+        ].join("\n\n")
+      },
+      traceability: {
+        sourceItemIds: composeInput.validatedCanvasItems.map((item) => item.id),
+        severityAssessmentId: `${composeInput.caseId}:${composeInput.humanSeverityAssessment.assessedAt ?? "unknown"}`,
+        criticalReviewId: composeInput.criticalReview.reviewId,
+        limitations
+      },
+      compositionMetadata: {
+        generatedBy: "AI",
+        provider: "MockAIProvider",
+        generatedAt: now,
+        language: "es",
+        promptVersion: EXECUTIVE_COMPOSER_PROMPT_VERSION
+      }
+    };
+  }
+
+  return {
+    email: {
+      subject: `Brief ejecutivo — ${composeInput.caseTitle}`,
+      body: [
+        `Te comparto una actualización sobre ${composeInput.caseTitle}. ${context}`,
+        `${exposure} En este escenario, existe riesgo de que ${impacts}`,
+        `Se mantienen incertidumbres relevantes: ${uncertainties}`,
+        `La gravedad fue evaluada por el usuario como ${severityLabel}.`,
+        `Necesito tu intervención para ${composeInput.requiredIntervention}`
+      ].join("\n\n")
+    },
+    message: {
+      body: `Resumen ejecutivo: ${exposure} Existe riesgo de que ${impacts}. Incertidumbre material: ${uncertainties}. Gravedad evaluada por el usuario: ${severityLabel}. Necesito tu intervención para ${composeInput.requiredIntervention}`
+    },
+    traceability: {
+      sourceItemIds: composeInput.validatedCanvasItems.map((item) => item.id),
+      severityAssessmentId: `${composeInput.caseId}:${composeInput.humanSeverityAssessment.assessedAt ?? "unknown"}`,
+      criticalReviewId: composeInput.criticalReview.reviewId,
+      limitations
+    },
+    compositionMetadata: {
+      generatedBy: "AI",
+      provider: "MockAIProvider",
+      generatedAt: now,
+      language: "es",
+      promptVersion: EXECUTIVE_COMPOSER_PROMPT_VERSION
+    }
+  };
+}
+
+function composeExecutiveCommunication(
+  composeInput: ComposeExecutiveCommunicationInput,
+  fixtureType: FixtureType
+): ComposedExecutiveCommunication {
+  const composed = buildFixtureComposedCommunication(composeInput, fixtureType);
+  assertNonMechanicalComposition(composed, composeInput);
+  return composed;
+}
+
+function buildComposeInput(input: GenerateBriefInput, structuredBrief: ExecutiveBrief): ComposeExecutiveCommunicationInput {
+  const interventionFromCanvas = input.activeCanvasItems.find((item) => item.dimension === "INTERVENTION")?.content;
+
+  return {
+    caseId: input.caseId,
+    caseTitle: input.caseTitle,
+    audience: "DIRECT_LEADER",
+    validatedCanvasItems: input.activeCanvasItems,
+    criticalReview: input.completedCriticalReview,
+    openWarnings: input.openWarnings,
+    humanSeverityAssessment: {
+      ...input.humanSeverityAssessment,
+      assessedBy: "USER"
+    },
+    structuredBrief,
+    requiredIntervention: interventionFromCanvas ?? structuredBrief.requiredIntervention.content,
+    language: "es"
+  };
+}
+
 function buildGeneralBrief(input: GenerateBriefInput): GenerateBriefResult {
   const validItems = input.activeCanvasItems;
   const facts = validItems.filter((item) => item.epistemicType === "FACT");
@@ -646,101 +944,86 @@ function buildGeneralBrief(input: GenerateBriefInput): GenerateBriefResult {
   const placeholder = "No hay información suficiente para completar esta sección.";
   const createdAt = nowIso();
 
-  const emailSubject = `Brief ejecutivo — ${input.caseTitle}`;
-  const contextText = joinOrPlaceholder(validItems.filter((item) => item.dimension === "CONTEXT").map((item) => item.content), placeholder);
-  const exposureText = joinOrPlaceholder(validItems.filter((item) => item.dimension === "EXPOSURE").map((item) => item.content), placeholder);
-  const impactText = joinOrPlaceholder(validItems.filter((item) => item.dimension === "IMPACT").map((item) => item.content), placeholder);
-  const uncertaintyText = joinOrPlaceholder(validItems.filter((item) => item.dimension === "UNCERTAINTY").map((item) => item.content), placeholder);
-  const alternativeText = joinOrPlaceholder(
-    validItems.filter((item) => item.dimension === "ALTERNATIVE" || item.dimension === "SCENARIO").map((item) => item.content),
-    "No se identificaron alternativas validadas."
-  );
-  const interventionText = joinOrPlaceholder(validItems.filter((item) => item.dimension === "INTERVENTION").map((item) => item.content), placeholder);
+  const executive: ExecutiveBrief = {
+    situation: {
+      content: joinOrPlaceholder(
+        validItems.filter((item) => item.dimension === "CONTEXT").map((item) => item.content),
+        placeholder
+      ),
+      sourceItemIds: map.situation,
+      hasSufficientInformation: map.situation.length > 0,
+      limitations: map.situation.length > 0 ? [] : [placeholder]
+    },
+    whyItMatters: {
+      content: joinOrPlaceholder(
+        validItems.filter((item) => item.dimension === "EXPOSURE").map((item) => item.content),
+        placeholder
+      ),
+      sourceItemIds: map.whyItMatters,
+      hasSufficientInformation: map.whyItMatters.length > 0,
+      limitations: map.whyItMatters.length > 0 ? [] : [placeholder]
+    },
+    possibleImpacts: {
+      content: joinOrPlaceholder(
+        validItems.filter((item) => item.dimension === "IMPACT").map((item) => item.content),
+        placeholder
+      ),
+      sourceItemIds: map.possibleImpacts,
+      hasSufficientInformation: map.possibleImpacts.length > 0,
+      limitations: map.possibleImpacts.length > 0 ? [] : [placeholder]
+    },
+    evidence: {
+      content: joinOrPlaceholder(evidence.map((item) => item.content), placeholder),
+      sourceItemIds: map.evidence,
+      hasSufficientInformation: map.evidence.length > 0,
+      limitations: map.evidence.length > 0 ? [] : [placeholder]
+    },
+    uncertainties: {
+      content: joinOrPlaceholder(missing.map((item) => item.content), placeholder),
+      sourceItemIds: map.uncertainties,
+      hasSufficientInformation: map.uncertainties.length > 0,
+      limitations: map.uncertainties.length > 0 ? [] : [placeholder]
+    },
+    scenariosAndAlternatives: {
+      content:
+        map.scenariosAndAlternatives.length > 0
+          ? validItems
+              .filter((item) => item.dimension === "SCENARIO" || item.dimension === "ALTERNATIVE")
+              .map((item) => item.content)
+              .join(" ")
+          : "No identificados con la evidencia disponible.",
+      sourceItemIds: map.scenariosAndAlternatives,
+      hasSufficientInformation: map.scenariosAndAlternatives.length > 0,
+      limitations: map.scenariosAndAlternatives.length > 0 ? [] : ["No se identificaron escenarios o alternativas válidas."]
+    },
+    severity: {
+      value: input.humanSeverityAssessment.severity,
+      label: HUMAN_SEVERITY_LABELS[input.humanSeverityAssessment.severity],
+      rationale: input.humanSeverityAssessment.rationale ?? null,
+      assessedBy: "USER",
+      assessedAt: input.humanSeverityAssessment.assessedAt ?? nowIso(),
+      notice: "Evaluación realizada por el usuario."
+    },
+    requiredIntervention: {
+      content: joinOrPlaceholder(
+        validItems.filter((item) => item.dimension === "INTERVENTION").map((item) => item.content),
+        placeholder
+      ),
+      sourceItemIds: map.requiredIntervention,
+      hasSufficientInformation: map.requiredIntervention.length > 0,
+      limitations: map.requiredIntervention.length > 0 ? [] : [placeholder]
+    }
+  };
 
-  const emailBody = [
-    `Te comparto el estado actual del caso ${input.caseTitle}. ${contextText}`,
-    `${exposureText} En este escenario, el riesgo principal observado es: ${impactText}`,
-    `Las incertidumbres que siguen abiertas son: ${uncertaintyText}. Además, hoy sólo contamos con estas alternativas validadas: ${alternativeText}.`,
-    `La gravedad fue evaluada por el usuario como ${HUMAN_SEVERITY_LABELS[input.humanSeverityAssessment.severity]}.`,
-    `Te solicito tu intervención para definir próximos pasos: ${interventionText}`
-  ].join("\n\n");
-  const messageBody = `Resumen ejecutivo: ${impactText}. Incertidumbre principal: ${uncertaintyText}. Gravedad evaluada por el usuario: ${HUMAN_SEVERITY_LABELS[input.humanSeverityAssessment.severity]}. Pedido: ${interventionText}`;
+  const composeInput = buildComposeInput(input, executive);
+  const composed = composeExecutiveCommunication(composeInput, detectFixtureType(input.initialNarrative));
 
   return {
     id: `dw-brief-${input.caseId}-${Date.now()}`,
     caseId: input.caseId,
     version: 1,
     status: "GENERATED",
-    executive: {
-      situation: {
-        content: joinOrPlaceholder(
-          validItems.filter((item) => item.dimension === "CONTEXT").map((item) => item.content),
-          placeholder
-        ),
-        sourceItemIds: map.situation,
-        hasSufficientInformation: map.situation.length > 0,
-        limitations: map.situation.length > 0 ? [] : [placeholder]
-      },
-      whyItMatters: {
-        content: joinOrPlaceholder(
-          validItems.filter((item) => item.dimension === "EXPOSURE").map((item) => item.content),
-          placeholder
-        ),
-        sourceItemIds: map.whyItMatters,
-        hasSufficientInformation: map.whyItMatters.length > 0,
-        limitations: map.whyItMatters.length > 0 ? [] : [placeholder]
-      },
-      possibleImpacts: {
-        content: joinOrPlaceholder(
-          validItems.filter((item) => item.dimension === "IMPACT").map((item) => item.content),
-          placeholder
-        ),
-        sourceItemIds: map.possibleImpacts,
-        hasSufficientInformation: map.possibleImpacts.length > 0,
-        limitations: map.possibleImpacts.length > 0 ? [] : [placeholder]
-      },
-      evidence: {
-        content: joinOrPlaceholder(evidence.map((item) => item.content), placeholder),
-        sourceItemIds: map.evidence,
-        hasSufficientInformation: map.evidence.length > 0,
-        limitations: map.evidence.length > 0 ? [] : [placeholder]
-      },
-      uncertainties: {
-        content: joinOrPlaceholder(missing.map((item) => item.content), placeholder),
-        sourceItemIds: map.uncertainties,
-        hasSufficientInformation: map.uncertainties.length > 0,
-        limitations: map.uncertainties.length > 0 ? [] : [placeholder]
-      },
-      scenariosAndAlternatives: {
-        content:
-          map.scenariosAndAlternatives.length > 0
-            ? validItems
-                .filter((item) => item.dimension === "SCENARIO" || item.dimension === "ALTERNATIVE")
-                .map((item) => item.content)
-                .join(" ")
-            : "No identificados con la evidencia disponible.",
-        sourceItemIds: map.scenariosAndAlternatives,
-        hasSufficientInformation: map.scenariosAndAlternatives.length > 0,
-        limitations: map.scenariosAndAlternatives.length > 0 ? [] : ["No se identificaron escenarios o alternativas válidas."]
-      },
-      severity: {
-        value: input.humanSeverityAssessment.severity,
-        label: HUMAN_SEVERITY_LABELS[input.humanSeverityAssessment.severity],
-        rationale: input.humanSeverityAssessment.rationale ?? null,
-        assessedBy: "USER",
-        assessedAt: input.humanSeverityAssessment.assessedAt ?? nowIso(),
-        notice: "Evaluación realizada por el usuario."
-      },
-      requiredIntervention: {
-        content: joinOrPlaceholder(
-          validItems.filter((item) => item.dimension === "INTERVENTION").map((item) => item.content),
-          placeholder
-        ),
-        sourceItemIds: map.requiredIntervention,
-        hasSufficientInformation: map.requiredIntervention.length > 0,
-        limitations: map.requiredIntervention.length > 0 ? [] : [placeholder]
-      }
-    },
+    executive,
     expanded: {
       facts: facts.map(toExpandedItem),
       inferences: inferences.map((item) =>
@@ -767,7 +1050,8 @@ function buildGeneralBrief(input: GenerateBriefInput): GenerateBriefResult {
       sources: evidence.map((item) => item.content),
       generationLimitations: [
         "La IA solo consolidó contenido validado o editado por el usuario.",
-        ...(missing.length > 0 ? ["Persisten datos faltantes que requieren validación humana."] : [])
+        ...(missing.length > 0 ? ["Persisten datos faltantes que requieren validación humana."] : []),
+        ...composed.traceability.limitations
       ]
     },
     traceability: {
@@ -780,24 +1064,24 @@ function buildGeneralBrief(input: GenerateBriefInput): GenerateBriefResult {
         scenariosAndAlternatives: map.scenariosAndAlternatives,
         requiredIntervention: map.requiredIntervention
       },
-      severityAssessmentRef: `${input.caseId}:${input.humanSeverityAssessment.assessedAt ?? "unknown"}`,
-      criticalReviewId: input.completedCriticalReview.reviewId,
+      severityAssessmentRef: composed.traceability.severityAssessmentId,
+      criticalReviewId: composed.traceability.criticalReviewId,
       generatedFromCanvasUpdatedAt: validItems.reduce((max, item) =>
         new Date(item.updatedAt).getTime() > new Date(max).getTime() ? item.updatedAt : max,
       validItems[0]?.updatedAt ?? nowIso()),
       generationProvider: "MockAIProvider",
-      generationTimestamp: nowIso(),
+      generationTimestamp: composed.compositionMetadata.generatedAt,
       editedSections: []
     },
     communication: {
       email: {
-        subject: emailSubject,
-        body: emailBody,
+        subject: composed.email.subject,
+        body: composed.email.body,
         editedByUser: false,
         updatedAt: createdAt
       },
       message: {
-        body: messageBody,
+        body: composed.message.body,
         editedByUser: false,
         updatedAt: createdAt
       }
@@ -877,92 +1161,87 @@ function buildDynamicsBrief(input: GenerateBriefInput): GenerateBriefResult {
     requiredIntervention: interventionItem ? [interventionItem.id] : []
   };
 
-  const emailSubject = `Brief ejecutivo — ${input.caseTitle}`;
-  const emailBody = [
-    `Te comparto una actualización sobre ${input.caseTitle}: el contrato con el proveedor venció y la continuidad actual es transitoria hasta finalizar el proyecto en curso.`,
-    `Hoy no pueden iniciarse nuevos proyectos ni tareas, por lo que la capacidad operativa futura queda comprometida. El impacto principal observado es: ${impactItem?.content ?? missingLimit}.`,
-    "Se mantiene incertidumbre sobre el cierre exacto del proyecto actual y sobre la demanda de nuevos trabajos en los próximos meses; además, la prórroga contractual aparece como alternativa posible, pero todavía no confirmada.",
-    `La gravedad fue evaluada por el usuario como ${HUMAN_SEVERITY_LABELS[input.humanSeverityAssessment.severity]}.`,
-    "Te solicito definir con Compras las alternativas contractuales viables y sus plazos, para priorizar la vía de continuidad." 
-  ].join("\n\n");
-  const messageBody = `Contrato vencido y continuidad transitoria; no se pueden iniciar nuevos trabajos y el riesgo operativo es alto. Persisten incertidumbres de plazo y demanda. Gravedad evaluada por el usuario: ${HUMAN_SEVERITY_LABELS[input.humanSeverityAssessment.severity]}. Pedido: definir con Compras alternativas y plazos.`;
+  const executive: ExecutiveBrief = {
+    situation: {
+      content:
+        situationItems.length > 0
+          ? "El contrato con el proveedor venció el 31/10/2026. El proveedor continúa únicamente hasta finalizar el proyecto actual."
+          : missingLimit,
+      sourceItemIds: sectionSources.situation,
+      hasSufficientInformation: situationItems.length > 0,
+      limitations: situationItems.length > 0 ? [] : [missingLimit]
+    },
+    whyItMatters: {
+      content:
+        exposureItem
+          ? "Actualmente no pueden iniciarse nuevos proyectos ni tareas. Esta restricción expone la capacidad de atender nuevas necesidades sobre las soluciones."
+          : missingLimit,
+      sourceItemIds: sectionSources.whyItMatters,
+      hasSufficientInformation: Boolean(exposureItem),
+      limitations: exposureItem ? [] : [missingLimit]
+    },
+    possibleImpacts: {
+      content: impactItem ? impactItem.content : missingLimit,
+      sourceItemIds: sectionSources.possibleImpacts,
+      hasSufficientInformation: Boolean(impactItem),
+      limitations: impactItem ? [] : [missingLimit]
+    },
+    evidence: {
+      content: evidenceItem
+        ? "El proceso de Compras puede demorar aproximadamente entre 1 y 6 meses, según conocimiento aportado por el usuario."
+        : missingLimit,
+      sourceItemIds: sectionSources.evidence,
+      hasSufficientInformation: Boolean(evidenceItem),
+      limitations: evidenceItem ? [] : [missingLimit]
+    },
+    uncertainties: {
+      content:
+        uncertaintyOne && uncertaintyTwo
+          ? "No se conoce cuándo termina exactamente el proyecto actual ni cuál será la demanda de nuevos trabajos durante los próximos meses."
+          : missingLimit,
+      sourceItemIds: sectionSources.uncertainties,
+      hasSufficientInformation: Boolean(uncertaintyOne && uncertaintyTwo),
+      limitations: uncertaintyOne && uncertaintyTwo ? [] : [missingLimit]
+    },
+    scenariosAndAlternatives: {
+      content: alternativeItem
+        ? "Una prórroga contractual podría ser una alternativa, pero su viabilidad no está confirmada."
+        : "No identificados con la evidencia disponible.",
+      sourceItemIds: sectionSources.scenariosAndAlternatives,
+      hasSufficientInformation: Boolean(alternativeItem),
+      limitations: alternativeItem
+        ? unresolvedWarning
+          ? [unresolvedWarning.message]
+          : []
+        : ["No se identificaron escenarios o alternativas válidas."]
+    },
+    severity: {
+      value: input.humanSeverityAssessment.severity,
+      label: HUMAN_SEVERITY_LABELS[input.humanSeverityAssessment.severity],
+      rationale: input.humanSeverityAssessment.rationale ?? null,
+      assessedBy: "USER",
+      assessedAt: input.humanSeverityAssessment.assessedAt ?? nowIso(),
+      notice: "Evaluación realizada por el usuario."
+    },
+    requiredIntervention: {
+      content: interventionItem
+        ? "Se necesita que el superior consulte con Compras qué alternativas contractuales son viables y cuáles son sus plazos."
+        : missingLimit,
+      sourceItemIds: sectionSources.requiredIntervention,
+      hasSufficientInformation: Boolean(interventionItem),
+      limitations: interventionItem ? [] : [missingLimit]
+    }
+  };
+
+  const composeInput = buildComposeInput(input, executive);
+  const composed = composeExecutiveCommunication(composeInput, "DYNAMICS");
 
   return {
     id: `dw-brief-${input.caseId}-${Date.now()}`,
     caseId: input.caseId,
     version: 1,
     status: "GENERATED",
-    executive: {
-      situation: {
-        content:
-          situationItems.length > 0
-            ? "El contrato con el proveedor venció el 31/10/2026. El proveedor continúa únicamente hasta finalizar el proyecto actual."
-            : missingLimit,
-        sourceItemIds: sectionSources.situation,
-        hasSufficientInformation: situationItems.length > 0,
-        limitations: situationItems.length > 0 ? [] : [missingLimit]
-      },
-      whyItMatters: {
-        content:
-          exposureItem
-            ? "Actualmente no pueden iniciarse nuevos proyectos ni tareas. Esta restricción expone la capacidad de atender nuevas necesidades sobre las soluciones."
-            : missingLimit,
-        sourceItemIds: sectionSources.whyItMatters,
-        hasSufficientInformation: Boolean(exposureItem),
-        limitations: exposureItem ? [] : [missingLimit]
-      },
-      possibleImpacts: {
-        content: impactItem ? impactItem.content : missingLimit,
-        sourceItemIds: sectionSources.possibleImpacts,
-        hasSufficientInformation: Boolean(impactItem),
-        limitations: impactItem ? [] : [missingLimit]
-      },
-      evidence: {
-        content: evidenceItem
-          ? "El proceso de Compras puede demorar aproximadamente entre 1 y 6 meses, según conocimiento aportado por el usuario."
-          : missingLimit,
-        sourceItemIds: sectionSources.evidence,
-        hasSufficientInformation: Boolean(evidenceItem),
-        limitations: evidenceItem ? [] : [missingLimit]
-      },
-      uncertainties: {
-        content:
-          uncertaintyOne && uncertaintyTwo
-            ? "No se conoce cuándo termina exactamente el proyecto actual ni cuál será la demanda de nuevos trabajos durante los próximos meses."
-            : missingLimit,
-        sourceItemIds: sectionSources.uncertainties,
-        hasSufficientInformation: Boolean(uncertaintyOne && uncertaintyTwo),
-        limitations: uncertaintyOne && uncertaintyTwo ? [] : [missingLimit]
-      },
-      scenariosAndAlternatives: {
-        content: alternativeItem
-          ? "Una prórroga contractual podría ser una alternativa, pero su viabilidad no está confirmada."
-          : "No identificados con la evidencia disponible.",
-        sourceItemIds: sectionSources.scenariosAndAlternatives,
-        hasSufficientInformation: Boolean(alternativeItem),
-        limitations: alternativeItem
-          ? unresolvedWarning
-            ? [unresolvedWarning.message]
-            : []
-          : ["No se identificaron escenarios o alternativas válidas."]
-      },
-      severity: {
-        value: input.humanSeverityAssessment.severity,
-        label: HUMAN_SEVERITY_LABELS[input.humanSeverityAssessment.severity],
-        rationale: input.humanSeverityAssessment.rationale ?? null,
-        assessedBy: "USER",
-        assessedAt: input.humanSeverityAssessment.assessedAt ?? nowIso(),
-        notice: "Evaluación realizada por el usuario."
-      },
-      requiredIntervention: {
-        content: interventionItem
-          ? "Se necesita que el superior consulte con Compras qué alternativas contractuales son viables y cuáles son sus plazos."
-          : missingLimit,
-        sourceItemIds: sectionSources.requiredIntervention,
-        hasSufficientInformation: Boolean(interventionItem),
-        limitations: interventionItem ? [] : [missingLimit]
-      }
-    },
+    executive,
     expanded: {
       facts: pickItemsBy(all, (item) => item.epistemicType === "FACT").map(toExpandedItem),
       inferences: pickItemsBy(all, (item) => item.epistemicType === "INFERENCE").map(toExpandedItem),
@@ -987,30 +1266,31 @@ function buildDynamicsBrief(input: GenerateBriefInput): GenerateBriefResult {
       sources: evidenceItem ? [evidenceItem.content] : [],
       generationLimitations: [
         "No se inventaron hechos, cifras, fechas ni fuentes fuera del canvas validado.",
-        ...(unresolvedWarning ? [unresolvedWarning.message] : [])
+        ...(unresolvedWarning ? [unresolvedWarning.message] : []),
+        ...composed.traceability.limitations
       ]
     },
     traceability: {
       sectionSources,
-      severityAssessmentRef: `${input.caseId}:${input.humanSeverityAssessment.assessedAt ?? "unknown"}`,
-      criticalReviewId: input.completedCriticalReview.reviewId,
+      severityAssessmentRef: composed.traceability.severityAssessmentId,
+      criticalReviewId: composed.traceability.criticalReviewId,
       generatedFromCanvasUpdatedAt: all.reduce(
         (max, item) => (new Date(item.updatedAt).getTime() > new Date(max).getTime() ? item.updatedAt : max),
         all[0]?.updatedAt ?? nowIso()
       ),
       generationProvider: "MockAIProvider",
-      generationTimestamp: nowIso(),
+      generationTimestamp: composed.compositionMetadata.generatedAt,
       editedSections: []
     },
     communication: {
       email: {
-        subject: emailSubject,
-        body: emailBody,
+        subject: composed.email.subject,
+        body: composed.email.body,
         editedByUser: false,
         updatedAt: createdAt
       },
       message: {
-        body: messageBody,
+        body: composed.message.body,
         editedByUser: false,
         updatedAt: createdAt
       }

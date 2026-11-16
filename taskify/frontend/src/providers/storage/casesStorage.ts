@@ -106,6 +106,18 @@ export function updateDecisionCaseStatus(id: string, status: CaseStatus): Decisi
   return updated;
 }
 
+export function deleteDecisionCase(id: string): void {
+  const safeId = id.trim();
+
+  if (!safeId) {
+    throw new Error("case id is required");
+  }
+
+  const items = loadCases();
+  const nextItems = items.filter((item) => item.id !== safeId);
+  writeCases(nextItems);
+}
+
 export function clearDecisionCasesForTests(): void {
   localStorage.removeItem(STORAGE_KEY);
 }

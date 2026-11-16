@@ -139,6 +139,42 @@ export type GenerateBriefInput = {
   currentCaseStatus: CaseStatus;
 };
 
+export type ComposeExecutiveCommunicationInput = {
+  caseId: string;
+  caseTitle: string;
+  audience: "DIRECT_LEADER";
+  validatedCanvasItems: CanvasItem[];
+  criticalReview: CriticalReview;
+  openWarnings: ReviewFinding[];
+  humanSeverityAssessment: HumanSeverityAssessment;
+  structuredBrief: ExecutiveBrief;
+  requiredIntervention: string;
+  language: "es";
+};
+
+export type ComposedExecutiveCommunication = {
+  email: {
+    subject: string;
+    body: string;
+  };
+  message: {
+    body: string;
+  };
+  traceability: {
+    sourceItemIds: string[];
+    severityAssessmentId: string;
+    criticalReviewId: string;
+    limitations: string[];
+  };
+  compositionMetadata: {
+    generatedBy: "AI";
+    provider: "MockAIProvider";
+    generatedAt: string;
+    language: "es";
+    promptVersion: string;
+  };
+};
+
 export type GenerateBriefResult = DecisionBrief;
 
 export type BriefRecord = {

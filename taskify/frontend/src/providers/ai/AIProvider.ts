@@ -2,6 +2,8 @@ import type { AISuggestionSource, CanvasDimension, CanvasItem, EpistemicType } f
 import type { DynamicQuestion, SuggestNextQuestionInput, SuggestNextQuestionResult } from "../../domain/models/ContextualQuestion";
 import type { ReviewCaseInput, ReviewCaseResult } from "../../domain/models/CriticalReview";
 import type {
+  ComposedExecutiveCommunication,
+  ComposeExecutiveCommunicationInput,
   DecisionBrief,
   GenerateBriefInput as DomainGenerateBriefInput,
   GenerateBriefResult as DomainGenerateBriefResult
@@ -30,7 +32,7 @@ export type { SuggestNextQuestionInput, SuggestNextQuestionResult, DynamicQuesti
 export type { ReviewCaseInput, ReviewCaseResult };
 export type GenerateBriefInput = DomainGenerateBriefInput;
 export type GenerateBriefResult = DomainGenerateBriefResult;
-export type { DecisionBrief };
+export type { ComposedExecutiveCommunication, ComposeExecutiveCommunicationInput, DecisionBrief };
 
 export interface AIProvider {
   analyzeNarrative(input: AnalyzeNarrativeInput): Promise<AnalyzeNarrativeResult>;

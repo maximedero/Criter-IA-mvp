@@ -1,6 +1,8 @@
 import {
   analyzeNarrativeInputSchema,
   analyzeNarrativeResultSchema,
+  composeExecutiveCommunicationInputSchema,
+  composedExecutiveCommunicationSchema,
   generateBriefInputSchema,
   generateBriefResultSchema,
   reviewCaseInputSchema,
@@ -9,6 +11,8 @@ import {
   suggestNextQuestionResultSchema
 } from "../../validation/aiSchemas";
 import type {
+  ComposedExecutiveCommunication,
+  ComposeExecutiveCommunicationInput,
   AnalyzeNarrativeInput,
   AnalyzeNarrativeResult,
   GenerateBriefInput,
@@ -49,4 +53,12 @@ export function parseGenerateBriefInput(value: unknown): GenerateBriefInput {
 
 export function parseGenerateBriefResult(value: unknown): GenerateBriefResult {
   return generateBriefResultSchema.parse(value);
+}
+
+export function parseComposeExecutiveCommunicationInput(value: unknown): ComposeExecutiveCommunicationInput {
+  return composeExecutiveCommunicationInputSchema.parse(value);
+}
+
+export function parseComposedExecutiveCommunication(value: unknown): ComposedExecutiveCommunication {
+  return composedExecutiveCommunicationSchema.parse(value);
 }

@@ -93,6 +93,24 @@ export type BriefTraceability = {
   userReviewTimestamp?: string;
 };
 
+export type ExecutiveEmailCommunication = {
+  subject: string;
+  body: string;
+  editedByUser: boolean;
+  updatedAt: string;
+};
+
+export type ExecutiveMessageCommunication = {
+  body: string;
+  editedByUser: boolean;
+  updatedAt: string;
+};
+
+export type ExecutiveCommunication = {
+  email: ExecutiveEmailCommunication;
+  message: ExecutiveMessageCommunication;
+};
+
 export type DecisionBrief = {
   id: string;
   caseId: string;
@@ -101,6 +119,7 @@ export type DecisionBrief = {
   executive: ExecutiveBrief;
   expanded: ExpandedBrief;
   traceability: BriefTraceability;
+  communication: ExecutiveCommunication;
   generatedBy: "AI";
   reviewedByUser: boolean;
   createdAt: string;

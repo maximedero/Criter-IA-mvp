@@ -22,6 +22,7 @@ import {
   getLatestCanvasUpdatedAt,
   markBriefAsReviewed,
   normalizeGeneratedBriefForPersist,
+  updateCommunicationAsEdited,
   updateSectionAsEdited
 } from "../../domain/workflow/briefWorkflow";
 import { evaluateApprovalReadiness } from "../../domain/rules/readyToElevateRules";
@@ -81,9 +82,12 @@ export function BriefWorkspace({
   onReadyToEscalate
 }: Props) {
   const [loading, setLoading] = useState(false);
-  const [view, setView] = useState<"executive" | "expanded">("executive");
+  const [view, setView] = useState<"communication" | "executive" | "expanded">("communication");
   const [editingSection, setEditingSection] = useState<ExecutiveSectionKey | null>(null);
   const [editingValue, setEditingValue] = useState("");
+  const [editingCommunication, setEditingCommunication] = useState<"emailSubject" | "emailBody" | "messageBody" | null>(null);
+  const [editingCommunicationValue, setEditingCommunicationValue] = useState("");
+  const [copyFeedback, setCopyFeedback] = useState<"email" | "message" | null>(null);
   const [hasViewedExecutive, setHasViewedExecutive] = useState(false);
   const [record, setRecord] = useState(() => getBriefRecord(decisionCase.id));
   const [approval, setApproval] = useState(() => getHumanBriefApproval(decisionCase.id));
@@ -286,6 +290,52 @@ export function BriefWorkspace({
     onBriefSaved();
   };
 
+  const saveCommunicationEdit = () => {
+    if (!brief || !editingCommunication) {
+      return;
+    }
+
+    const updated = updateCommunicationAsEdited(brief, editingCommunication, editingCommunicationValue);
+    const next = saveCurrentBrief(decisionCase.id, updated);
+    setRecord(next);
+    setEditingCommunication(null);
+    setEditingCommunicationValue("");
+    setCopyFeedback(null);
+    onBriefSaved();
+  };
+
+  const copyText = async (type: "email" | "message", content: string) => {
+    if (!content.trim()) {
+      onError("No hay contenido para copiar.");
+      return;
+    }
+
+    if (record.stale) {
+      onError("El análisis cambió después de generar este brief.");
+      return;
+    }
+
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(content);
+      } else {
+        const textArea = document.createElement("textarea");
+        textArea.value = content;
+        textArea.style.position = "fixed";
+        textArea.style.opacity = "0";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+      }
+      setCopyFeedback(type);
+      onError(null);
+    } catch {
+      onError("No se pudo copiar el contenido. Seleccionalo manualmente.");
+    }
+  };
+
   const markReviewed = () => {
     if (!brief) {
       return;
@@ -337,7 +387,7 @@ export function BriefWorkspace({
       stale: getBriefRecord(decisionCase.id).stale
     });
 
-    if (!reevaluated.allowed) {
+    if (reevaluated.allowed === false) {
       setShowApproveDialog(false);
       onError(reevaluated.message);
       return;
@@ -450,6 +500,15 @@ export function BriefWorkspace({
             <Button
               type="button"
               role="tab"
+              aria-selected={view === "communication"}
+              variant={view === "communication" ? "primary" : "ghost"}
+              onClick={() => setView("communication")}
+            >
+              Comunicación ejecutiva
+            </Button>
+            <Button
+              type="button"
+              role="tab"
               aria-selected={view === "executive"}
               variant={view === "executive" ? "primary" : "ghost"}
               onClick={() => setView("executive")}
@@ -466,6 +525,162 @@ export function BriefWorkspace({
               Vista expandida
             </Button>
           </div>
+
+          {view === "communication" ? (
+            <section>
+              <article>
+                <h5>Correo electrónico</h5>
+                {editingCommunication === "emailSubject" ? (
+                  <>
+                    <label>
+                      Asunto
+                      <input value={editingCommunicationValue} onChange={(event) => setEditingCommunicationValue(event.target.value)} />
+                    </label>
+                    <div className="dw-brief-inline-actions">
+                      <Button type="button" onClick={saveCommunicationEdit} disabled={isReadyToEscalate}>
+                        Guardar edición
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        onClick={() => {
+                          setEditingCommunication(null);
+                          setEditingCommunicationValue("");
+                        }}
+                      >
+                        Cancelar
+                      </Button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <p><strong>Asunto:</strong> {brief.communication.email.subject || "Sin asunto"}</p>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      disabled={isReadyToEscalate}
+                      onClick={() => {
+                        setEditingCommunication("emailSubject");
+                        setEditingCommunicationValue(brief.communication.email.subject);
+                      }}
+                    >
+                      Editar asunto
+                    </Button>
+                  </>
+                )}
+
+                {editingCommunication === "emailBody" ? (
+                  <>
+                    <label>
+                      Cuerpo del correo
+                      <textarea value={editingCommunicationValue} onChange={(event) => setEditingCommunicationValue(event.target.value)} />
+                    </label>
+                    <div className="dw-brief-inline-actions">
+                      <Button type="button" onClick={saveCommunicationEdit} disabled={isReadyToEscalate}>
+                        Guardar edición
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        onClick={() => {
+                          setEditingCommunication(null);
+                          setEditingCommunicationValue("");
+                        }}
+                      >
+                        Cancelar
+                      </Button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <p>{brief.communication.email.body || "Sin contenido"}</p>
+                    <div className="dw-brief-inline-actions">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        disabled={isReadyToEscalate}
+                        onClick={() => {
+                          setEditingCommunication("emailBody");
+                          setEditingCommunicationValue(brief.communication.email.body);
+                        }}
+                      >
+                        Editar correo
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        disabled={record.stale}
+                        onClick={() =>
+                          copyText(
+                            "email",
+                            `Asunto: ${brief.communication.email.subject || "Sin asunto"}\n\n${brief.communication.email.body}`
+                          )
+                        }
+                      >
+                        Copiar como correo
+                      </Button>
+                    </div>
+                    {copyFeedback === "email" ? <p>Correo copiado.</p> : null}
+                  </>
+                )}
+              </article>
+
+              <article>
+                <h5>Mensaje breve</h5>
+                {editingCommunication === "messageBody" ? (
+                  <>
+                    <label>
+                      Mensaje
+                      <textarea value={editingCommunicationValue} onChange={(event) => setEditingCommunicationValue(event.target.value)} />
+                    </label>
+                    <div className="dw-brief-inline-actions">
+                      <Button type="button" onClick={saveCommunicationEdit} disabled={isReadyToEscalate}>
+                        Guardar edición
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        onClick={() => {
+                          setEditingCommunication(null);
+                          setEditingCommunicationValue("");
+                        }}
+                      >
+                        Cancelar
+                      </Button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <p>{brief.communication.message.body || "Sin contenido"}</p>
+                    <div className="dw-brief-inline-actions">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        disabled={isReadyToEscalate}
+                        onClick={() => {
+                          setEditingCommunication("messageBody");
+                          setEditingCommunicationValue(brief.communication.message.body);
+                        }}
+                      >
+                        Editar mensaje
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        disabled={record.stale}
+                        onClick={() => copyText("message", brief.communication.message.body)}
+                      >
+                        Copiar como mensaje
+                      </Button>
+                    </div>
+                    {copyFeedback === "message" ? <p>Mensaje copiado.</p> : null}
+                  </>
+                )}
+              </article>
+
+              <p>Estado del brief: {brief.status}</p>
+            </section>
+          ) : null}
 
           {view === "executive" ? (
             <section>

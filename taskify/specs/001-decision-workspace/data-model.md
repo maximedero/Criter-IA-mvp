@@ -72,6 +72,16 @@ Rules:
 - caseId (UUID)
 - executiveView (text)
 - expandedView (text)
+- executiveCommunication (json)
+  - email (object)
+	- subject (text)
+	- body (text)
+	- editedByUser (boolean)
+	- updatedAt (datetime)
+  - shortMessage (object)
+	- body (text)
+	- editedByUser (boolean)
+	- updatedAt (datetime)
 - assignedSeverity (enum)
 - requiredIntervention (text)
 - readyChecklistSnapshot (json)
@@ -83,6 +93,8 @@ Rules:
 Rules:
 - Aprobación requiere checklist visible + acción explícita + confirmación final.
 - IA no puede aprobar ni confirmar aprobación.
+- `executiveCommunication` pertenece a la misma versión del brief y debe marcarse stale cuando el brief queda stale.
+- Correo y mensaje breve sólo pueden copiarse como vigentes cuando el brief no está stale.
 
 ## Entity: AiQuestionSession
 - caseId (UUID)

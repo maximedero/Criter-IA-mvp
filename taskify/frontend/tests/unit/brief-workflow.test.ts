@@ -7,6 +7,7 @@ import {
   createBriefGenerationInput,
   evaluateBriefGenerationGate,
   markBriefAsReviewed,
+  updateCommunicationAsEdited,
   updateSectionAsEdited
 } from "../../src/domain/workflow/briefWorkflow";
 import type { CanvasItem } from "../../src/domain/models/CanvasItem";
@@ -15,6 +16,8 @@ import type { HumanSeverityAssessment } from "../../src/domain/models/HumanSever
 import { MockAIProvider } from "../../src/providers/ai";
 
 const CASE_ID = "case-brief";
+const PRODUCCION_NARRATIVE =
+  "Las líneas de producción tuvieron microcortes durante los últimos tres turnos y distintos equipos técnicos reportaron comportamientos intermitentes en sistemas de control. No está claro si el origen está en red, energía o integración entre componentes. Hay registros parciales y percepciones de operadores, pero no existe todavía una línea de causalidad validada de punta a punta.";
 
 function item(
   id: string,
@@ -272,6 +275,116 @@ describe("slice9 brief workflow", () => {
 
     expect(edited.status).toBe("EDITED_BY_USER");
     expect(edited.executive.whyItMatters.sourceItemIds).toEqual(previousIds);
+  });
+
+  it("communication is generated with required structure, grounded content and narrative format", async () => {
+    const provider = new MockAIProvider();
+    const valid = dynamicsItems().filter((entry) => entry.validationStatus === "VALIDATED" || entry.validationStatus === "EDITED");
+    const result = await provider.generateBrief({
+      caseId: CASE_ID,
+      caseTitle: "Caso Dynamics",
+      initialNarrative:
+        "El contrato con el proveedor venció el 31/10/2026. El proveedor continúa únicamente hasta finalizar el proyecto actual. Actualmente no pueden iniciarse nuevos proyectos ni tareas.",
+      activeCanvasItems: valid,
+      humanSeverityAssessment: severity(),
+      completedCriticalReview: completedReview(),
+      openWarnings: completedReview().findings.filter((finding) => finding.level === "WARNING" && finding.status === "OPEN"),
+      contextualQuestionHistory: [],
+      currentCaseStatus: "BRIEF_DRAFT"
+    });
+
+    expect(result.communication.email.subject.trim().length).toBeGreaterThan(0);
+    expect(result.communication.email.body.trim().length).toBeGreaterThan(0);
+    expect(result.communication.message.body.trim().length).toBeGreaterThan(0);
+    expect(result.communication.message.body.length).toBeLessThan(result.communication.email.body.length);
+
+    expect(result.communication.email.body).not.toContain("Situación:");
+    expect(result.communication.email.body).not.toContain("Por qué importa:");
+    expect(result.communication.email.body).not.toContain("Impactos posibles:");
+    expect(result.communication.email.body).not.toContain("Intervención requerida:");
+
+    expect(result.communication.email.body).toContain("gravedad fue evaluada por el usuario");
+    expect(result.communication.email.body).toContain("alternativa");
+    expect(result.communication.email.body).toContain("incertidumbre");
+    expect(result.communication.email.body).toContain("Te solicito");
+  });
+
+  it("communication excludes PENDING and REJECTED content", async () => {
+    const provider = new MockAIProvider();
+    const valid = dynamicsItems().filter((entry) => entry.validationStatus === "VALIDATED" || entry.validationStatus === "EDITED");
+    const result = await provider.generateBrief({
+      caseId: CASE_ID,
+      caseTitle: "Caso Dynamics",
+      initialNarrative: "Caso de prueba",
+      activeCanvasItems: valid,
+      humanSeverityAssessment: severity(),
+      completedCriticalReview: completedReview(),
+      openWarnings: completedReview().findings.filter((finding) => finding.level === "WARNING" && finding.status === "OPEN"),
+      contextualQuestionHistory: [],
+      currentCaseStatus: "BRIEF_DRAFT"
+    });
+
+    expect(result.communication.email.body).not.toContain("No consolidable");
+    expect(result.communication.message.body).not.toContain("No consolidable");
+  });
+
+  it("production communication preserves uncertainty and avoids invented quantitative claims", async () => {
+    const provider = new MockAIProvider();
+    const valid = [
+      item("ctx-p1", "CONTEXT", "Las líneas de producción tuvieron microcortes en tres turnos.", "FACT"),
+      item("exp-p1", "EXPOSURE", "Varias áreas operativas intervienen en la resolución.", "FACT"),
+      item("imp-p1", "IMPACT", "Existe riesgo de afectación operativa si no se estabiliza la situación.", "INFERENCE"),
+      item("unc-p1", "UNCERTAINTY", "No hay evidencia suficiente para estimar probabilidad confiable.", "MISSING_INFORMATION"),
+      item("int-p1", "INTERVENTION", "Definir si se habilita un análisis transversal y refuerzo de recolección de información.", "HUMAN_EVALUATION")
+    ];
+
+    const result = await provider.generateBrief({
+      caseId: CASE_ID,
+      caseTitle: "Caso Producción",
+      initialNarrative: PRODUCCION_NARRATIVE,
+      activeCanvasItems: valid,
+      humanSeverityAssessment: severity(),
+      completedCriticalReview: completedReview(),
+      openWarnings: [],
+      contextualQuestionHistory: [],
+      currentCaseStatus: "BRIEF_DRAFT"
+    });
+
+    expect(result.communication.email.body).toContain("incertidumbre");
+    expect(result.communication.email.body).toContain("Te solicito");
+    expect(result.communication.message.body).toContain("Incertidumbre");
+
+    const combined = `${result.communication.email.body} ${result.communication.message.body}`.toLowerCase();
+    expect(combined).not.toMatch(/\d+%/);
+    expect(combined).not.toMatch(/probabilidad\s+de\s+\d/);
+    expect(combined).not.toMatch(/fecha\s+(estimada|calculada)/);
+  });
+
+  it("editing communication updates flags and forces new review", async () => {
+    const provider = new MockAIProvider();
+    const valid = dynamicsItems().filter((entry) => entry.validationStatus === "VALIDATED" || entry.validationStatus === "EDITED");
+    const generated = await provider.generateBrief({
+      caseId: CASE_ID,
+      caseTitle: "Caso Dynamics",
+      initialNarrative:
+        "El contrato con el proveedor venció el 31/10/2026. El proveedor continúa únicamente hasta finalizar el proyecto actual. Actualmente no pueden iniciarse nuevos proyectos ni tareas.",
+      activeCanvasItems: valid,
+      humanSeverityAssessment: severity(),
+      completedCriticalReview: completedReview(),
+      openWarnings: completedReview().findings.filter((finding) => finding.level === "WARNING" && finding.status === "OPEN"),
+      contextualQuestionHistory: [],
+      currentCaseStatus: "BRIEF_DRAFT"
+    });
+
+    const reviewed = markBriefAsReviewed(generated);
+    const edited = updateCommunicationAsEdited(reviewed, "messageBody", "Texto exacto editado para mensaje.");
+
+    expect(edited.status).toBe("EDITED_BY_USER");
+    expect(edited.communication.message.body).toBe("Texto exacto editado para mensaje.");
+    expect(edited.communication.message.editedByUser).toBe(true);
+    expect(edited.reviewedByUser).toBe(false);
+    expect(edited.reviewedAt).toBeNull();
+    expect(edited.executive.severity.value).toBe(reviewed.executive.severity.value);
   });
 
   it("mark reviewed keeps BRIEF_DRAFT workflow external and sets reviewed fields", async () => {

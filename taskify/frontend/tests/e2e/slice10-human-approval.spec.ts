@@ -47,6 +47,7 @@ async function setupCaseToReviewedBrief(page: import("@playwright/test").Page) {
   await page.getByRole("button", { name: "Continuar a preparación del brief" }).click();
 
   await page.getByRole("button", { name: "Generar borrador de brief" }).click();
+  await page.getByRole("tab", { name: "Brief ejecutivo" }).click();
   page.once("dialog", async (dialog) => {
     if (dialog.message() === "Confirmás que revisaste el contenido del brief.") {
       await dialog.accept();
@@ -144,6 +145,7 @@ test("slice10 dynamics human approval flow", async ({ page }) => {
 
   await page.reload();
   await page.getByRole("button", { name: "Abrir" }).click();
+  await page.getByRole("tab", { name: "Brief ejecutivo" }).click();
 
   await expect(page.getByRole("heading", { name: "LISTO PARA ELEVAR" })).toBeVisible();
   await expect(page.getByText("Este brief corresponde a una versión aprobada.")).toBeVisible();

@@ -644,6 +644,27 @@ function buildGeneralBrief(input: GenerateBriefInput): GenerateBriefResult {
   }
 
   const placeholder = "No hay información suficiente para completar esta sección.";
+  const createdAt = nowIso();
+
+  const emailSubject = `Brief ejecutivo — ${input.caseTitle}`;
+  const contextText = joinOrPlaceholder(validItems.filter((item) => item.dimension === "CONTEXT").map((item) => item.content), placeholder);
+  const exposureText = joinOrPlaceholder(validItems.filter((item) => item.dimension === "EXPOSURE").map((item) => item.content), placeholder);
+  const impactText = joinOrPlaceholder(validItems.filter((item) => item.dimension === "IMPACT").map((item) => item.content), placeholder);
+  const uncertaintyText = joinOrPlaceholder(validItems.filter((item) => item.dimension === "UNCERTAINTY").map((item) => item.content), placeholder);
+  const alternativeText = joinOrPlaceholder(
+    validItems.filter((item) => item.dimension === "ALTERNATIVE" || item.dimension === "SCENARIO").map((item) => item.content),
+    "No se identificaron alternativas validadas."
+  );
+  const interventionText = joinOrPlaceholder(validItems.filter((item) => item.dimension === "INTERVENTION").map((item) => item.content), placeholder);
+
+  const emailBody = [
+    `Te comparto el estado actual del caso ${input.caseTitle}. ${contextText}`,
+    `${exposureText} En este escenario, el riesgo principal observado es: ${impactText}`,
+    `Las incertidumbres que siguen abiertas son: ${uncertaintyText}. Además, hoy sólo contamos con estas alternativas validadas: ${alternativeText}.`,
+    `La gravedad fue evaluada por el usuario como ${HUMAN_SEVERITY_LABELS[input.humanSeverityAssessment.severity]}.`,
+    `Te solicito tu intervención para definir próximos pasos: ${interventionText}`
+  ].join("\n\n");
+  const messageBody = `Resumen ejecutivo: ${impactText}. Incertidumbre principal: ${uncertaintyText}. Gravedad evaluada por el usuario: ${HUMAN_SEVERITY_LABELS[input.humanSeverityAssessment.severity]}. Pedido: ${interventionText}`;
 
   return {
     id: `dw-brief-${input.caseId}-${Date.now()}`,
@@ -768,10 +789,23 @@ function buildGeneralBrief(input: GenerateBriefInput): GenerateBriefResult {
       generationTimestamp: nowIso(),
       editedSections: []
     },
+    communication: {
+      email: {
+        subject: emailSubject,
+        body: emailBody,
+        editedByUser: false,
+        updatedAt: createdAt
+      },
+      message: {
+        body: messageBody,
+        editedByUser: false,
+        updatedAt: createdAt
+      }
+    },
     generatedBy: "AI",
     reviewedByUser: false,
-    createdAt: nowIso(),
-    updatedAt: nowIso(),
+    createdAt,
+    updatedAt: createdAt,
     reviewedAt: null
   };
 }
@@ -831,6 +865,7 @@ function buildDynamicsBrief(input: GenerateBriefInput): GenerateBriefResult {
   const unresolvedWarning = input.openWarnings.find((warning) => /prórroga contractual/i.test(warning.message));
 
   const missingLimit = "No hay información suficiente para completar esta sección.";
+  const createdAt = nowIso();
 
   const sectionSources = {
     situation: situationItems.map((item) => item.id),
@@ -841,6 +876,16 @@ function buildDynamicsBrief(input: GenerateBriefInput): GenerateBriefResult {
     scenariosAndAlternatives: alternativeItem ? [alternativeItem.id] : [],
     requiredIntervention: interventionItem ? [interventionItem.id] : []
   };
+
+  const emailSubject = `Brief ejecutivo — ${input.caseTitle}`;
+  const emailBody = [
+    `Te comparto una actualización sobre ${input.caseTitle}: el contrato con el proveedor venció y la continuidad actual es transitoria hasta finalizar el proyecto en curso.`,
+    `Hoy no pueden iniciarse nuevos proyectos ni tareas, por lo que la capacidad operativa futura queda comprometida. El impacto principal observado es: ${impactItem?.content ?? missingLimit}.`,
+    "Se mantiene incertidumbre sobre el cierre exacto del proyecto actual y sobre la demanda de nuevos trabajos en los próximos meses; además, la prórroga contractual aparece como alternativa posible, pero todavía no confirmada.",
+    `La gravedad fue evaluada por el usuario como ${HUMAN_SEVERITY_LABELS[input.humanSeverityAssessment.severity]}.`,
+    "Te solicito definir con Compras las alternativas contractuales viables y sus plazos, para priorizar la vía de continuidad." 
+  ].join("\n\n");
+  const messageBody = `Contrato vencido y continuidad transitoria; no se pueden iniciar nuevos trabajos y el riesgo operativo es alto. Persisten incertidumbres de plazo y demanda. Gravedad evaluada por el usuario: ${HUMAN_SEVERITY_LABELS[input.humanSeverityAssessment.severity]}. Pedido: definir con Compras alternativas y plazos.`;
 
   return {
     id: `dw-brief-${input.caseId}-${Date.now()}`,
@@ -957,10 +1002,23 @@ function buildDynamicsBrief(input: GenerateBriefInput): GenerateBriefResult {
       generationTimestamp: nowIso(),
       editedSections: []
     },
+    communication: {
+      email: {
+        subject: emailSubject,
+        body: emailBody,
+        editedByUser: false,
+        updatedAt: createdAt
+      },
+      message: {
+        body: messageBody,
+        editedByUser: false,
+        updatedAt: createdAt
+      }
+    },
     generatedBy: "AI",
     reviewedByUser: false,
-    createdAt: nowIso(),
-    updatedAt: nowIso(),
+    createdAt,
+    updatedAt: createdAt,
     reviewedAt: null
   };
 }

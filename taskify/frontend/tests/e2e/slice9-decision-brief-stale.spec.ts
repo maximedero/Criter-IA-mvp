@@ -64,6 +64,7 @@ test("marks a generated brief stale and requires explicit regeneration", async (
 
   await page.getByRole("button", { name: "Generar borrador de brief" }).click();
   await expect(page.getByRole("tab", { name: "Brief ejecutivo" })).toBeVisible();
+  await page.getByRole("tab", { name: "Brief ejecutivo" }).click();
 
   await page.getByRole("button", { name: "Editar Por qué importa" }).click();
   const editedExecutiveText =

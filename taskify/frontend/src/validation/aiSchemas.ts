@@ -329,6 +329,20 @@ export const briefTraceabilitySchema = z.object({
   userReviewTimestamp: z.string().optional()
 });
 
+export const executiveCommunicationSchema = z.object({
+  email: z.object({
+    subject: z.string(),
+    body: z.string(),
+    editedByUser: z.boolean(),
+    updatedAt: z.string().min(1)
+  }),
+  message: z.object({
+    body: z.string(),
+    editedByUser: z.boolean(),
+    updatedAt: z.string().min(1)
+  })
+});
+
 export const generateBriefInputSchema = z
   .object({
     caseId: z.string().min(1),
@@ -385,6 +399,7 @@ export const decisionBriefSchema = z.object({
   executive: executiveBriefSchema,
   expanded: expandedBriefSchema,
   traceability: briefTraceabilitySchema,
+  communication: executiveCommunicationSchema,
   generatedBy: z.literal("AI"),
   reviewedByUser: z.boolean(),
   createdAt: z.string().min(1),

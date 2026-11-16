@@ -149,9 +149,12 @@ describe.sequential("slice9 brief ui", () => {
     fireEvent.click(screen.getByRole("button", { name: "Generar borrador de brief" }));
 
     await waitFor(() => {
+      expect(screen.getByRole("tab", { name: "Comunicación ejecutiva" })).toBeInTheDocument();
       expect(screen.getByRole("tab", { name: "Brief ejecutivo" })).toBeInTheDocument();
       expect(screen.getByRole("tab", { name: "Vista expandida" })).toBeInTheDocument();
     });
+
+    fireEvent.click(screen.getByRole("tab", { name: "Brief ejecutivo" }));
 
     const prepSection = screen.getByRole("region", { name: "Preparación del brief" });
 
@@ -174,6 +177,8 @@ describe.sequential("slice9 brief ui", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Generar borrador de brief" }));
 
+    await waitFor(() => expect(screen.getByRole("tab", { name: "Brief ejecutivo" })).toBeInTheDocument());
+    fireEvent.click(screen.getByRole("tab", { name: "Brief ejecutivo" }));
     await waitFor(() => expect(screen.getByText("Por qué importa")).toBeInTheDocument());
 
     fireEvent.click(screen.getByRole("button", { name: "Editar Por qué importa" }));
@@ -202,6 +207,8 @@ describe.sequential("slice9 brief ui", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Generar borrador de brief" }));
 
+    await waitFor(() => expect(screen.getByRole("tab", { name: "Brief ejecutivo" })).toBeInTheDocument());
+    fireEvent.click(screen.getByRole("tab", { name: "Brief ejecutivo" }));
     await waitFor(() => expect(screen.getByRole("button", { name: "Marcar brief como revisado" })).toBeInTheDocument());
 
     fireEvent.click(screen.getByRole("button", { name: "Marcar brief como revisado" }));
@@ -234,6 +241,39 @@ describe.sequential("slice9 brief ui", () => {
     expect(screen.getByText("Warnings abiertos")).toBeInTheDocument();
     expect(screen.getByText("Findings resueltos")).toBeInTheDocument();
     expect(screen.getByText("Limitaciones de generación")).toBeInTheDocument();
+  });
+
+  it("copy actions use clipboard and do not trigger AI calls", async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, "clipboard", {
+      value: { writeText },
+      configurable: true
+    });
+
+    render(<App />);
+    fireEvent.click(screen.getByRole("button", { name: "Abrir" }));
+    fireEvent.click(screen.getByRole("button", { name: "Generar borrador de brief" }));
+
+    await waitFor(() => expect(screen.getByRole("tab", { name: "Comunicación ejecutiva" })).toBeInTheDocument());
+
+    fireEvent.click(screen.getByRole("button", { name: "Copiar como correo" }));
+    await waitFor(() => expect(screen.getByText("Correo copiado.")).toBeInTheDocument());
+
+    const firstCall = writeText.mock.calls[0]?.[0] as string;
+    expect(firstCall.startsWith("Asunto: ")).toBe(true);
+    expect(firstCall.includes("\n\n")).toBe(true);
+
+    fireEvent.click(screen.getByRole("button", { name: "Copiar como mensaje" }));
+    await waitFor(() => expect(screen.getByText("Mensaje copiado.")).toBeInTheDocument());
+
+    const secondCall = writeText.mock.calls[1]?.[0] as string;
+    expect(secondCall.startsWith("Asunto:")).toBe(false);
+
+    const counters = JSON.parse(localStorage.getItem("dw.ai.observation") ?? "{}");
+    expect(counters.generateBrief).toBe(1);
+    expect(counters.reviewCase).toBe(0);
+    expect(counters.analyzeNarrative).toBe(0);
+    expect(counters.suggestNextQuestion).toBe(0);
   });
 
   it("shows storage error and keeps BRIEF_DRAFT when brief persistence fails", async () => {

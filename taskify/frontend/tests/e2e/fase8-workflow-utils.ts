@@ -147,12 +147,14 @@ export async function createCase(page: Page, title: string, narrative: string): 
 export async function acceptNarrativeSuggestions(page: Page): Promise<{ total: number; accepted: number; edited: number; rejected: number }> {
   await page.getByRole("button", { name: "Analizar relato" }).click();
 
-  const total = await page.getByText("Sugerido por IA").count();
+  const acceptButtons = page.getByRole("button", { name: "Aceptar" });
+  const total = await acceptButtons.count();
+
   for (let index = 0; index < total; index += 1) {
-    await page.locator("article", { hasText: "Sugerido por IA" }).first().getByRole("button", { name: "Aceptar" }).click();
+    await acceptButtons.first().click();
   }
 
-  await expect(page.getByText("Sugerido por IA")).toHaveCount(0);
+  await expect(acceptButtons).toHaveCount(0);
 
   return {
     total,
@@ -345,6 +347,8 @@ export async function runHumanSeverity(page: Page, severity: Phase8CaseDefinitio
 
 export async function generateAndReviewBrief(page: Page): Promise<void> {
   await page.getByRole("button", { name: "Generar borrador de brief" }).click();
+
+  await page.getByRole("tab", { name: "Brief ejecutivo" }).click();
 
   await page.getByRole("button", { name: "Editar Por qué importa" }).click();
   const current = await page.getByLabel("Por qué importa").inputValue();

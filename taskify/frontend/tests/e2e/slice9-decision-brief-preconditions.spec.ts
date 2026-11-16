@@ -62,6 +62,7 @@ test("blocks brief actions when a generation precondition is revoked", async ({ 
 
   await page.getByRole("button", { name: "Generar borrador de brief" }).click();
   await expect(page.getByRole("tab", { name: "Brief ejecutivo" })).toBeVisible();
+  await page.getByRole("tab", { name: "Brief ejecutivo" }).click();
 
   const baseline = await page.evaluate(() => {
     const cases = JSON.parse(localStorage.getItem("dw.cases") ?? "[]") as Array<{ id: string }>;

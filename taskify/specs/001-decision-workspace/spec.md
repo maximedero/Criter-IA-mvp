@@ -87,6 +87,13 @@ Si una regla de `DESIGN.md` no puede aplicarse:
 - Se fija cobertura mínima obligatoria para ofrecer generación de brief (6 dimensiones mínimas).
 - Se fija regla de doble vista del brief (ejecutivo + expandida) como un único artefacto.
 
+### Session 2026-11-16
+
+- Se agrega salida `ExecutiveCommunication` dentro de `DecisionBrief` con dos formatos: `EMAIL` y `SHORT_MESSAGE`.
+- La vista por defecto del brief pasa a ser "Comunicación ejecutiva", preservando análisis estructurado, vista expandida y trazabilidad.
+- La comunicación ejecutiva no puede inventar hechos, cifras, fechas, fuentes, probabilidades ni recomendaciones.
+- Copiar comunicación usa portapapeles local y no dispara envíos, integraciones externas ni nuevas llamadas al proveedor de IA.
+
 ## 2. Problema
 
 Los profesionales pueden detectar anticipadamente señales de riesgo, pero
@@ -558,6 +565,53 @@ Debe incluir:
 - advertencias;
 - historial de revisión.
 
+#### Comunicación ejecutiva obligatoria (nuevo output del brief)
+
+El `DecisionBrief` debe incluir además una salida `ExecutiveCommunication` con dos
+formatos listos para uso laboral:
+
+1. `EMAIL`
+   - `subject`
+   - `body`
+   - `editedByUser`
+   - `updatedAt`
+
+2. `SHORT_MESSAGE`
+   - `body`
+   - `editedByUser`
+   - `updatedAt`
+
+Reglas de formato para `EMAIL`:
+
+- debe incluir asunto;
+- tono profesional y natural;
+- objetivo de extensión aproximada: 150 a 250 palabras;
+- párrafos breves;
+- incertidumbres materiales explícitas;
+- gravedad explícita como evaluación humana;
+- cierre con intervención concreta solicitada al líder.
+
+Reglas de formato para `SHORT_MESSAGE`:
+
+- objetivo de extensión aproximada: 70 a 130 palabras;
+- redactado para uso en Microsoft Teams o Slack;
+- misma información material del correo;
+- cierre con pregunta o pedido concreto.
+
+Reglas de grounding para `ExecutiveCommunication`:
+
+La comunicación sólo puede usar:
+
+- `CanvasItems` con estado VALIDATED o EDITED;
+- gravedad humana;
+- incertidumbres visibles;
+- alternativas existentes;
+- intervención solicitada;
+- `findings` y `warnings` que deban comunicarse.
+
+La comunicación no puede inventar hechos, cifras, fechas, fuentes,
+probabilidades ni recomendaciones.
+
 Regla de cobertura mínima para ofrecer generación de brief:
 
 Definición de "dimensión definida":
@@ -621,6 +675,34 @@ identificarse con evidencia suficiente, debe mostrarse explícitamente:
    - autorización;
    - decisión;
    - escalamiento.
+
+9. La vista por defecto del módulo de brief debe ser "Comunicación ejecutiva".
+
+10. Deben existir dos formatos seleccionables dentro de "Comunicación ejecutiva":
+	- Correo;
+	- Mensaje breve.
+
+11. El usuario debe poder editar, guardar y copiar cada formato de comunicación
+	sin alterar la trazabilidad del análisis estructurado.
+
+12. La acción de copiar debe usar portapapeles local y no debe:
+	- enviar mensajes;
+	- abrir Outlook;
+	- abrir Teams;
+	- abrir Slack;
+	- seleccionar destinatarios;
+	- cambiar `CaseStatus`;
+	- cambiar aprobación;
+	- invocar nuevamente `AIProvider`.
+
+13. Si el brief queda stale, `EMAIL` y `SHORT_MESSAGE` también quedan stale y no
+	deben poder copiarse como comunicación vigente hasta regenerar o revisar el
+	brief.
+
+14. La revisión y aprobación siguen aplicando a la versión completa del brief,
+	incluyendo `ExecutiveCommunication`.
+
+15. La aprobación del brief permanece exclusivamente humana.
 
 ---
 
@@ -715,6 +797,20 @@ identificarse con evidencia suficiente, debe mostrarse explícitamente:
 - **FR-031**: El sistema debe comparar comunicación original y aumentada y permitir puntuación por criterios definidos.
 - **FR-032**: La demostración debe funcionar con los tres casos definidos.
 - **FR-033**: La aplicación debe evitar inventar fuentes o datos y debe abstenerse explícitamente cuando falte información suficiente.
+- **FR-034**: El modelo `DecisionBrief` debe incluir `ExecutiveCommunication` con subestructuras `EMAIL` y `SHORT_MESSAGE`.
+- **FR-035**: `EMAIL` debe incluir `subject`, `body`, `editedByUser` y `updatedAt`.
+- **FR-036**: `SHORT_MESSAGE` debe incluir `body`, `editedByUser` y `updatedAt`.
+- **FR-037**: La vista por defecto del módulo brief debe ser "Comunicación ejecutiva".
+- **FR-038**: La UI debe permitir seleccionar formato "Correo" o "Mensaje breve" y conservar acceso a análisis estructurado, vista expandida y trazabilidad.
+- **FR-039**: El formato Correo debe redactarse con tono profesional natural y objetivo de 150-250 palabras.
+- **FR-040**: El formato Mensaje breve debe redactarse para Teams/Slack con objetivo de 70-130 palabras.
+- **FR-041**: Ambos formatos deben preservar incertidumbres materiales, gravedad humana y cierre con pedido concreto al líder (pregunta o intervención solicitada según formato).
+- **FR-042**: El contenido de `ExecutiveCommunication` sólo puede basarse en `CanvasItems` VALIDATED/EDITED, gravedad humana, incertidumbres visibles, alternativas, intervención solicitada y findings/warnings comunicables.
+- **FR-043**: El sistema no debe inventar hechos, cifras, fechas, fuentes, probabilidades ni recomendaciones en `ExecutiveCommunication`.
+- **FR-044**: La UI debe ofrecer acciones separadas de editar, guardar y copiar para Correo y Mensaje breve.
+- **FR-045**: Copiar debe usar portapapeles y no debe ejecutar envíos, apertura de clientes externos, cambios de estado, cambios de aprobación ni nuevas llamadas a `AIProvider`.
+- **FR-046**: Cuando el brief esté stale, `ExecutiveCommunication` debe marcarse stale y bloquear su copia como contenido vigente hasta regeneración o revisión.
+- **FR-047**: La aprobación humana debe cubrir la versión completa del brief, incluyendo `ExecutiveCommunication`.
 
 ## 11. Non-Functional Requirements
 
@@ -742,9 +838,6 @@ identificarse con evidencia suficiente, debe mostrarse explícitamente:
 
 ## 12. Out of Scope
 
-- Outlook add-in;
-- Teams application;
-- Microsoft Graph;
 - búsqueda automática de correos o reuniones;
 - conectores corporativos;
 - autenticación organizacional;
@@ -754,6 +847,14 @@ identificarse con evidencia suficiente, debe mostrarse explícitamente:
 - cálculos probabilísticos;
 - scoring automático;
 - envío del brief;
+- envío automático de correo o mensaje;
+- integración con Outlook;
+- integración con Teams;
+- integración con Slack;
+- Microsoft Graph;
+- webhooks;
+- backend;
+- RealAIProvider;
 - colaboración multiusuario en tiempo real;
 - aprobaciones;
 - aplicación móvil nativa;

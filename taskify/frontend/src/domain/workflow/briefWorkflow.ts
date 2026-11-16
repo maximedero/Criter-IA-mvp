@@ -139,6 +139,13 @@ export function canMarkBriefAsReviewed(context: ReviewEligibilityContext): Brief
   }
 
   if (context.brief) {
+    const hasCommunicationContent =
+      context.brief.communication.email.body.trim().length > 0 && context.brief.communication.message.body.trim().length > 0;
+
+    if (!hasCommunicationContent) {
+      reasonCodes.push("MISSING_REQUIRED_SECTIONS");
+    }
+
     const requiredSections: ExecutiveSectionKey[] = [
       "situation",
       "whyItMatters",
@@ -161,6 +168,37 @@ export function canMarkBriefAsReviewed(context: ReviewEligibilityContext): Brief
     allowed: unique.length === 0,
     reasonCodes: unique,
     reasons: unique.map((code) => BRIEF_GATE_ERRORS[code])
+  };
+}
+
+export function updateCommunicationAsEdited(
+  brief: DecisionBrief,
+  target: "emailSubject" | "emailBody" | "messageBody",
+  content: string
+): DecisionBrief {
+  const updatedAt = nowIso();
+
+  return {
+    ...brief,
+    status: "EDITED_BY_USER",
+    communication: {
+      email: {
+        ...brief.communication.email,
+        subject: target === "emailSubject" ? content : brief.communication.email.subject,
+        body: target === "emailBody" ? content : brief.communication.email.body,
+        editedByUser: target === "emailSubject" || target === "emailBody" ? true : brief.communication.email.editedByUser,
+        updatedAt: target === "emailSubject" || target === "emailBody" ? updatedAt : brief.communication.email.updatedAt
+      },
+      message: {
+        ...brief.communication.message,
+        body: target === "messageBody" ? content : brief.communication.message.body,
+        editedByUser: target === "messageBody" ? true : brief.communication.message.editedByUser,
+        updatedAt: target === "messageBody" ? updatedAt : brief.communication.message.updatedAt
+      }
+    },
+    reviewedByUser: false,
+    reviewedAt: null,
+    updatedAt
   };
 }
 

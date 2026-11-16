@@ -84,6 +84,7 @@ test("slice9 dynamics main flow", async ({ page }) => {
   await page.getByRole("button", { name: "Generar borrador de brief" }).click();
 
   await expect(page.getByRole("tab", { name: "Brief ejecutivo" })).toBeVisible();
+  await page.getByRole("tab", { name: "Brief ejecutivo" }).click();
 
   const briefRegion = page.getByRole("region", { name: "Preparación del brief" });
 
@@ -170,6 +171,7 @@ test("slice9 dynamics main flow", async ({ page }) => {
 
   await page.reload();
   await page.getByRole("button", { name: "Abrir" }).click();
+  await page.getByRole("tab", { name: "Brief ejecutivo" }).click();
 
   await expect(page.getByText("Brief revisado por el usuario.")).toBeVisible();
   await expect(

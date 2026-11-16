@@ -330,6 +330,7 @@ describe.sequential("slice10 human approval ui", () => {
 
     render(<App />);
     fireEvent.click(screen.getByRole("button", { name: "Abrir" }));
+    fireEvent.click(screen.getByRole("tab", { name: "Brief ejecutivo" }));
 
     expect(screen.getByText("LISTO PARA ELEVAR")).toBeInTheDocument();
     expect(screen.getByText("Este brief corresponde a una versión aprobada.")).toBeInTheDocument();

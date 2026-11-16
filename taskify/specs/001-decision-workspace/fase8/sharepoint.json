@@ -14,17 +14,17 @@
     "INTERVENTION"
   ],
   "suggestions": {
-    "total": 0,
-    "accepted": 0,
+    "total": 3,
+    "accepted": 3,
     "edited": 0,
     "rejected": 0
   },
   "questions": {
-    "total": 0,
-    "answered": 0,
-    "dontKnow": 0,
+    "total": 2,
+    "answered": 1,
+    "dontKnow": 1,
     "skipped": 0,
-    "externalResearchStops": 0
+    "externalResearchStops": 1
   },
   "canvas": {
     "facts": 4,
@@ -35,7 +35,7 @@
   },
   "coverage": {
     "reachedMinimum": true,
-    "questionsToSixOfSix": 0,
+    "questionsToSixOfSix": 2,
     "hardestDimension": "EVIDENCE"
   },
   "review": {
@@ -87,155 +87,208 @@
   "artifacts": {
     "canvas": [
       {
-        "id": "d0634377-f611-4727-8f23-5dac440c5df4",
-        "caseId": "456b6449-b620-468f-a924-42b69dbacc19",
+        "id": "2afa28b1-078d-40b1-b2ea-4dc3e1da0d2d",
+        "caseId": "09ca804a-12de-4133-9334-a688bba14743",
+        "dimension": "CONTEXT",
+        "content": "Microsoft informó que en julio de 2026 dejaría de dar soporte a los workflows de SharePoint utilizados por soluciones con Nintex Workflow.",
+        "epistemicType": "FACT",
+        "origin": "AI",
+        "validationStatus": "VALIDATED",
+        "aiSuggestion": {
+          "suggestionId": "dw-ai-sharepoint-1",
+          "rationale": "El relato indica explícitamente el hito de fin de soporte anunciado por Microsoft.",
+          "source": "INITIAL_NARRATIVE",
+          "originalContent": "Microsoft informó que en julio de 2026 dejaría de dar soporte a los workflows de SharePoint utilizados por soluciones con Nintex Workflow."
+        },
+        "createdAt": "2026-11-16T05:01:40.568Z",
+        "updatedAt": "2026-11-16T05:01:40.613Z"
+      },
+      {
+        "id": "ba7cda83-6825-44e8-8d42-1b0b02cee6b8",
+        "caseId": "09ca804a-12de-4133-9334-a688bba14743",
+        "dimension": "CONTEXT",
+        "content": "La modernización comenzó en 2023 y transitó entre alternativas tecnológicas antes de definir un destino final.",
+        "epistemicType": "FACT",
+        "origin": "AI",
+        "validationStatus": "VALIDATED",
+        "aiSuggestion": {
+          "suggestionId": "dw-ai-sharepoint-2",
+          "rationale": "El relato detalla una secuencia temporal de decisiones de modernización.",
+          "source": "INITIAL_NARRATIVE",
+          "originalContent": "La modernización comenzó en 2023 y transitó entre alternativas tecnológicas antes de definir un destino final."
+        },
+        "createdAt": "2026-11-16T05:01:40.568Z",
+        "updatedAt": "2026-11-16T05:01:40.663Z"
+      },
+      {
+        "id": "ab7f3df1-d1ea-4793-aee3-5fc591bdc782",
+        "caseId": "09ca804a-12de-4133-9334-a688bba14743",
+        "dimension": "EXPOSURE",
+        "content": "Persisten soluciones en SharePoint 2016 con un motor de workflow sin soporte debido a demoras del proyecto de migración.",
+        "epistemicType": "FACT",
+        "origin": "AI",
+        "validationStatus": "VALIDATED",
+        "aiSuggestion": {
+          "suggestionId": "dw-ai-sharepoint-3",
+          "rationale": "El relato confirma exposición vigente por coexistencia de tecnología sin soporte.",
+          "source": "INITIAL_NARRATIVE",
+          "originalContent": "Persisten soluciones en SharePoint 2016 con un motor de workflow sin soporte debido a demoras del proyecto de migración."
+        },
+        "createdAt": "2026-11-16T05:01:40.568Z",
+        "updatedAt": "2026-11-16T05:01:40.697Z"
+      },
+      {
+        "id": "10ce4111-7fd7-4ed6-9912-3a0db102af18",
+        "caseId": "09ca804a-12de-4133-9334-a688bba14743",
+        "dimension": "IMPACT",
+        "content": "Podrían interrumpirse circuitos administrativos y de aprobación documental en soluciones todavía no modernizadas.",
+        "epistemicType": "INFERENCE",
+        "origin": "USER",
+        "validationStatus": "VALIDATED",
+        "createdAt": "2026-11-16T05:01:40.816Z",
+        "updatedAt": "2026-11-16T05:01:40.816Z"
+      },
+      {
+        "id": "2cb12880-0054-4092-9102-7461b21e22b1",
+        "caseId": "09ca804a-12de-4133-9334-a688bba14743",
+        "dimension": "UNCERTAINTY",
+        "content": "No contamos con información suficiente que respalde la necesidad de continuidad del proveedor para atender esas soluciones.",
+        "epistemicType": "MISSING_INFORMATION",
+        "origin": "USER",
+        "validationStatus": "VALIDATED",
+        "createdAt": "2026-11-16T05:01:40.913Z",
+        "updatedAt": "2026-11-16T05:01:40.913Z"
+      },
+      {
+        "id": "04677326-8202-4c26-aeb1-5f282b27bc72",
+        "caseId": "09ca804a-12de-4133-9334-a688bba14743",
         "dimension": "EVIDENCE",
         "content": "Existe información de referencia interna pendiente de consolidación formal.",
         "epistemicType": "FACT",
         "origin": "USER",
         "validationStatus": "VALIDATED",
-        "createdAt": "2026-11-15T21:22:04.816Z",
-        "updatedAt": "2026-11-15T21:22:04.816Z"
+        "createdAt": "2026-11-16T05:01:41.081Z",
+        "updatedAt": "2026-11-16T05:01:41.081Z"
       },
       {
-        "id": "159bd01e-50e6-4130-beef-cf94be6b9281",
-        "caseId": "456b6449-b620-468f-a924-42b69dbacc19",
+        "id": "79196d4a-e780-4aff-b089-cdc776168dc8",
+        "caseId": "09ca804a-12de-4133-9334-a688bba14743",
         "dimension": "IMPACT",
         "content": "Podrían generarse impactos operativos relevantes si no se gestiona el riesgo a tiempo.",
         "epistemicType": "INFERENCE",
         "origin": "USER",
         "validationStatus": "VALIDATED",
-        "createdAt": "2026-11-15T21:22:04.934Z",
-        "updatedAt": "2026-11-15T21:22:04.934Z"
+        "createdAt": "2026-11-16T05:01:41.198Z",
+        "updatedAt": "2026-11-16T05:01:41.198Z"
       },
       {
-        "id": "60c096e2-ebc5-4872-a274-ffcfbc78bbec",
-        "caseId": "456b6449-b620-468f-a924-42b69dbacc19",
+        "id": "ccce781b-3d95-42f2-898e-e57194ee278a",
+        "caseId": "09ca804a-12de-4133-9334-a688bba14743",
         "dimension": "UNCERTAINTY",
         "content": "Persisten datos faltantes que requieren investigación externa antes de cerrar conclusiones.",
         "epistemicType": "MISSING_INFORMATION",
         "origin": "USER",
         "validationStatus": "VALIDATED",
-        "createdAt": "2026-11-15T21:22:05.017Z",
-        "updatedAt": "2026-11-15T21:22:05.017Z"
+        "createdAt": "2026-11-16T05:01:41.315Z",
+        "updatedAt": "2026-11-16T05:01:41.315Z"
       },
       {
-        "id": "b869b1a6-e4ad-4858-80db-246437243ae0",
-        "caseId": "456b6449-b620-468f-a924-42b69dbacc19",
+        "id": "6939b8b2-7108-4850-8889-90cf6406d68c",
+        "caseId": "09ca804a-12de-4133-9334-a688bba14743",
         "dimension": "SCENARIO",
         "content": "Si un workflow crítico deja de funcionar sin alternativa manual, podría detenerse temporalmente el proceso asociado.",
         "epistemicType": "INFERENCE",
         "origin": "USER",
         "validationStatus": "VALIDATED",
-        "createdAt": "2026-11-15T21:22:05.099Z",
-        "updatedAt": "2026-11-15T21:22:05.099Z"
+        "createdAt": "2026-11-16T05:01:41.414Z",
+        "updatedAt": "2026-11-16T05:01:41.414Z"
       },
       {
-        "id": "151f97c8-dc7d-427c-b2c9-f859703a263c",
-        "caseId": "456b6449-b620-468f-a924-42b69dbacc19",
+        "id": "d6639c6a-a38d-4014-bf24-93ffcdb21455",
+        "caseId": "09ca804a-12de-4133-9334-a688bba14743",
         "dimension": "ALTERNATIVE",
         "content": "Una alternativa es priorizar primero los workflows con mayor impacto operativo, pero requiere validación del criterio de prioridad.",
         "epistemicType": "ASSUMPTION",
         "origin": "USER",
         "validationStatus": "VALIDATED",
-        "createdAt": "2026-11-15T21:22:05.183Z",
-        "updatedAt": "2026-11-15T21:22:05.183Z"
+        "createdAt": "2026-11-16T05:01:41.514Z",
+        "updatedAt": "2026-11-16T05:01:41.514Z"
       },
       {
-        "id": "b969dcb6-963e-460c-8ccb-68b207c243e8",
-        "caseId": "456b6449-b620-468f-a924-42b69dbacc19",
+        "id": "20bc27f1-312b-47e2-af45-2baecfd1b7ee",
+        "caseId": "09ca804a-12de-4133-9334-a688bba14743",
         "dimension": "INTERVENTION",
         "content": "Solicito patrocinio para completar el relevamiento de dependencias y definir un plan de mitigación de continuidad.",
         "epistemicType": "HUMAN_EVALUATION",
         "origin": "USER",
         "validationStatus": "VALIDATED",
-        "createdAt": "2026-11-15T21:22:05.266Z",
-        "updatedAt": "2026-11-15T21:22:05.266Z"
-      },
-      {
-        "id": "3cba43c1-39b8-4452-b9b2-65b0fca2133c",
-        "caseId": "456b6449-b620-468f-a924-42b69dbacc19",
-        "dimension": "EVIDENCE",
-        "content": "Existe evidencia de referencia interna pendiente de consolidación formal.",
-        "epistemicType": "FACT",
-        "origin": "USER",
-        "validationStatus": "VALIDATED",
-        "createdAt": "2026-11-15T21:22:05.349Z",
-        "updatedAt": "2026-11-15T21:22:05.349Z"
-      },
-      {
-        "id": "932c115d-2262-4ede-9bf4-47fc2c4e72e0",
-        "caseId": "456b6449-b620-468f-a924-42b69dbacc19",
-        "dimension": "IMPACT",
-        "content": "Podrían generarse impactos operativos relevantes si no se gestiona el riesgo a tiempo.",
-        "epistemicType": "INFERENCE",
-        "origin": "USER",
-        "validationStatus": "VALIDATED",
-        "createdAt": "2026-11-15T21:22:05.433Z",
-        "updatedAt": "2026-11-15T21:22:05.433Z"
-      },
-      {
-        "id": "47ec583f-a796-4102-b447-7d26450f6187",
-        "caseId": "456b6449-b620-468f-a924-42b69dbacc19",
-        "dimension": "UNCERTAINTY",
-        "content": "Persisten datos faltantes que requieren investigación externa antes de cerrar conclusiones.",
-        "epistemicType": "MISSING_INFORMATION",
-        "origin": "USER",
-        "validationStatus": "VALIDATED",
-        "createdAt": "2026-11-15T21:22:05.516Z",
-        "updatedAt": "2026-11-15T21:22:05.516Z"
-      },
-      {
-        "id": "4bc32a38-959a-4a3c-935a-21e6a90352c7",
-        "caseId": "456b6449-b620-468f-a924-42b69dbacc19",
-        "dimension": "CONTEXT",
-        "content": "Se confirma una señal de riesgo vigente que requiere análisis estructurado.",
-        "epistemicType": "FACT",
-        "origin": "USER",
-        "validationStatus": "VALIDATED",
-        "createdAt": "2026-11-15T21:22:05.616Z",
-        "updatedAt": "2026-11-15T21:22:05.616Z"
-      },
-      {
-        "id": "f3f3e1e3-6876-46ca-978b-1e4ecfc85876",
-        "caseId": "456b6449-b620-468f-a924-42b69dbacc19",
-        "dimension": "EXPOSURE",
-        "content": "Existe exposición operativa mientras no se complete la mitigación requerida.",
-        "epistemicType": "FACT",
-        "origin": "USER",
-        "validationStatus": "VALIDATED",
-        "createdAt": "2026-11-15T21:22:05.700Z",
-        "updatedAt": "2026-11-15T21:22:05.700Z"
+        "createdAt": "2026-11-16T05:01:41.596Z",
+        "updatedAt": "2026-11-16T05:01:41.596Z"
       }
     ],
     "aiSession": {
-      "caseId": "456b6449-b620-468f-a924-42b69dbacc19",
-      "questionCount": 0,
-      "questions": [],
+      "caseId": "09ca804a-12de-4133-9334-a688bba14743",
+      "questionCount": 2,
+      "questions": [
+        {
+          "id": "dw-q-sp-impact",
+          "targetDimension": "IMPACT",
+          "question": "¿Qué procesos de negocio podrían interrumpirse si un workflow deja de funcionar?",
+          "reason": "Permite dimensionar el impacto potencial sin inventar magnitudes.",
+          "priority": "HIGH",
+          "suggestedEpistemicType": "INFERENCE",
+          "answerOptions": [
+            "ANSWER",
+            "DONT_KNOW",
+            "SKIP_FOR_NOW"
+          ],
+          "caseId": "09ca804a-12de-4133-9334-a688bba14743",
+          "status": "ANSWERED",
+          "createdAt": "2026-11-16T05:01:40.765Z",
+          "updatedAt": "2026-11-16T05:01:40.816Z",
+          "answeredAt": "2026-11-16T05:01:40.816Z",
+          "resultingCanvasItemId": "10ce4111-7fd7-4ed6-9912-3a0db102af18"
+        },
+        {
+          "id": "dw-q-sp-evidence",
+          "targetDimension": "EVIDENCE",
+          "question": "¿Qué evidencia disponible respalda el estado actual de migración y las dependencias remanentes?",
+          "reason": "Distingue percepción general de evidencia verificable.",
+          "priority": "HIGH",
+          "suggestedEpistemicType": "FACT",
+          "answerOptions": [
+            "ANSWER",
+            "DONT_KNOW",
+            "SKIP_FOR_NOW"
+          ],
+          "caseId": "09ca804a-12de-4133-9334-a688bba14743",
+          "status": "DONT_KNOW",
+          "createdAt": "2026-11-16T05:01:40.863Z",
+          "updatedAt": "2026-11-16T05:01:40.913Z",
+          "answeredAt": "2026-11-16T05:01:40.913Z",
+          "resultingCanvasItemId": "2cb12880-0054-4092-9102-7461b21e22b1"
+        }
+      ],
       "lastStop": {
         "question": null,
         "shouldStop": true,
-        "stopReason": "NO_MATERIAL_QUESTION",
+        "stopReason": "EXTERNAL_RESEARCH_REQUIRED",
         "remainingMissingDimensions": [
-          "SITUATION",
-          "EXPOSURE",
-          "IMPACT",
           "EVIDENCE",
-          "UNCERTAINTY",
           "INTERVENTION"
         ],
         "provisionalBriefAllowed": false,
-        "message": "No se identificó otra pregunta material con la información disponible."
+        "message": "La evidencia necesaria requiere investigación o consulta externa. Registrá el faltante y retomá el análisis cuando dispongas de información."
       },
       "userStopped": false,
-      "updatedAt": "2026-11-15T21:22:04.700Z"
+      "updatedAt": "2026-11-16T05:01:40.963Z"
     },
     "criticalReview": [
       {
-        "reviewId": "dw-review-456b6449-b620-468f-a924-42b69dbacc19-none",
-        "caseId": "456b6449-b620-468f-a924-42b69dbacc19",
-        "createdAt": "2026-11-15T21:22:05.769Z",
-        "updatedAt": "2026-11-15T21:22:05.816Z",
+        "reviewId": "dw-review-09ca804a-12de-4133-9334-a688bba14743-none",
+        "caseId": "09ca804a-12de-4133-9334-a688bba14743",
+        "createdAt": "2026-11-16T05:01:41.697Z",
+        "updatedAt": "2026-11-16T05:01:41.747Z",
         "findings": [],
         "summary": {
           "totalFindings": 0,
@@ -245,64 +298,64 @@
         },
         "canCompleteReview": true,
         "status": "COMPLETED",
-        "completedAt": "2026-11-15T21:22:05.816Z"
+        "completedAt": "2026-11-16T05:01:41.747Z"
       }
     ],
     "severityAssessment": {
-      "caseId": "456b6449-b620-468f-a924-42b69dbacc19",
+      "caseId": "09ca804a-12de-4133-9334-a688bba14743",
       "severity": "HIGH",
       "assessedBy": "USER",
-      "assessedAt": "2026-11-15T21:22:05.933Z",
-      "updatedAt": "2026-11-15T21:22:05.933Z",
+      "assessedAt": "2026-11-16T05:01:41.880Z",
+      "updatedAt": "2026-11-16T05:01:41.880Z",
       "status": "ASSESSED",
       "rationale": ""
     },
     "briefRecord": {
       "current": {
-        "id": "dw-brief-456b6449-b620-468f-a924-42b69dbacc19-1794777726017",
-        "caseId": "456b6449-b620-468f-a924-42b69dbacc19",
+        "id": "dw-brief-09ca804a-12de-4133-9334-a688bba14743-1794805301948",
+        "caseId": "09ca804a-12de-4133-9334-a688bba14743",
         "version": 1,
         "status": "REVIEWED_BY_USER",
         "executive": {
           "situation": {
-            "content": "Se confirma una señal de riesgo vigente que requiere análisis estructurado.",
+            "content": "Microsoft informó que en julio de 2026 dejaría de dar soporte a los workflows de SharePoint utilizados por soluciones con Nintex Workflow. La modernización comenzó en 2023 y transitó entre alternativas tecnológicas antes de definir un destino final.",
             "sourceItemIds": [
-              "4bc32a38-959a-4a3c-935a-21e6a90352c7"
+              "2afa28b1-078d-40b1-b2ea-4dc3e1da0d2d",
+              "ba7cda83-6825-44e8-8d42-1b0b02cee6b8"
             ],
             "hasSufficientInformation": true,
             "limitations": []
           },
           "whyItMatters": {
-            "content": "Existe exposición operativa mientras no se complete la mitigación requerida. Se mantiene explícita la incertidumbre relevante.",
+            "content": "Persisten soluciones en SharePoint 2016 con un motor de workflow sin soporte debido a demoras del proyecto de migración. Se mantiene explícita la incertidumbre relevante.",
             "sourceItemIds": [
-              "f3f3e1e3-6876-46ca-978b-1e4ecfc85876"
+              "ab7f3df1-d1ea-4793-aee3-5fc591bdc782"
             ],
             "hasSufficientInformation": true,
             "limitations": []
           },
           "possibleImpacts": {
-            "content": "Podrían generarse impactos operativos relevantes si no se gestiona el riesgo a tiempo. Podrían generarse impactos operativos relevantes si no se gestiona el riesgo a tiempo.",
+            "content": "Podrían interrumpirse circuitos administrativos y de aprobación documental en soluciones todavía no modernizadas. Podrían generarse impactos operativos relevantes si no se gestiona el riesgo a tiempo.",
             "sourceItemIds": [
-              "159bd01e-50e6-4130-beef-cf94be6b9281",
-              "932c115d-2262-4ede-9bf4-47fc2c4e72e0"
+              "10ce4111-7fd7-4ed6-9912-3a0db102af18",
+              "79196d4a-e780-4aff-b089-cdc776168dc8"
             ],
             "hasSufficientInformation": true,
             "limitations": []
           },
           "evidence": {
-            "content": "Existe información de referencia interna pendiente de consolidación formal. Existe evidencia de referencia interna pendiente de consolidación formal.",
+            "content": "Existe información de referencia interna pendiente de consolidación formal.",
             "sourceItemIds": [
-              "d0634377-f611-4727-8f23-5dac440c5df4",
-              "3cba43c1-39b8-4452-b9b2-65b0fca2133c"
+              "04677326-8202-4c26-aeb1-5f282b27bc72"
             ],
             "hasSufficientInformation": true,
             "limitations": []
           },
           "uncertainties": {
-            "content": "Persisten datos faltantes que requieren investigación externa antes de cerrar conclusiones. Persisten datos faltantes que requieren investigación externa antes de cerrar conclusiones.",
+            "content": "No contamos con información suficiente que respalde la necesidad de continuidad del proveedor para atender esas soluciones. Persisten datos faltantes que requieren investigación externa antes de cerrar conclusiones.",
             "sourceItemIds": [
-              "60c096e2-ebc5-4872-a274-ffcfbc78bbec",
-              "47ec583f-a796-4102-b447-7d26450f6187"
+              "2cb12880-0054-4092-9102-7461b21e22b1",
+              "ccce781b-3d95-42f2-898e-e57194ee278a"
             ],
             "hasSufficientInformation": true,
             "limitations": []
@@ -310,8 +363,8 @@
           "scenariosAndAlternatives": {
             "content": "Si un workflow crítico deja de funcionar sin alternativa manual, podría detenerse temporalmente el proceso asociado. Una alternativa es priorizar primero los workflows con mayor impacto operativo, pero requiere validación del criterio de prioridad.",
             "sourceItemIds": [
-              "b869b1a6-e4ad-4858-80db-246437243ae0",
-              "151f97c8-dc7d-427c-b2c9-f859703a263c"
+              "6939b8b2-7108-4850-8889-90cf6406d68c",
+              "d6639c6a-a38d-4014-bf24-93ffcdb21455"
             ],
             "hasSufficientInformation": true,
             "limitations": []
@@ -321,13 +374,13 @@
             "label": "Alta",
             "rationale": "",
             "assessedBy": "USER",
-            "assessedAt": "2026-11-15T21:22:05.933Z",
+            "assessedAt": "2026-11-16T05:01:41.880Z",
             "notice": "Evaluación realizada por el usuario."
           },
           "requiredIntervention": {
             "content": "Solicito patrocinio para completar el relevamiento de dependencias y definir un plan de mitigación de continuidad.",
             "sourceItemIds": [
-              "b969dcb6-963e-460c-8ccb-68b207c243e8"
+              "20bc27f1-312b-47e2-af45-2baecfd1b7ee"
             ],
             "hasSufficientInformation": true,
             "limitations": []
@@ -336,41 +389,49 @@
         "expanded": {
           "facts": [
             {
-              "itemId": "d0634377-f611-4727-8f23-5dac440c5df4",
+              "itemId": "2afa28b1-078d-40b1-b2ea-4dc3e1da0d2d",
+              "dimension": "CONTEXT",
+              "epistemicType": "FACT",
+              "origin": "AI",
+              "validationStatus": "VALIDATED",
+              "content": "Microsoft informó que en julio de 2026 dejaría de dar soporte a los workflows de SharePoint utilizados por soluciones con Nintex Workflow."
+            },
+            {
+              "itemId": "ba7cda83-6825-44e8-8d42-1b0b02cee6b8",
+              "dimension": "CONTEXT",
+              "epistemicType": "FACT",
+              "origin": "AI",
+              "validationStatus": "VALIDATED",
+              "content": "La modernización comenzó en 2023 y transitó entre alternativas tecnológicas antes de definir un destino final."
+            },
+            {
+              "itemId": "ab7f3df1-d1ea-4793-aee3-5fc591bdc782",
+              "dimension": "EXPOSURE",
+              "epistemicType": "FACT",
+              "origin": "AI",
+              "validationStatus": "VALIDATED",
+              "content": "Persisten soluciones en SharePoint 2016 con un motor de workflow sin soporte debido a demoras del proyecto de migración."
+            },
+            {
+              "itemId": "04677326-8202-4c26-aeb1-5f282b27bc72",
               "dimension": "EVIDENCE",
               "epistemicType": "FACT",
               "origin": "USER",
               "validationStatus": "VALIDATED",
               "content": "Existe información de referencia interna pendiente de consolidación formal."
-            },
-            {
-              "itemId": "3cba43c1-39b8-4452-b9b2-65b0fca2133c",
-              "dimension": "EVIDENCE",
-              "epistemicType": "FACT",
-              "origin": "USER",
-              "validationStatus": "VALIDATED",
-              "content": "Existe evidencia de referencia interna pendiente de consolidación formal."
-            },
-            {
-              "itemId": "4bc32a38-959a-4a3c-935a-21e6a90352c7",
-              "dimension": "CONTEXT",
-              "epistemicType": "FACT",
-              "origin": "USER",
-              "validationStatus": "VALIDATED",
-              "content": "Se confirma una señal de riesgo vigente que requiere análisis estructurado."
-            },
-            {
-              "itemId": "f3f3e1e3-6876-46ca-978b-1e4ecfc85876",
-              "dimension": "EXPOSURE",
-              "epistemicType": "FACT",
-              "origin": "USER",
-              "validationStatus": "VALIDATED",
-              "content": "Existe exposición operativa mientras no se complete la mitigación requerida."
             }
           ],
           "inferences": [
             {
-              "itemId": "159bd01e-50e6-4130-beef-cf94be6b9281",
+              "itemId": "10ce4111-7fd7-4ed6-9912-3a0db102af18",
+              "dimension": "IMPACT",
+              "epistemicType": "INFERENCE",
+              "origin": "USER",
+              "validationStatus": "VALIDATED",
+              "content": "Podrían interrumpirse circuitos administrativos y de aprobación documental en soluciones todavía no modernizadas."
+            },
+            {
+              "itemId": "79196d4a-e780-4aff-b089-cdc776168dc8",
               "dimension": "IMPACT",
               "epistemicType": "INFERENCE",
               "origin": "USER",
@@ -378,25 +439,17 @@
               "content": "Podrían generarse impactos operativos relevantes si no se gestiona el riesgo a tiempo."
             },
             {
-              "itemId": "b869b1a6-e4ad-4858-80db-246437243ae0",
+              "itemId": "6939b8b2-7108-4850-8889-90cf6406d68c",
               "dimension": "SCENARIO",
               "epistemicType": "INFERENCE",
               "origin": "USER",
               "validationStatus": "VALIDATED",
               "content": "Si un workflow crítico deja de funcionar sin alternativa manual, podría detenerse temporalmente el proceso asociado."
-            },
-            {
-              "itemId": "932c115d-2262-4ede-9bf4-47fc2c4e72e0",
-              "dimension": "IMPACT",
-              "epistemicType": "INFERENCE",
-              "origin": "USER",
-              "validationStatus": "VALIDATED",
-              "content": "Podrían generarse impactos operativos relevantes si no se gestiona el riesgo a tiempo."
             }
           ],
           "assumptions": [
             {
-              "itemId": "151f97c8-dc7d-427c-b2c9-f859703a263c",
+              "itemId": "d6639c6a-a38d-4014-bf24-93ffcdb21455",
               "dimension": "ALTERNATIVE",
               "epistemicType": "ASSUMPTION",
               "origin": "USER",
@@ -406,15 +459,15 @@
           ],
           "missingInformation": [
             {
-              "itemId": "60c096e2-ebc5-4872-a274-ffcfbc78bbec",
+              "itemId": "2cb12880-0054-4092-9102-7461b21e22b1",
               "dimension": "UNCERTAINTY",
               "epistemicType": "MISSING_INFORMATION",
               "origin": "USER",
               "validationStatus": "VALIDATED",
-              "content": "Persisten datos faltantes que requieren investigación externa antes de cerrar conclusiones."
+              "content": "No contamos con información suficiente que respalde la necesidad de continuidad del proveedor para atender esas soluciones."
             },
             {
-              "itemId": "47ec583f-a796-4102-b447-7d26450f6187",
+              "itemId": "ccce781b-3d95-42f2-898e-e57194ee278a",
               "dimension": "UNCERTAINTY",
               "epistemicType": "MISSING_INFORMATION",
               "origin": "USER",
@@ -424,7 +477,7 @@
           ],
           "humanEvaluations": [
             {
-              "itemId": "b969dcb6-963e-460c-8ccb-68b207c243e8",
+              "itemId": "20bc27f1-312b-47e2-af45-2baecfd1b7ee",
               "dimension": "INTERVENTION",
               "epistemicType": "HUMAN_EVALUATION",
               "origin": "USER",
@@ -434,27 +487,18 @@
           ],
           "evidenceItems": [
             {
-              "itemId": "d0634377-f611-4727-8f23-5dac440c5df4",
+              "itemId": "04677326-8202-4c26-aeb1-5f282b27bc72",
               "dimension": "EVIDENCE",
               "epistemicType": "FACT",
               "origin": "USER",
               "validationStatus": "VALIDATED",
               "content": "Existe información de referencia interna pendiente de consolidación formal."
-            },
-            {
-              "itemId": "3cba43c1-39b8-4452-b9b2-65b0fca2133c",
-              "dimension": "EVIDENCE",
-              "epistemicType": "FACT",
-              "origin": "USER",
-              "validationStatus": "VALIDATED",
-              "content": "Existe evidencia de referencia interna pendiente de consolidación formal."
             }
           ],
           "openWarnings": [],
           "resolvedFindings": [],
           "sources": [
-            "Existe información de referencia interna pendiente de consolidación formal.",
-            "Existe evidencia de referencia interna pendiente de consolidación formal."
+            "Existe información de referencia interna pendiente de consolidación formal."
           ],
           "generationLimitations": [
             "La IA solo consolidó contenido validado o editado por el usuario.",
@@ -464,57 +508,70 @@
         "traceability": {
           "sectionSources": {
             "situation": [
-              "4bc32a38-959a-4a3c-935a-21e6a90352c7"
+              "2afa28b1-078d-40b1-b2ea-4dc3e1da0d2d",
+              "ba7cda83-6825-44e8-8d42-1b0b02cee6b8"
             ],
             "whyItMatters": [
-              "f3f3e1e3-6876-46ca-978b-1e4ecfc85876"
+              "ab7f3df1-d1ea-4793-aee3-5fc591bdc782"
             ],
             "possibleImpacts": [
-              "159bd01e-50e6-4130-beef-cf94be6b9281",
-              "932c115d-2262-4ede-9bf4-47fc2c4e72e0"
+              "10ce4111-7fd7-4ed6-9912-3a0db102af18",
+              "79196d4a-e780-4aff-b089-cdc776168dc8"
             ],
             "evidence": [
-              "d0634377-f611-4727-8f23-5dac440c5df4",
-              "3cba43c1-39b8-4452-b9b2-65b0fca2133c"
+              "04677326-8202-4c26-aeb1-5f282b27bc72"
             ],
             "uncertainties": [
-              "60c096e2-ebc5-4872-a274-ffcfbc78bbec",
-              "47ec583f-a796-4102-b447-7d26450f6187"
+              "2cb12880-0054-4092-9102-7461b21e22b1",
+              "ccce781b-3d95-42f2-898e-e57194ee278a"
             ],
             "scenariosAndAlternatives": [
-              "b869b1a6-e4ad-4858-80db-246437243ae0",
-              "151f97c8-dc7d-427c-b2c9-f859703a263c"
+              "6939b8b2-7108-4850-8889-90cf6406d68c",
+              "d6639c6a-a38d-4014-bf24-93ffcdb21455"
             ],
             "requiredIntervention": [
-              "b969dcb6-963e-460c-8ccb-68b207c243e8"
+              "20bc27f1-312b-47e2-af45-2baecfd1b7ee"
             ]
           },
-          "severityAssessmentRef": "456b6449-b620-468f-a924-42b69dbacc19:2026-11-15T21:22:05.933Z",
-          "criticalReviewId": "dw-review-456b6449-b620-468f-a924-42b69dbacc19-none",
-          "generatedFromCanvasUpdatedAt": "2026-11-15T21:22:05.700Z",
+          "severityAssessmentRef": "09ca804a-12de-4133-9334-a688bba14743:2026-11-16T05:01:41.880Z",
+          "criticalReviewId": "dw-review-09ca804a-12de-4133-9334-a688bba14743-none",
+          "generatedFromCanvasUpdatedAt": "2026-11-16T05:01:41.596Z",
           "generationProvider": "MockAIProvider",
-          "generationTimestamp": "2026-11-15T21:22:06.018Z",
+          "generationTimestamp": "2026-11-16T05:01:41.950Z",
           "editedSections": [
             "whyItMatters"
           ],
-          "userReviewTimestamp": "2026-11-15T21:22:06.151Z"
+          "userReviewTimestamp": "2026-11-16T05:01:42.152Z"
+        },
+        "communication": {
+          "email": {
+            "subject": "Brief ejecutivo — Fase8 SharePoint Nintex",
+            "body": "Te comparto el estado actual del caso Fase8 SharePoint Nintex. Microsoft informó que en julio de 2026 dejaría de dar soporte a los workflows de SharePoint utilizados por soluciones con Nintex Workflow. La modernización comenzó en 2023 y transitó entre alternativas tecnológicas antes de definir un destino final.\n\nPersisten soluciones en SharePoint 2016 con un motor de workflow sin soporte debido a demoras del proyecto de migración. En este escenario, el riesgo principal observado es: Podrían interrumpirse circuitos administrativos y de aprobación documental en soluciones todavía no modernizadas. Podrían generarse impactos operativos relevantes si no se gestiona el riesgo a tiempo.\n\nLas incertidumbres que siguen abiertas son: No contamos con información suficiente que respalde la necesidad de continuidad del proveedor para atender esas soluciones. Persisten datos faltantes que requieren investigación externa antes de cerrar conclusiones.. Además, hoy sólo contamos con estas alternativas validadas: Si un workflow crítico deja de funcionar sin alternativa manual, podría detenerse temporalmente el proceso asociado. Una alternativa es priorizar primero los workflows con mayor impacto operativo, pero requiere validación del criterio de prioridad..\n\nLa gravedad fue evaluada por el usuario como Alta.\n\nTe solicito tu intervención para definir próximos pasos: Solicito patrocinio para completar el relevamiento de dependencias y definir un plan de mitigación de continuidad.",
+            "editedByUser": false,
+            "updatedAt": "2026-11-16T05:01:41.948Z"
+          },
+          "message": {
+            "body": "Resumen ejecutivo: Podrían interrumpirse circuitos administrativos y de aprobación documental en soluciones todavía no modernizadas. Podrían generarse impactos operativos relevantes si no se gestiona el riesgo a tiempo.. Incertidumbre principal: No contamos con información suficiente que respalde la necesidad de continuidad del proveedor para atender esas soluciones. Persisten datos faltantes que requieren investigación externa antes de cerrar conclusiones.. Gravedad evaluada por el usuario: Alta. Pedido: Solicito patrocinio para completar el relevamiento de dependencias y definir un plan de mitigación de continuidad.",
+            "editedByUser": false,
+            "updatedAt": "2026-11-16T05:01:41.948Z"
+          }
         },
         "generatedBy": "AI",
         "reviewedByUser": true,
-        "createdAt": "2026-11-15T21:22:06.017Z",
-        "updatedAt": "2026-11-15T21:22:06.151Z",
-        "reviewedAt": "2026-11-15T21:22:06.151Z"
+        "createdAt": "2026-11-16T05:01:41.948Z",
+        "updatedAt": "2026-11-16T05:01:42.152Z",
+        "reviewedAt": "2026-11-16T05:01:42.152Z"
       },
       "history": [],
       "stale": false
     },
     "approvalRecord": {
-      "caseId": "456b6449-b620-468f-a924-42b69dbacc19",
-      "briefId": "dw-brief-456b6449-b620-468f-a924-42b69dbacc19-1794777726017",
+      "caseId": "09ca804a-12de-4133-9334-a688bba14743",
+      "briefId": "dw-brief-09ca804a-12de-4133-9334-a688bba14743-1794805301948",
       "briefVersion": 1,
       "status": "APPROVED",
       "approvedBy": "USER",
-      "approvedAt": "2026-11-15T21:22:06.418Z",
+      "approvedAt": "2026-11-16T05:01:42.264Z",
       "confirmedBriefVersion": 1,
       "checklistSnapshot": {
         "ready": true,
@@ -623,10 +680,10 @@
           }
         ],
         "blockers": [],
-        "evaluatedAt": "2026-11-15T21:22:06.418Z"
+        "evaluatedAt": "2026-11-16T05:01:42.264Z"
       },
-      "createdAt": "2026-11-15T21:22:06.418Z",
-      "updatedAt": "2026-11-15T21:22:06.418Z"
+      "createdAt": "2026-11-16T05:01:42.264Z",
+      "updatedAt": "2026-11-16T05:01:42.264Z"
     }
   }
 }
